@@ -35,15 +35,18 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1
 
   var hash = location.hash || '';
   var admin = /(?:^#|&)admin(?:&|$)/.test(hash);
-  var link = hash.match(/(?:^#|&)t=([A-Za-z0-9_\-]+)/);   // «ссылка для продолжения» сотрудника
-  if (link) set(link[1]);
+  // «Ссылка для продолжения» сотрудника. Сохранённый ключ она НЕ перезаписывает: опрос сначала покажет,
+  // чьё это интервью, и сохранит ключ, только когда человек нажмёт «Продолжить» (защита от подсунутой ссылки).
+  var link = hash.match(/(?:^#|&)t=([A-Za-z0-9_\-]+)/);
   if (hash) { try { history.replaceState(null, '', location.pathname + (admin ? '#admin' : '')); } catch (e) {} }
 
   // опрос сообщает свой ключ — храним его здесь, на постоянном адресе (адрес сервера меняется)
   window.addEventListener('message', function (e) {
     if (!origin || e.origin !== origin) return;
     var d = e.data || {};
-    if (d.type === 'bp_token') set(d.token || '');
+    if (d.type !== 'bp_token') return;
+    if (d.token) set(d.token);
+    else if (!link) set('');   // отказ от чужой ссылки не стирает собственный ключ
   });
 
   function start() {
@@ -55,7 +58,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1
       })
       .then(function (cfg) {
         origin = cfg.url;
-        var tok = get();
+        var tok = link ? link[1] : get();
         var f = document.createElement('iframe');
         f.id = 'app';
         f.title = 'Карта процессов Balkan';
