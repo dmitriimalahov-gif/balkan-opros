@@ -64,8 +64,9 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1
         f.title = 'Карта процессов Balkan';
         f.allow = 'clipboard-write';
         f.src = cfg.url + (admin ? '/admin' : '/') + (!admin && tok ? '#' + (link ? 't' : 'st') + '=' + tok : '');
+        // надпись «Загрузка…» остаётся под прозрачным iframe, пока опрос не загрузится (через туннель — несколько секунд)
+        f.addEventListener('load', function () { document.getElementById('msg').hidden = true; });
         document.body.appendChild(f);
-        document.getElementById('msg').hidden = true;
       })
       .catch(function () {
         show('Опрос временно недоступен', 'Сервер обновляет адрес, это занимает несколько минут — страница попробует снова сама. / Sondajul este temporar indisponibil, reîncercăm automat.');
