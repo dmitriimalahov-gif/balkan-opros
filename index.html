@@ -68,7 +68,8 @@ html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;backgrou
         var f = document.createElement('iframe');
         f.id = 'app';
         f.title = 'Карта процессов Balkan';
-        f.allow = 'clipboard-write';
+        // Распознавание речи в кросс-доменном iframe требует явного разрешения Permissions Policy.
+        f.allow = 'clipboard-write; microphone';
         var params = ['th=' + theme];
         if (!admin && tok) params.push((link ? 't' : 'st') + '=' + tok);
         f.src = cfg.url + (admin ? '/admin' : '/') + '#' + params.join('&');
