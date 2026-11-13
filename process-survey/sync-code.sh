@@ -4,8 +4,8 @@
 set -euo pipefail
 export PATH='/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
 
-BASE="${SURVEY_BASE:-/Users/brandbox/Desktop/BALCAN/process-survey}"
-REPO="${SURVEY_PAGES:-/Users/brandbox/erp2-inbox/process-survey/pages}"
+BASE="${SURVEY_BASE:-/Users/brandbox/erp2-inbox/process-survey}"
+REPO="${SURVEY_PAGES:-$BASE/pages}"
 DEST="$REPO/process-survey"
 PY="${SURVEY_PYTHON:-/Library/Frameworks/Python.framework/Versions/3.12/bin/python3}"
 RUN="$BASE/run"

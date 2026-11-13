@@ -1,7 +1,7 @@
 #!/bin/bash
 # Автозапуск только синхронизации кода с GitHub; опрос и туннель на Mac не запускаются.
 set -euo pipefail
-BASE=/Users/brandbox/Desktop/BALCAN/process-survey
+BASE=/Users/brandbox/erp2-inbox/process-survey
 LABEL=com.balkan.process-survey-code-sync
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 SERVICE="gui/$UID/$LABEL"

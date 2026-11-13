@@ -6,14 +6,14 @@
   <string>com.balkan.process-survey-code-sync</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/Users/brandbox/Desktop/BALCAN/process-survey/sync-code.sh</string>
+    <string>/Users/brandbox/erp2-inbox/process-survey/sync-code.sh</string>
   </array>
   <key>WorkingDirectory</key>
-  <string>/Users/brandbox/Desktop/BALCAN/process-survey</string>
+  <string>/Users/brandbox/erp2-inbox/process-survey</string>
   <key>EnvironmentVariables</key>
   <dict>
     <key>SURVEY_BASE</key>
-    <string>/Users/brandbox/Desktop/BALCAN/process-survey</string>
+    <string>/Users/brandbox/erp2-inbox/process-survey</string>
     <key>SURVEY_PAGES</key>
     <string>/Users/brandbox/erp2-inbox/process-survey/pages</string>
     <key>PATH</key>
@@ -28,8 +28,8 @@
   <key>ProcessType</key>
   <string>Background</string>
   <key>StandardOutPath</key>
-  <string>/Users/brandbox/Desktop/BALCAN/process-survey/run/code-sync.log</string>
+  <string>/Users/brandbox/erp2-inbox/process-survey/run/code-sync.log</string>
   <key>StandardErrorPath</key>
-  <string>/Users/brandbox/Desktop/BALCAN/process-survey/run/code-sync.log</string>
+  <string>/Users/brandbox/erp2-inbox/process-survey/run/code-sync.log</string>
 </dict>
 </plist>
