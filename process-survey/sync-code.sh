@@ -1,7 +1,8 @@
 #!/bin/bash
 # Синхронизация исходного кода с GitHub без паролей, данных сотрудников и рабочих файлов.
-# Вызывается watchdog.sh раз в 2 минуты; можно запустить вручную: ./sync-code.sh
+# Запускается отдельным LaunchAgent раз в 2 минуты; можно запустить вручную: ./sync-code.sh
 set -euo pipefail
+export PATH='/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
 
 BASE="${SURVEY_BASE:-/Users/brandbox/Desktop/BALCAN/process-survey}"
 REPO="${SURVEY_PAGES:-/Users/brandbox/erp2-inbox/process-survey/pages}"
