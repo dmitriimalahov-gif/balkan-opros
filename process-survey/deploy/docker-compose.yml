@@ -1,0 +1,64 @@
+# Опрос «Карта процессов Balkan» на сервере: poll.erp.numer.om (nginx хоста → 127.0.0.1:18795).
+# Каталог: /opt/balkan-opros (код + data/ + run/ + ADMIN_PASSWORD.txt), этот файл — /opt/balkan-opros/deploy/.
+# Секреты: ../run/llm.env (LLM_BASE_URL, LLM_API_KEY; chmod 600) и ../ADMIN_PASSWORD.txt (chmod 600) — не в git.
+name: balkan-opros
+
+services:
+  survey:
+    build: .
+    image: balkan-opros-survey:latest
+    container_name: balkan-opros-survey
+    restart: unless-stopped
+    env_file: ../run/llm.env
+    environment:
+      SURVEY_PORT: "8795"
+      SURVEY_OLLAMA: http://ollama:11434
+      SURVEY_MODEL: qwen3.5:9b
+      # Постоянная ссылка сотрудникам остаётся github.io-обёрткой (frame-ancestors/CORS — её origin);
+      # прямой вход на https://poll.erp.numer.om работает и без этого (страница верхнего уровня).
+      SURVEY_STABLE_URL: https://dmitriimalahov-gif.github.io/balkan-opros/
+      TZ: Europe/Chisinau
+    volumes:
+      - ..:/app:ro
+      - ../data:/app/data
+      - ../run:/app/run
+      - ./run.py:/deploy/run.py:ro
+    ports:
+      - "127.0.0.1:18795:8795"
+    mem_limit: 2g
+    cpus: 4
+    depends_on:
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-m", "5", "http://127.0.0.1:8795/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  # Резервная модель (основная — OpenAI-совместимый API из llm.env). Только внутренняя сеть, порт наружу не публикуется.
+  # GPU сервера занята движком strata, nvidia-container-toolkit не установлен → CPU.
+  ollama:
+    image: ollama/ollama:latest
+    container_name: balkan-opros-ollama
+    restart: unless-stopped
+    environment:
+      OLLAMA_NUM_PARALLEL: "1"
+      OLLAMA_MAX_LOADED_MODELS: "1"
+      OLLAMA_KEEP_ALIVE: 10m
+    volumes:
+      - ../ollama:/root/.ollama
+    mem_limit: 12g
+    cpus: 8
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
