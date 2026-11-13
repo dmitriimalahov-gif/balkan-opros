@@ -1,0 +1,15 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+node_modules/
+
+# Локальные пароли и настройки API
+.env
+*.env
+**/ADMIN_PASSWORD.txt
+
+# Данные сотрудников, вложения, отчёты и рабочие файлы
+**/data/
+**/run/*
+!**/run/.gitkeep
+**/exports/

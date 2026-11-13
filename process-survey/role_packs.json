@@ -1,0 +1,645 @@
+{
+  "schema": "kodos.role-packs",
+  "version": 1,
+  "description": "21 функция оргструктуры Balkan. Профиль — референтная модель; ответы сотрудника фиксируют фактическую работу.",
+  "roles": {
+    "14": {
+      "dept": "mgmt",
+      "title": {"ru": "Руководитель компании / CEO", "ro": "Director general / CEO"},
+      "mission": {"ru": "Стратегия, устойчивость компании, качество, ресурсы и единая система решений.", "ro": "Strategia, durabilitatea companiei, calitatea, resursele și un sistem unitar de decizie."},
+      "practices": ["ICH Q10", "EU GMP Chapter 1", "ILO ISCO 1120", "COSO"],
+      "profile": {
+        "responsibilities": ["Стратегия и портфель", "Качественная политика и ресурсы", "Бюджет и инвестиции", "Назначение руководителей", "Management review и S&OP", "Риски и непрерывность бизнеса"],
+        "decisions": ["Лимиты полномочий", "Бюджетные исключения", "Межфункциональные приоритеты", "Владельцы процессов", "Критические эскалации"],
+        "documents": ["Оргструктура", "Матрица полномочий", "Бюджет", "Управленческая сводка DOC12", "Решения DOC28", "Протоколы управленческого анализа"],
+        "kpis": ["Стратегические инициативы", "OTIF", "План/факт производства", "Маржа и денежный поток", "Запасы", "Просроченные решения и риски"]
+      },
+      "coverage_ru": ["Границы ответственности", "Стратегия и цели", "Полномочия и лимиты", "Качественная политика", "Бюджет и ресурсы", "Management review", "S&OP", "KPI и происхождение данных", "Межфункциональные конфликты", "Независимость качества", "Риски и непрерывность", "Заместители", "Эскалации", "Контроль эффекта", "Доказательства решений"],
+      "questions": [
+        {"id": "14-01", "phase": 1, "ru": "За какие юридические лица, площадки, продукты, рынки и аутсорсинговые процессы вы отвечаете?", "ro": "Pentru ce entități juridice, unități, produse, piețe și procese externalizate răspundeți?"},
+        {"id": "14-02", "phase": 1, "ru": "Какие пять–семь результатов компании вы считаете своими главными обязанностями и как проверяете их выполнение?", "ro": "Care sunt cele cinci–șapte rezultate principale ale companiei pentru care răspundeți și cum verificați realizarea lor?"},
+        {"id": "14-03", "phase": 3, "ru": "Какие решения принимаете только вы, какие — руководители функций, а какие требуют собственников? Назовите лимиты.", "ro": "Ce decizii luați personal, ce decizii aparțin directorilor funcționali și ce necesită acordul proprietarilor? Precizați limitele."},
+        {"id": "14-04", "phase": 2, "ru": "Как качественная политика превращается в годовые цели, бюджет, проекты и KPI подразделений? Покажите последний цикл.", "ro": "Cum se transformă politica calității în obiective anuale, buget, proiecte și KPI-uri departamentale? Descrieți ultimul ciclu."},
+        {"id": "14-05", "phase": 2, "ru": "Как устроены management review и S&OP: участники, периодичность, входные пакеты, решения и контроль поручений?", "ro": "Cum funcționează analiza managerială și S&OP: participanți, frecvență, date de intrare, decizii și urmărirea sarcinilor?"},
+        {"id": "14-06", "phase": 4, "ru": "Какие показатели вы видите ежедневно, еженедельно и ежемесячно? Для каждого назовите формулу, источник и владельца.", "ro": "Ce indicatori urmăriți zilnic, săptămânal și lunar? Pentru fiecare precizați formula, sursa și responsabilul."},
+        {"id": "14-07", "phase": 3, "ru": "Разберите последний конфликт между крупным клиентом, мощностью, сроком сырья, бюджетом и качеством.", "ro": "Analizați ultimul conflict dintre un client important, capacitate, termenul materiei prime, buget și calitate."},
+        {"id": "14-08", "phase": 3, "ru": "Что должно входить в пакет бюджетного исключения или инвестиции: варианты, цена, срок, риск бездействия?", "ro": "Ce trebuie să conțină un pachet pentru excepție bugetară sau investiție: variante, cost, termen, riscul inacțiunii?"},
+        {"id": "14-09", "phase": 3, "ru": "Как вы подтверждаете независимость качества и невозможность снятия удержания продукции коммерческим решением?", "ro": "Cum confirmați independența funcției calității și imposibilitatea ridicării blocării produsului printr-o decizie comercială?"},
+        {"id": "14-10", "phase": 4, "ru": "Какие риски входят в верхний реестр и как проверяется владелец и эффективность каждой меры?", "ro": "Ce riscuri intră în registrul superior și cum se verifică responsabilul și eficacitatea fiecărei măsuri?"},
+        {"id": "14-11", "phase": 3, "ru": "Как назначаются заместители и передаются полномочия и незавершённые решения при вашем отсутствии?", "ro": "Cum sunt numiți înlocuitorii și cum se transferă competențele și deciziile nefinalizate în absența dumneavoastră?"},
+        {"id": "14-12", "phase": 4, "ru": "Какие решения сейчас теряются в почте, мессенджерах или устных договорённостях?", "ro": "Ce decizii se pierd în prezent în e-mailuri, mesagerii sau înțelegeri verbale?"},
+        {"id": "14-13", "phase": 5, "ru": "Как проверяете эффект принятого решения и когда требуется новое решение вместо исполнения старого?", "ro": "Cum verificați efectul unei decizii și când este necesară o decizie nouă în locul executării celei vechi?"},
+        {"id": "14-14", "phase": 5, "ru": "Приложите оргструктуру, матрицу полномочий, управленческую сводку и завершённый пример эскалации. Какие поля обязательны для ERP?", "ro": "Atașați organigrama, matricea competențelor, sinteza managerială și un exemplu finalizat de escaladare. Ce câmpuri sunt obligatorii pentru ERP?"}
+      ]
+    },
+    "01": {
+      "dept": "prod_dir",
+      "title": {"ru": "Директор производства", "ro": "Director de producție"},
+      "mission": {"ru": "Выпуск продукции в нужном объёме, качестве, сроке и себестоимости при соблюдении технологии и GMP.", "ro": "Fabricarea produselor în volumul, calitatea, termenul și costul necesare, cu respectarea tehnologiei și GMP."},
+      "practices": ["EU GMP Chapter 2.7", "EU GMP Chapter 5", "ILO ISCO 1321", "APQC S&OP"],
+      "profile": {
+        "responsibilities": ["Производственная стратегия", "План и мощности", "Готовность партий", "Люди и допуски", "Оборудование и валидация", "Записи, выпуск и отклонения"],
+        "decisions": ["Производственные приоритеты", "Сценарии дефицита", "Перепланирование", "Ресурсы и смены", "Изменения в пределах полномочий"],
+        "documents": ["План DOC03", "Сценарии DOC04", "Сменные задания DOC05", "Готовность DOC20", "Факт выпуска DOC23", "Инструкции и записи обучения"],
+        "kpis": ["Schedule attainment", "Выход и потери", "Время цикла", "Простои", "Полнота записей", "Допуски персонала"]
+      },
+      "coverage_ru": ["Участки и продукты", "План и мощности", "Полномочия", "Готовность партии", "BOM и версии", "Дефицит материалов", "Оборудование", "Производственные записи", "Отклонения", "Люди и допуски", "KPI", "Аутсорсинг", "Улучшения", "Доказательства"],
+      "questions": [
+        {"id": "01-01", "phase": 1, "ru": "Какие участки, линии, смены, технологии, продукты и внешние производства находятся под вашим управлением?", "ro": "Ce secții, linii, schimburi, tehnologii, produse și producții externalizate se află sub conducerea dumneavoastră?"},
+        {"id": "01-02", "phase": 2, "ru": "Как прогноз и подтверждённые заказы превращаются в производственный план? Назовите горизонты и участников.", "ro": "Cum se transformă prognoza și comenzile confirmate în planul de producție? Precizați orizonturile și participanții."},
+        {"id": "01-03", "phase": 3, "ru": "Какие решения принимаете вы, какие — планировщик, начальник участка, технолог, качество и CEO?", "ro": "Ce decizii vă aparțin și ce decizii aparțin planificatorului, șefului de secție, tehnologului, calității și CEO-ului?"},
+        {"id": "01-04", "phase": 2, "ru": "Какие обязательные условия запуска проверяются по каждой партии: BOM, маршрут, сырьё, оборудование, люди, документы?", "ro": "Ce condiții obligatorii de pornire verificați pentru fiecare lot: BOM, traseu, materie primă, echipament, personal, documente?"},
+        {"id": "01-05", "phase": 3, "ru": "Разберите дефицит общего материала для нескольких SKU: кто рассчитывает варианты, кто утверждает и что получают продажи?", "ro": "Analizați deficitul unei materii prime comune pentru mai multe SKU-uri: cine calculează variantele, cine aprobă și ce primesc vânzările?"},
+        {"id": "01-06", "phase": 2, "ru": "Как учитываются мощность, переналадки, чистка, обслуживание, калибровка и незапланированные простои?", "ro": "Cum sunt considerate capacitatea, schimbările de serie, curățarea, mentenanța, calibrarea și opririle neplanificate?"},
+        {"id": "01-07", "phase": 3, "ru": "Что происходит с начатыми и ещё не начатыми заданиями после изменения технологической версии?", "ro": "Ce se întâmplă cu sarcinile începute și neîncepute după modificarea versiunii tehnologice?"},
+        {"id": "01-08", "phase": 2, "ru": "Как производственные записи проверяются и подписываются до передачи качеству? Кто вправе исправить закрытую запись?", "ro": "Cum sunt verificate și semnate înregistrările de producție înainte de transmiterea la calitate? Cine poate corecta o înregistrare închisă?"},
+        {"id": "01-09", "phase": 3, "ru": "Разберите последнее критическое отклонение: остановка, изоляция, оценка, решение качества и новый план.", "ro": "Analizați ultima abatere critică: oprire, izolare, evaluare, decizia calității și noul plan."},
+        {"id": "01-10", "phase": 2, "ru": "Как проверяется квалификация и достаточная численность персонала? Что происходит при отсутствии нужного допуска?", "ro": "Cum verificați calificarea și numărul suficient de personal? Ce se întâmplă când lipsește autorizația necesară?"},
+        {"id": "01-11", "phase": 4, "ru": "Какие KPI вы используете: расписание, выход, потери, простои, цикл, записи? Дайте формулу и источник каждого.", "ro": "Ce KPI-uri utilizați: program, randament, pierderi, opriri, ciclu, înregistrări? Precizați formula și sursa fiecăruia."},
+        {"id": "01-12", "phase": 3, "ru": "Как управляются подрядное производство и внешние услуги? Какие решения остаются у вас, качества и CEO?", "ro": "Cum sunt gestionate producția la contract și serviciile externe? Ce decizii rămân la dumneavoastră, la calitate și la CEO?"},
+        {"id": "01-13", "phase": 5, "ru": "Какие повторяющиеся потери или ручные согласования должна устранить ERP? Что нельзя автоматизировать без вашего решения?", "ro": "Ce pierderi repetitive sau aprobări manuale trebuie eliminate prin ERP? Ce nu poate fi automatizat fără decizia dumneavoastră?"},
+        {"id": "01-14", "phase": 5, "ru": "Приложите реальный план, готовность партии, отклонение и итоговый план/факт. Какие статусы и связи должны сохраниться?", "ro": "Atașați un plan real, pregătirea unui lot, o abatere și rezultatul plan/fapt. Ce statusuri și legături trebuie păstrate?"}
+      ]
+    },
+    "03": {
+      "dept": "prod_area",
+      "title": {"ru": "Начальник производственного участка", "ro": "Șef de secție de producție"},
+      "mission": {"ru": "Безопасное и документированное выполнение сменного задания квалифицированной командой с эскалацией отклонений.", "ro": "Executarea sigură și documentată a sarcinilor de schimb de către o echipă calificată, cu escaladarea abaterilor."},
+      "practices": ["ILO ISCO 3122", "EU GMP Chapters 2 and 5", "FDA 21 CFR 211.25"],
+      "profile": {
+        "responsibilities": ["План смены", "Люди и линии", "Готовность рабочего места", "Материалы и инструкции", "Фактические записи", "Выпуск и передача смены"],
+        "decisions": ["Очередь внутри смены", "Назначение исполнителей", "Локальные решения", "Остановка и эскалация", "Приёмка полноты записей"],
+        "documents": ["Задание DOC05", "Операции DOC06", "Простои DOC07", "Готовность DOC20", "Выдача DOC22", "Факт DOC23", "Передача DOC33"],
+        "kpis": ["Выполнение задания", "Простои", "Выход и брак", "Переналадки", "Правильность записей", "Передача смены"]
+      },
+      "coverage_ru": ["Линии и команда", "План смены", "Допуски людей", "Готовность и line clearance", "Материалы", "Инструкции", "Фактические записи", "Остановки", "Отклонения", "Материальный баланс", "Передача смены", "KPI", "Заместители", "Мобильный терминал"],
+      "questions": [
+        {"id": "03-01", "phase": 1, "ru": "Какие линии, операции, смены и сотрудники находятся под вашим управлением?", "ro": "Ce linii, operații, schimburi și angajați se află sub conducerea dumneavoastră?"},
+        {"id": "03-02", "phase": 2, "ru": "Как вы принимаете план смены и подтверждаете его соответствие фактическому состоянию линий?", "ro": "Cum preluați planul de schimb și confirmați corespunderea lui cu starea reală a liniilor?"},
+        {"id": "03-03", "phase": 2, "ru": "Как назначаете операторов с учётом обучения, допусков, замен и нагрузки?", "ro": "Cum repartizați operatorii în funcție de instruire, autorizări, înlocuitori și volumul de lucru?"},
+        {"id": "03-04", "phase": 2, "ru": "Какие условия готовности проверяются перед каждой партией, включая очистку и line clearance?", "ro": "Ce condiții de pregătire verificați înainte de fiecare lot, inclusiv curățarea și eliberarea liniei?"},
+        {"id": "03-05", "phase": 2, "ru": "Как получаете и проверяете сырьё, серии, количество и маркировку?", "ro": "Cum primiți și verificați materia primă, seriile, cantitatea și marcarea?"},
+        {"id": "03-06", "phase": 3, "ru": "Как оператор узнаёт об изменении инструкции и подтверждает понимание до старта?", "ro": "Cum află operatorul despre modificarea instrucțiunii și confirmă înțelegerea înainte de pornire?"},
+        {"id": "03-07", "phase": 2, "ru": "Какие параметры и количество регистрируются во время операции? Где запись действительно возникает позже?", "ro": "Ce parametri și cantități se înregistrează în timpul operației? Unde apar înregistrările efectiv mai târziu?"},
+        {"id": "03-08", "phase": 3, "ru": "Разберите остановку: безопасное состояние, изоляция, уведомление, решение и возобновление.", "ro": "Analizați o oprire: stare sigură, izolare, notificare, decizie și reluare."},
+        {"id": "03-09", "phase": 2, "ru": "Как проверяются выпуск, брак, расход и материальный баланс до передачи качеству?", "ro": "Cum verificați producția, rebutul, consumul și bilanțul materialelor înainte de transmiterea la calitate?"},
+        {"id": "03-10", "phase": 3, "ru": "Какие отклонения решаете сами, а какие передаёте директору, технологу или качеству?", "ro": "Ce abateri rezolvați personal și care sunt transmise directorului, tehnologului sau calității?"},
+        {"id": "03-11", "phase": 2, "ru": "Как передаются незавершённые операции, остатки и ограничения следующей смене?", "ro": "Cum sunt transmise operațiile nefinalizate, stocurile și restricțiile următorului schimb?"},
+        {"id": "03-12", "phase": 4, "ru": "Какие KPI отражают результат смены и не стимулируют скрывать брак или задерживать записи?", "ro": "Ce KPI-uri reflectă rezultatul schimbului fără a încuraja ascunderea rebutului sau întârzierea înregistrărilor?"},
+        {"id": "03-13", "phase": 3, "ru": "Кто вас замещает и какие полномочия имеет заместитель при отсутствии оператора или начальника?", "ro": "Cine vă înlocuiește și ce competențe are înlocuitorul în absența operatorului sau a șefului?"},
+        {"id": "03-14", "phase": 5, "ru": "Приложите сменное задание, журнал и пример исключения. Какие действия оператора должны выполняться на мобильном терминале?", "ro": "Atașați o sarcină de schimb, un jurnal și un exemplu de excepție. Ce acțiuni ale operatorului trebuie efectuate pe terminalul mobil?"}
+      ]
+    },
+    "20": {
+      "dept": "quality",
+      "title": {"ru": "Качество / руководитель Quality Unit", "ro": "Calitate / responsabil Quality Unit"},
+      "mission": {"ru": "Независимая защита пациента, пригодность продукции и эффективность фармацевтической системы качества.", "ro": "Protejarea independentă a pacientului, conformitatea produsului și eficacitatea sistemului farmaceutic de calitate."},
+      "practices": ["EU GMP Chapters 1, 2 and 6", "FDA 21 CFR 211.22", "ICH Q9 and Q10", "MHRA ALCOA+"],
+      "profile": {
+        "responsibilities": ["QA/QC и независимость", "Допуск материалов и серий", "Спецификации и методы", "Отклонения и CAPA", "Изменения и поставщики", "Жалобы, отзывы, PQR и данные"],
+        "decisions": ["Допуск или отказ", "Удержание и границы", "Утверждение процедур", "Условия продолжения", "Закрытие расследований"],
+        "documents": ["Допуски DOC21/24", "Факт DOC23", "Отклонения DOC34", "Возвраты DOC36", "Спецификации и методы", "PQR и management review"],
+        "kpis": ["Время решения", "Полнота пакета", "Возраст отклонений и CAPA", "Повторяемость", "Эффективность CAPA", "PQR и аудиты"]
+      },
+      "coverage_ru": ["QA QC и QP", "Независимость", "Допуски", "Спецификации и методы", "Испытания", "Пакет серии", "Отклонения OOS OOT", "CAPA", "Изменения", "Поставщики", "Валидация и обучение", "Жалобы и отзывы", "PQR", "ALCOA+ и доступ", "KPI"],
+      "questions": [
+        {"id": "20-01", "phase": 1, "ru": "Как устроены QA, QC, уполномоченное лицо и другие роли выпуска? Кому подчиняется каждая?", "ro": "Cum sunt organizate QA, QC, persoana autorizată și celelalte roluri de eliberare? Cui este subordonată fiecare?"},
+        {"id": "20-02", "phase": 3, "ru": "Какие материалы, промежуточные продукты, серии, спецификации и процедуры вы вправе одобрять или отклонять?", "ro": "Ce materiale, produse intermediare, loturi, specificații și proceduri puteți aproba sau respinge?"},
+        {"id": "20-03", "phase": 2, "ru": "Как создаются, версионируются и утверждаются спецификации, методы отбора и испытаний?", "ro": "Cum sunt create, versionate și aprobate specificațiile, metodele de eșantionare și testare?"},
+        {"id": "20-04", "phase": 2, "ru": "Как регистрируются отбор образцов, испытания, результаты и работа внешних лабораторий?", "ro": "Cum sunt înregistrate eșantionarea, testele, rezultatele și activitatea laboratoarelor externe?"},
+        {"id": "20-05", "phase": 2, "ru": "Какой пакет необходим для решения по серии? Что обязательно оставляет её на удержании?", "ro": "Ce pachet este necesar pentru decizia privind lotul? Ce lipsă menține obligatoriu lotul blocat?"},
+        {"id": "20-06", "phase": 3, "ru": "Как определяются границы отклонения, OOS/OOT и потенциально затронутого объёма?", "ro": "Cum se determină limitele abaterii, OOS/OOT și volumul potențial afectat?"},
+        {"id": "20-07", "phase": 3, "ru": "Как расследуются причины и проверяется эффективность CAPA? Что происходит при повторении дефекта?", "ro": "Cum sunt investigate cauzele și verificată eficacitatea CAPA? Ce se întâmplă dacă defectul se repetă?"},
+        {"id": "20-08", "phase": 3, "ru": "Как оцениваются изменения продукта, процесса, оборудования, поставщика и документов, включая регуляторные последствия?", "ro": "Cum sunt evaluate modificările produsului, procesului, echipamentului, furnizorului și documentelor, inclusiv impactul de reglementare?"},
+        {"id": "20-09", "phase": 3, "ru": "Как квалифицируются поставщики, подрядные производители и лаборатории? Как пересматривается их статус?", "ro": "Cum sunt calificați furnizorii, producătorii la contract și laboratoarele? Cum este revizuit statutul lor?"},
+        {"id": "20-10", "phase": 2, "ru": "Как контролируются валидация, квалификация, обучение и допуски сотрудников качества?", "ro": "Cum sunt controlate validarea, calificarea, instruirea și autorizările personalului calității?"},
+        {"id": "20-11", "phase": 3, "ru": "Как обрабатываются жалобы, возвраты, поздние сигналы и отзывы? Как определяются затронутые серии и клиенты?", "ro": "Cum sunt tratate reclamațiile, retururile, semnalele tardive și retragerile? Cum se determină loturile și clienții afectați?"},
+        {"id": "20-12", "phase": 4, "ru": "Как формируются PQR и материалы management review? Какие KPI и тренды обязательны?", "ro": "Cum sunt formate PQR și materialele analizei manageriale? Ce KPI-uri și tendințe sunt obligatorii?"},
+        {"id": "20-13", "phase": 4, "ru": "Как обеспечиваются ALCOA+, персональный доступ, audit trail, электронные подписи и запрет редактирования истории?", "ro": "Cum sunt asigurate ALCOA+, accesul individual, audit trail-ul, semnăturile electronice și interdicția modificării istoricului?"},
+        {"id": "20-14", "phase": 5, "ru": "Приложите схему качества, поток статусов серии, пример отклонения и решения. Что ERP должна блокировать автоматически?", "ro": "Atașați schema calității, fluxul statusurilor lotului, un exemplu de abatere și decizie. Ce trebuie blocat automat de ERP?"}
+      ]
+    },
+    "11": {
+      "dept": "sales",
+      "title": {"ru": "Руководитель продаж", "ro": "Manager vânzări"},
+      "mission": {"ru": "Достоверный спрос, прибыльные и исполнимые обязательства клиентам и согласование продаж с производством.", "ro": "Cerere fiabilă, angajamente profitabile și realizabile față de clienți și coordonarea vânzărilor cu producția."},
+      "practices": ["ILO ISCO 1221", "APQC S&OP", "EU GDP"],
+      "profile": {
+        "responsibilities": ["Воронка и прогноз", "Условия и приоритеты", "Исполнимые обещания", "Команда продаж", "S&OP", "Жалобы и анализ потерь"],
+        "decisions": ["Скидки в мандате", "Прогнозная версия", "Коммерческий приоритет", "Перераспределение клиентов", "Разбор исполнения"],
+        "documents": ["Контакты DOC11", "Заказы DOC17", "Потребность DOC16", "Прогноз DOC32", "Сделки DOC31", "Отчёт DOC12"],
+        "kpis": ["Точность прогноза", "Конверсия", "OTIF", "Маржа", "Просроченные действия", "Качество CRM"]
+      },
+      "coverage_ru": ["Рынки и команда", "Полномочия", "Доказательства сделки", "Прогноз и версии", "Заказ и спрос", "Цена и кредит", "Доступность и качество", "Сроки и части", "Приоритеты", "Жалобы и возвраты", "Рекламные материалы", "KPI команды", "S&OP", "Доказательства"],
+      "questions": [
+        {"id": "11-01", "phase": 1, "ru": "За какие рынки, каналы, клиентов, продукты и команду вы отвечаете?", "ro": "Pentru ce piețe, canale, clienți, produse și echipă răspundeți?"},
+        {"id": "11-02", "phase": 3, "ru": "Какие коммерческие решения принимаете вы, менеджеры, финансы и CEO?", "ro": "Ce decizii comerciale luați dumneavoastră, managerii, finanțele și CEO-ul?"},
+        {"id": "11-03", "phase": 2, "ru": "Как подтверждается реальность сделки и следующий шаг? Что запрещает переводить её на следующую стадию?", "ro": "Cum se confirmă realitatea unei tranzacții și pasul următor? Ce împiedică trecerea la etapa următoare?"},
+        {"id": "11-04", "phase": 2, "ru": "Как формируется прогноз по SKU и периодам? Как отделяются заказы, вероятностный спрос и разовые проекты?", "ro": "Cum se formează prognoza pe SKU-uri și perioade? Cum sunt separate comenzile, cererea probabilă și proiectele unice?"},
+        {"id": "11-05", "phase": 3, "ru": "Как версионируется прогноз и что происходит при замене прогнозной сделки реальным заказом?", "ro": "Cum este versionată prognoza și ce se întâmplă când o tranzacție prognozată devine comandă reală?"},
+        {"id": "11-06", "phase": 3, "ru": "Как согласуются цена, скидка, отсрочка, кредитный лимит и другие исключения?", "ro": "Cum se aprobă prețul, reducerea, amânarea plății, limita de credit și celelalte excepții?"},
+        {"id": "11-07", "phase": 2, "ru": "Что менеджер вправе обещать клиенту по остатку и дате? Как исключается карантинная продукция?", "ro": "Ce poate promite managerul clientului privind stocul și data? Cum este exclusă producția în carantină?"},
+        {"id": "11-08", "phase": 3, "ru": "Как согласуются частичные поставки и изменения срока? Какие версии получают клиент и планировщик?", "ro": "Cum se aprobă livrările parțiale și modificarea termenului? Ce versiuni primesc clientul și planificatorul?"},
+        {"id": "11-09", "phase": 3, "ru": "Разберите конфликт приоритетов двух клиентов при ограниченном выпуске.", "ro": "Analizați un conflict de priorități între doi clienți în condiții de producție limitată."},
+        {"id": "11-10", "phase": 3, "ru": "Как жалобы, возвраты и отзывы связываются с клиентом, заказом, серией и качеством?", "ro": "Cum sunt legate reclamațiile, retururile și retragerile de client, comandă, lot și calitate?"},
+        {"id": "11-11", "phase": 2, "ru": "Как утверждаются рекламные и продуктовые материалы и проверяются требования конкретного рынка?", "ro": "Cum sunt aprobate materialele publicitare și de produs și verificate cerințele pieței respective?"},
+        {"id": "11-12", "phase": 4, "ru": "Какие KPI используются для руководителя и менеджеров? Как исключается завышение прогноза?", "ro": "Ce KPI-uri sunt folosite pentru manager și agenți? Cum se previne supraestimarea prognozei?"},
+        {"id": "11-13", "phase": 5, "ru": "Как устроен ваш цикл S&OP и какие решения должны автоматически попадать в производственный план?", "ro": "Cum funcționează ciclul S&OP și ce decizii trebuie să ajungă automat în planul de producție?"},
+        {"id": "11-14", "phase": 5, "ru": "Приложите прогноз, заказ, изменение условий и пример потери сделки. Что должно переноситься без повторного ввода?", "ro": "Atașați prognoza, comanda, modificarea condițiilor și un exemplu de tranzacție pierdută. Ce date trebuie transferate fără reintroducere?"}
+      ]
+    },
+    "13": {
+      "dept": "finance",
+      "title": {"ru": "Финансы / финансовый руководитель", "ro": "Finanțe / director financiar"},
+      "mission": {"ru": "Ликвидность, достоверный учёт, бюджетный контроль и экономическая оценка решений.", "ro": "Lichiditate, contabilitate fiabilă, control bugetar și evaluarea economică a deciziilor."},
+      "practices": ["ILO ISCO 1211", "COSO Internal Control", "APQC Finance"],
+      "profile": {
+        "responsibilities": ["Бюджет и прогноз", "Ликвидность и валюта", "Кредитный контроль", "Закупки и расчёты", "Себестоимость и запасы", "Закрытие и внутренний контроль"],
+        "decisions": ["Бюджет в мандате", "Кредит и предоплата", "Согласование корректировок", "Признание отклонений", "Эскалация превышений"],
+        "documents": ["Сверка DOC27", "Решения DOC28", "Корректировки DOC35", "Курсы и KPI DOC37", "Бюджет DOC39", "PO DOC09 и заказы DOC17"],
+        "kpis": ["Длительность закрытия", "Прогноз ликвидности", "DSO DPO", "Просроченный долг", "Несверенные суммы", "Бюджет и маржа"]
+      },
+      "coverage_ru": ["Границы CFO и учёта", "Источники и сверка", "Бюджет и сценарии", "Ликвидность и валюта", "Кредит клиентов", "Лимиты закупок", "PO приёмка счёт оплата", "Запасы и списания", "Себестоимость", "Закрытие периода", "Разделение полномочий", "Изменения после согласования", "KPI и происхождение", "Доказательства"],
+      "questions": [
+        {"id": "13-01", "phase": 1, "ru": "Какова точная роль: CFO, контролёр, главный бухгалтер или совмещение? Какие области входят?", "ro": "Care este rolul exact: CFO, controller, contabil-șef sau o combinare? Ce domenii include?"},
+        {"id": "13-02", "phase": 2, "ru": "Какие системы являются источником управленческого, складского и финансового учёта? Как они сверяются?", "ro": "Ce sisteme sunt sursa contabilității manageriale, de stoc și financiare? Cum sunt reconciliate?"},
+        {"id": "13-03", "phase": 2, "ru": "Как формируются годовой бюджет, скользящий прогноз и сценарии?", "ro": "Cum sunt formate bugetul anual, prognoza rulantă și scenariile?"},
+        {"id": "13-04", "phase": 2, "ru": "Как управляются ликвидность, валюты, курсы, платёжный календарь и риск кассового разрыва?", "ro": "Cum sunt gestionate lichiditatea, valutele, cursurile, calendarul plăților și riscul deficitului de numerar?"},
+        {"id": "13-05", "phase": 3, "ru": "Как устанавливаются кредитный лимит, предоплата и разрешение отгрузки клиенту?", "ro": "Cum se stabilesc limita de credit, avansul și autorizația de livrare către client?"},
+        {"id": "13-06", "phase": 3, "ru": "Какие лимиты согласования закупок и расходов действуют для вас, руководителей и CEO?", "ro": "Ce limite de aprobare a achizițiilor și cheltuielilor se aplică pentru dumneavoastră, manageri și CEO?"},
+        {"id": "13-07", "phase": 2, "ru": "Как связываются PO, приёмка, качество, счёт и оплата? Какие несоответствия блокируют закрытие?", "ro": "Cum sunt legate PO-ul, recepția, calitatea, factura și plata? Ce neconcordanțe blochează închiderea?"},
+        {"id": "13-08", "phase": 3, "ru": "Как подтверждаются корректировки и списания запасов? Какие доказательства и независимые проверки обязательны?", "ro": "Cum sunt confirmate ajustările și casările de stoc? Ce dovezi și verificări independente sunt obligatorii?"},
+        {"id": "13-09", "phase": 2, "ru": "Как рассчитываются себестоимость, потери, отклонения и маржа по SKU, клиенту и периоду?", "ro": "Cum se calculează costul, pierderile, abaterile și marja pe SKU, client și perioadă?"},
+        {"id": "13-10", "phase": 2, "ru": "Как устроено закрытие периода и исправление закрытых документов?", "ro": "Cum funcționează închiderea perioadei și corectarea documentelor închise?"},
+        {"id": "13-11", "phase": 3, "ru": "Как разделены создание поставщика, заказ, приёмка, счёт, оплата и изменение банковских реквизитов?", "ro": "Cum sunt separate crearea furnizorului, comanda, recepția, factura, plata și modificarea detaliilor bancare?"},
+        {"id": "13-12", "phase": 3, "ru": "Разберите изменение цены или валюты PO после согласования. Почему прежнее разрешение должно стать недействующим?", "ro": "Analizați modificarea prețului sau valutei PO după aprobare. De ce aprobarea anterioară trebuie invalidată?"},
+        {"id": "13-13", "phase": 4, "ru": "Какие финансовые KPI требуют формулы и трассировки до первичного документа?", "ro": "Ce KPI-uri financiare necesită formulă și trasabilitate până la documentul primar?"},
+        {"id": "13-14", "phase": 5, "ru": "Приложите бюджет, матрицу лимитов, сверку и пример кредитного решения. Какие действия ERP должна запрещать?", "ro": "Atașați bugetul, matricea limitelor, reconcilierea și un exemplu de decizie de credit. Ce acțiuni trebuie interzise de ERP?"}
+      ]
+    },
+    "08": {
+      "dept": "procurement",
+      "title": {"ru": "Закупки / руководитель закупок", "ro": "Achiziții / responsabil achiziții"},
+      "mission": {"ru": "Своевременное обеспечение производства допущенными материалами и услугами на приемлемых условиях.", "ro": "Aprovizionarea la timp a producției cu materiale și servicii aprobate, la condiții acceptabile."},
+      "practices": ["ICH Q10 section 2.7", "EU GMP Chapter 5", "ASCM SCOR Source"],
+      "profile": {
+        "responsibilities": ["Заявки и категории", "Допуск поставщиков", "RFQ и PO", "Сроки и запасы", "Претензии", "Оценка и непрерывность поставок"],
+        "decisions": ["Пакет закупки", "Сценарий запроса", "Выбор поставщика", "Проект PO", "Варианты покрытия риска"],
+        "documents": ["Заявка DOC19", "PO DOC09", "ETA DOC18", "Бюджет DOC39", "Приёмка DOC08", "Отклонения DOC34", "Решения DOC28"],
+        "kpis": ["OTIF поставщиков", "Подтверждённость ETA", "Дефицит из-за поставок", "Качество партий", "Претензии", "Единственные источники"]
+      },
+      "coverage_ru": ["Категории и аутсорсинг", "Заявки и версии", "Последняя дата", "Допуск поставщика", "Сравнение предложений", "PO и бюджет", "MOQ и срок годности", "ETA и части", "Задержки", "Претензии и возвраты", "Оценка поставщика", "Единственный источник", "Мастер-данные", "Доказательства"],
+      "questions": [
+        {"id": "08-01", "phase": 1, "ru": "Какие категории сырья, упаковки, услуг и аутсорсинга находятся под вашим управлением?", "ro": "Ce categorii de materii prime, ambalaje, servicii și externalizări se află sub responsabilitatea dumneavoastră?"},
+        {"id": "08-02", "phase": 2, "ru": "Как производственная потребность превращается в закупочную заявку? Как исключаются дубли и устаревшие версии плана?", "ro": "Cum se transformă necesarul de producție în cerere de achiziție? Cum sunt excluse duplicatele și versiunile vechi ale planului?"},
+        {"id": "08-03", "phase": 2, "ru": "Как определяется последняя допустимая дата поставки с учётом входного контроля?", "ro": "Cum se determină ultima dată acceptabilă de livrare, ținând cont de controlul de intrare?"},
+        {"id": "08-04", "phase": 3, "ru": "Как поставщик получает допуск? Какие решения принимают закупки, технолог, качество и CEO?", "ro": "Cum este autorizat furnizorul? Ce decizii aparțin achizițiilor, tehnologului, calității și CEO-ului?"},
+        {"id": "08-05", "phase": 2, "ru": "Как сравниваются предложения: цена, валюта, MOQ, срок, оплата, срок годности, документы и риск?", "ro": "Cum sunt comparate ofertele: preț, valută, MOQ, termen, plată, termen de valabilitate, documente și risc?"},
+        {"id": "08-06", "phase": 3, "ru": "Какие лимиты и бюджетные согласования нужны до отправки PO поставщику?", "ro": "Ce limite și aprobări bugetare sunt necesare înainte de trimiterea PO-ului furnizorului?"},
+        {"id": "08-07", "phase": 2, "ru": "Как обрабатываются MOQ, частичные поставки и избыточный запас?", "ro": "Cum sunt tratate MOQ-ul, livrările parțiale și stocul excedentar?"},
+        {"id": "08-08", "phase": 2, "ru": "Как подтверждается ETA и чем оно отличается от фактического отправления и доступности материала?", "ro": "Cum se confirmă ETA și prin ce diferă de expedierea efectivă și disponibilitatea materialului?"},
+        {"id": "08-09", "phase": 3, "ru": "Разберите критическую задержку: ускорение, разделение поставки, альтернативный поставщик и производственное решение.", "ro": "Analizați o întârziere critică: accelerare, livrare parțială, furnizor alternativ și decizia producției."},
+        {"id": "08-10", "phase": 3, "ru": "Как регистрируются недопоставка, повреждение, несоответствие качества, возврат и претензия?", "ro": "Cum sunt înregistrate livrarea incompletă, deteriorarea, neconformitatea, returul și reclamația?"},
+        {"id": "08-11", "phase": 4, "ru": "Как оцениваются поставщики по срокам, качеству, документам и реакции на проблемы?", "ro": "Cum sunt evaluați furnizorii după termene, calitate, documente și reacția la probleme?"},
+        {"id": "08-12", "phase": 4, "ru": "Как управляются единственный источник, альтернативы и риск прекращения поставки?", "ro": "Cum sunt gestionate sursa unică, alternativele și riscul întreruperii aprovizionării?"},
+        {"id": "08-13", "phase": 4, "ru": "Какие данные поставщика и материала должны быть едиными для закупок, склада, качества и финансов?", "ro": "Ce date ale furnizorului și materialului trebuie să fie comune pentru achiziții, depozit, calitate și finanțe?"},
+        {"id": "08-14", "phase": 5, "ru": "Приложите PO, оценку поставщика и реальный пример изменения ETA. Какие события должны автоматически менять производственный риск?", "ro": "Atașați PO-ul, evaluarea furnizorului și un exemplu real de modificare ETA. Ce evenimente trebuie să modifice automat riscul de producție?"}
+      ]
+    },
+    "06": {
+      "dept": "wh_raw",
+      "title": {"ru": "Склад сырья и материалов", "ro": "Depozit materii prime și materiale"},
+      "mission": {"ru": "Идентичность, сохранность и прослеживаемость сырья с разделением физического и качественного статусов.", "ro": "Identitatea, integritatea și trasabilitatea materiilor prime, cu separarea statusului fizic de cel calitativ."},
+      "practices": ["EU GMP Chapter 5", "EU GDP", "ASCM SCOR Fulfill and Return"],
+      "profile": {
+        "responsibilities": ["Ожидание и приёмка", "Карантин и хранение", "Партии и локации", "Выдача и возвраты", "Инвентаризация", "Передача смены"],
+        "decisions": ["Окно разгрузки", "Факт количества", "Адрес хранения", "Факт передачи", "Проект корректировки"],
+        "documents": ["Приёмка DOC08", "Допуск DOC21", "Выдача DOC22", "Перемещения DOC40", "Корректировки DOC35", "Передача DOC33"],
+        "kpis": ["Точность остатков", "Время приёмки", "Ошибки выдачи", "Карантины", "Истекающие запасы", "Незакрытые передачи"]
+      },
+      "coverage_ru": ["Зоны и материалы", "Окна приёмки", "Документы и количество", "Карантин и допуск", "Партии и локации", "Условия хранения", "FEFO", "Выдача и приём", "Возвраты", "Инвентаризация", "Корректировки", "Смена и офлайн", "KPI", "Сканирование и доказательства"],
+      "questions": [
+        {"id": "06-01", "phase": 1, "ru": "Какие зоны, материалы, условия хранения и сотрудники находятся под вашим управлением?", "ro": "Ce zone, materiale, condiții de depozitare și angajați se află sub responsabilitatea dumneavoastră?"},
+        {"id": "06-02", "phase": 2, "ru": "Как планируются приёмка, разгрузка, документы и зона временного хранения?", "ro": "Cum sunt planificate recepția, descărcarea, documentele și zona de depozitare temporară?"},
+        {"id": "06-03", "phase": 2, "ru": "Как фиксируются поставщик, PO, серия, количество, повреждение и фактическая приёмка?", "ro": "Cum sunt înregistrate furnizorul, PO-ul, seria, cantitatea, deteriorarea și recepția efectivă?"},
+        {"id": "06-04", "phase": 3, "ru": "Как разделяются физическое наличие, карантин, допуск, запрет и возврат в системе и на территории?", "ro": "Cum sunt separate disponibilitatea fizică, carantina, eliberarea, respingerea și returul în sistem și în depozit?"},
+        {"id": "06-05", "phase": 2, "ru": "Как маркируются серии, упаковки, паллеты и локации? Какие сканирования обязательны?", "ro": "Cum sunt marcate seriile, ambalajele, paleții și locațiile? Ce scanări sunt obligatorii?"},
+        {"id": "06-06", "phase": 2, "ru": "Как контролируются температура, влажность, калибровка и реакция на отклонение условий?", "ro": "Cum sunt controlate temperatura, umiditatea, calibrarea și reacția la abaterile condițiilor?"},
+        {"id": "06-07", "phase": 2, "ru": "Как применяются FEFO, срок годности, повторное испытание и остаточный срок использования?", "ro": "Cum se aplică FEFO, termenul de valabilitate, retestarea și termenul rămas de utilizare?"},
+        {"id": "06-08", "phase": 2, "ru": "Как выполняются выдача участку, приём получателем, возврат остатков и восстановление истории хранения?", "ro": "Cum se efectuează eliberarea către secție, primirea destinatarului, returul resturilor și reconstrucția istoricului depozitării?"},
+        {"id": "06-09", "phase": 3, "ru": "Как оформляются возврат поставщику, изоляция и передача перевозчику согласованного объёма?", "ro": "Cum se organizează returul la furnizor, izolarea și transferul cantității aprobate către transportator?"},
+        {"id": "06-10", "phase": 2, "ru": "Как проводятся инвентаризация, независимый пересчёт и согласование корректировки?", "ro": "Cum se efectuează inventarul, renumărarea independentă și aprobarea ajustării?"},
+        {"id": "06-11", "phase": 3, "ru": "Какие расхождения можете исправить сами, а какие требуют финансов, качества или CEO?", "ro": "Ce discrepanțe puteți corecta personal și care necesită finanțe, calitate sau CEO?"},
+        {"id": "06-12", "phase": 2, "ru": "Как передаются следующей смене открытые приёмки, комплекты, карантины и ожидаемые машины?", "ro": "Cum sunt transmise următorului schimb recepțiile deschise, seturile, carantinele și mașinile așteptate?"},
+        {"id": "06-13", "phase": 4, "ru": "Как работает склад при недоступности ERP и как восстанавливаются записи без задних дат и дублей?", "ro": "Cum funcționează depozitul fără ERP și cum sunt refăcute înregistrările fără date retroactive și duplicate?"},
+        {"id": "06-14", "phase": 5, "ru": "Приложите схему зон, журнал хранения, инвентаризацию и пример прослеживания серии. Какие KPI и экраны нужны?", "ro": "Atașați schema zonelor, jurnalul depozitării, inventarul și un exemplu de trasabilitate a seriei. Ce KPI-uri și ecrane sunt necesare?"}
+      ]
+    },
+    "07": {
+      "dept": "wh_fg",
+      "title": {"ru": "Склад готовой продукции", "ro": "Depozit produse finite"},
+      "mission": {"ru": "Сохранность и прослеживаемость готовой продукции от карантина до отгрузки и возврата.", "ro": "Integritatea și trasabilitatea produselor finite, de la carantină până la livrare și retur."},
+      "practices": ["EU GDP", "EU GMP Chapter 5", "ASCM SCOR Order Fulfill and Return"],
+      "profile": {
+        "responsibilities": ["Приём серий", "Карантин и доступность", "FEFO и резервы", "Комплектация и отгрузка", "Возвраты и списания", "Инвентаризация"],
+        "decisions": ["Факт количества", "Адрес и маркировка", "Готовность к погрузке", "Факт выезда", "Проект списания"],
+        "documents": ["Факт DOC23", "Допуск DOC24", "Приёмка DOC25", "Отгрузка DOC26", "Возвраты DOC36", "Корректировки DOC35"],
+        "kpis": ["Точность остатков", "OTIF отгрузки", "Ошибки комплектации", "Повреждения", "Истекающие запасы", "Температурные отклонения"]
+      },
+      "coverage_ru": ["Зоны и серии", "Приёмка выпуска", "Карантин и допуск", "Локации и маркировка", "FEFO и клиентский срок", "Резерв заказа", "Комплектация", "Финансовые и качественные допуски", "Погрузка и документы", "Возвраты", "Инвентаризация", "Транспортные условия", "Офлайн и KPI", "Прослеживаемость"],
+      "questions": [
+        {"id": "07-01", "phase": 1, "ru": "Какие зоны, продукты, условия хранения и сотрудники находятся под вашим управлением?", "ro": "Ce zone, produse, condiții de depozitare și angajați se află sub responsabilitatea dumneavoastră?"},
+        {"id": "07-02", "phase": 2, "ru": "Как принимаете серию от участка: количество, упаковки, маркировка, срок годности и расхождения?", "ro": "Cum primiți lotul de la secție: cantitate, ambalaje, marcaj, termen de valabilitate și discrepanțe?"},
+        {"id": "07-03", "phase": 3, "ru": "Как разделяются физический приём, карантин, решение качества и доступный для продажи остаток?", "ro": "Cum sunt separate recepția fizică, carantina, decizia calității și stocul disponibil pentru vânzare?"},
+        {"id": "07-04", "phase": 2, "ru": "Как адресуются и маркируются паллеты, серии и локации при изменении статуса?", "ro": "Cum sunt adresate și marcate paleții, seriile și locațiile la schimbarea statusului?"},
+        {"id": "07-05", "phase": 2, "ru": "Как применяются FEFO и минимальный остаточный срок годности клиента при подборе?", "ro": "Cum se aplică FEFO și termenul minim rămas de valabilitate cerut de client la colectare?"},
+        {"id": "07-06", "phase": 2, "ru": "Как проверяется резерв заказа без перемещения карантина или чужого резерва?", "ro": "Cum se verifică rezerva comenzii fără mutarea produsului din carantină sau a rezervei altei comenzi?"},
+        {"id": "07-07", "phase": 2, "ru": "Как комплектуется заказ и подтверждаются серии, количество, зона экспедиции и частичная отгрузка?", "ro": "Cum este colectată comanda și confirmate seriile, cantitatea, zona de expediție și livrarea parțială?"},
+        {"id": "07-08", "phase": 3, "ru": "Какие качественные и финансовые допуски проверяются перед погрузкой? Кто их снимает?", "ro": "Ce autorizări calitative și financiare sunt verificate înainte de încărcare? Cine le ridică?"},
+        {"id": "07-09", "phase": 2, "ru": "Как подтверждаются погрузка, выезд, перевозчик, документы и фактическая передача груза?", "ro": "Cum sunt confirmate încărcarea, ieșirea, transportatorul, documentele și transferul efectiv al mărfii?"},
+        {"id": "07-10", "phase": 3, "ru": "Как принимается возврат клиента в изоляцию и определяется дальнейший маршрут продукции?", "ro": "Cum este primit returul clientului în izolare și cum se stabilește traseul ulterior al produsului?"},
+        {"id": "07-11", "phase": 2, "ru": "Как проводятся инвентаризация, повторный счёт и согласованные исправления?", "ro": "Cum se efectuează inventarul, renumărarea și corecțiile aprobate?"},
+        {"id": "07-12", "phase": 3, "ru": "Как регистрируются температурные отклонения и повреждения при хранении и транспорте?", "ro": "Cum sunt înregistrate abaterile de temperatură și deteriorările în depozitare și transport?"},
+        {"id": "07-13", "phase": 4, "ru": "Какие KPI показывают точность, скорость и качество склада без стимулирования скрытия расхождений?", "ro": "Ce KPI-uri arată acuratețea, viteza și calitatea depozitului fără a încuraja ascunderea discrepanțelor?"},
+        {"id": "07-14", "phase": 5, "ru": "Приложите приёмку, отгрузку, возврат и трассировку серии до клиента. Какие сканирования и связи обязательны?", "ro": "Atașați recepția, livrarea, returul și trasabilitatea seriei până la client. Ce scanări și legături sunt obligatorii?"}
+      ]
+    },
+    "02": {
+      "dept": "planning",
+      "title": {"ru": "Планировщик производства", "ro": "Planificator de producție"},
+      "mission": {"ru": "Единый исполнимый план спроса, мощности и материалов с управляемыми сценариями ограничений.", "ro": "Un plan unic și realizabil pentru cerere, capacitate și materiale, cu scenarii controlate ale restricțiilor."},
+      "practices": ["ASCM SCOR Plan", "APQC S&OP", "EU GMP Chapter 5"],
+      "profile": {
+        "responsibilities": ["Версии спроса", "Чистая потребность", "BOM и мощность", "Материалы и ETA", "Сценарии ограничений", "Передача и пересчёт плана"],
+        "decisions": ["Включение спроса", "Округление партии", "Окно производства", "Рекомендация сценария", "Передача директору"],
+        "documents": ["Потребность DOC02/16", "План DOC03", "Сценарии DOC04", "PO и ETA DOC18/19", "Готовность DOC20", "Прогноз DOC32"],
+        "kpis": ["Точность прогноза", "Schedule attainment", "Покрытие потребности", "Дефицит и окна", "Версии и пересчёты", "Своевременность данных"]
+      },
+      "coverage_ru": ["Спрос и версии", "Свежесть данных", "Чистая потребность", "BOM и маршрут", "Размер партии", "Мощность и окна", "Материалы и карантин", "ETA и контроль", "Сценарии ограничений", "Передача директору", "Исполнение и изменения", "Фактический выпуск", "KPI", "Доказательства"],
+      "questions": [
+        {"id": "02-01", "phase": 1, "ru": "За какие продукты, линии, горизонты и типы спроса вы отвечаете?", "ro": "Pentru ce produse, linii, orizonturi și tipuri de cerere răspundeți?"},
+        {"id": "02-02", "phase": 2, "ru": "Как отличаете подтверждённый заказ, прогноз и оценку? Какие версии и дубли исключаются?", "ro": "Cum diferențiați comanda confirmată, prognoza și estimarea? Ce versiuni și duplicate sunt excluse?"},
+        {"id": "02-03", "phase": 2, "ru": "Как проверяете свежесть остатков, источников и сопоставления SKU до расчёта?", "ro": "Cum verificați actualitatea stocurilor, surselor și mapării SKU-urilor înainte de calcul?"},
+        {"id": "02-04", "phase": 2, "ru": "Как рассчитывается чистая потребность с учётом остатка, резервов, выпуска и целевого запаса?", "ro": "Cum se calculează necesarul net ținând cont de stoc, rezerve, producție și stocul țintă?"},
+        {"id": "02-05", "phase": 2, "ru": "Как проверяются действующие BOM, маршрут, размер партии, кратность и время операций?", "ro": "Cum sunt verificate BOM-ul actual, traseul, dimensiunea lotului, multiplicitatea și durata operațiilor?"},
+        {"id": "02-06", "phase": 2, "ru": "Как размещаете партии по датам с учётом линий, смен, переналадок и конфликтов?", "ro": "Cum programați loturile în timp ținând cont de linii, schimburi, schimbări de serie și conflicte?"},
+        {"id": "02-07", "phase": 2, "ru": "Как учитываются разрешённый остаток, карантин, резервы, сроки годности и ожидаемые поступления?", "ro": "Cum sunt considerate stocul eliberat, carantina, rezervele, termenele de valabilitate și aprovizionările așteptate?"},
+        {"id": "02-08", "phase": 3, "ru": "Какие сценарии готовите при дефиците материала или мощности и как показываете последствия для связанных SKU?", "ro": "Ce scenarii pregătiți la deficit de material sau capacitate și cum arătați efectul asupra SKU-urilor legate?"},
+        {"id": "02-09", "phase": 3, "ru": "Какой пакет передаёте директору для утверждения и какие решения остаются за вами?", "ro": "Ce pachet transmiteți directorului pentru aprobare și ce decizii rămân la dumneavoastră?"},
+        {"id": "02-10", "phase": 3, "ru": "Что делаете при изменении BOM, остатка или спроса после передачи плана на согласование?", "ro": "Ce faceți când BOM-ul, stocul sau cererea se modifică după transmiterea planului la aprobare?"},
+        {"id": "02-11", "phase": 3, "ru": "Как исправляете возвращённый проект и повторяете проверку без переноса старого согласования?", "ro": "Cum corectați proiectul returnat și repetați verificarea fără a păstra aprobarea veche?"},
+        {"id": "02-12", "phase": 2, "ru": "Как передаёте утверждённую версию участку и закупкам и проверяете её принятие?", "ro": "Cum transmiteți versiunea aprobată secției și achizițiilor și verificați acceptarea acesteia?"},
+        {"id": "02-13", "phase": 4, "ru": "Как пересчитываете остаточную потребность после фактического выпуска, карантина или недовыпуска?", "ro": "Cum recalculați necesarul rămas după producția efectivă, carantină sau subrealizare?"},
+        {"id": "02-14", "phase": 5, "ru": "Приложите расчёт потребности, проект плана и изменение сценария. Какие данные и блокировки должны быть в ERP?", "ro": "Atașați calculul necesarului, proiectul planului și modificarea scenariului. Ce date și blocări trebuie să existe în ERP?"}
+      ]
+    },
+    "05": {
+      "dept": "tech",
+      "title": {"ru": "Технолог / владелец НСИ", "ro": "Tehnolog / responsabil date master"},
+      "mission": {"ru": "Достоверные SKU, составы, маршруты и параметры с управляемыми версиями и влиянием на производство.", "ro": "SKU-uri, compoziții, trasee și parametri corecți, cu versiuni controlate și impact gestionat asupra producției."},
+      "practices": ["ICH Q8 Q10 and Q12", "EU GMP Chapters 4 and 5", "ISO 8000"],
+      "profile": {
+        "responsibilities": ["Заявки и дубли SKU", "Карточки и единицы", "BOM и маршруты", "Параметры и контрольные точки", "Версии и влияние изменений", "Технические расследования"],
+        "decisions": ["Тип заявки", "Новый канонический ID", "Черновик версии", "Публикация в мандате", "Отзыв ошибочной версии"],
+        "documents": ["Заявки DOC41", "SKU DOC14", "BOM и маршруты DOC15", "Готовность DOC20", "Отклонения DOC34", "Инструкции DOC06"],
+        "kpis": ["Полнота НСИ с первого раза", "Время публикации", "Дубли SKU", "Ошибки расчётов", "Возвраты версий", "Повторные технические причины"]
+      },
+      "coverage_ru": ["Заявки и назначение", "Дубли и канонический ID", "Атрибуты SKU", "Единицы и коэффициенты", "BOM и альтернативы", "Маршрут и оборудование", "CQA CPP и контроль", "Инструкции и версии", "Расчётный пример", "Влияние на активные планы", "Согласования и публикация", "Технические отклонения", "Отзыв версии", "Доказательства"],
+      "questions": [
+        {"id": "05-01", "phase": 1, "ru": "За какие продукты, справочники, технологические версии и участки вы отвечаете?", "ro": "Pentru ce produse, nomenclatoare, versiuni tehnologice și secții răspundeți?"},
+        {"id": "05-02", "phase": 2, "ru": "Как отличаете новый SKU, изменение карточки и новую технологическую версию?", "ro": "Cum diferențiați un SKU nou, modificarea fișei și o nouă versiune tehnologică?"},
+        {"id": "05-03", "phase": 2, "ru": "Как исключаете дубли по коду, штрихкоду, характеристикам и внешним идентификаторам?", "ro": "Cum eliminați duplicatele după cod, cod de bare, caracteristici și identificatori externi?"},
+        {"id": "05-04", "phase": 2, "ru": "Какие обязательные атрибуты карточки и основания их значений нужны до публикации?", "ro": "Ce atribute obligatorii ale fișei și ce justificări ale valorilor sunt necesare înainte de publicare?"},
+        {"id": "05-05", "phase": 2, "ru": "Как проверяются единицы закупки, хранения, дозирования и выпуска, коэффициенты и округления?", "ro": "Cum sunt verificate unitățile de achiziție, depozitare, dozare și producție, coeficienții și rotunjirile?"},
+        {"id": "05-06", "phase": 2, "ru": "Как собираются BOM, потери и допустимые альтернативы? Кто оценивает пригодность замены?", "ro": "Cum sunt formate BOM-ul, pierderile și alternativele permise? Cine evaluează conformitatea înlocuirii?"},
+        {"id": "05-07", "phase": 2, "ru": "Как описываются операции, оборудование, переналадки, размеры партии и нормативное время?", "ro": "Cum sunt descrise operațiile, echipamentul, schimbările de serie, dimensiunile lotului și timpul standard?"},
+        {"id": "05-08", "phase": 2, "ru": "Как определяются CQA/CPP, диапазоны, частота замера и действие при критическом отклонении?", "ro": "Cum sunt definite CQA/CPP, intervalele, frecvența măsurării și acțiunea la abatere critică?"},
+        {"id": "05-09", "phase": 2, "ru": "Как проверяете версию на минимальной, обычной и максимальной расчётной партии?", "ro": "Cum verificați versiunea pentru lotul minim, obișnuit și maxim de calcul?"},
+        {"id": "05-10", "phase": 3, "ru": "Как определяете границу применения изменения к новым, не начатым и уже начатым партиям?", "ro": "Cum stabiliți aplicarea modificării la loturi noi, neîncepute și deja începute?"},
+        {"id": "05-11", "phase": 3, "ru": "Какие согласования участка, качества, директора и регуляторики нужны до публикации?", "ro": "Ce aprobări de la secție, calitate, director și reglementare sunt necesare înainte de publicare?"},
+        {"id": "05-12", "phase": 3, "ru": "Разберите техническую проблему: версия серии, доказательства причины, заключение и решение качества.", "ro": "Analizați o problemă tehnică: versiunea lotului, dovezile cauzei, concluzia și decizia calității."},
+        {"id": "05-13", "phase": 3, "ru": "Как отзываете ошибочную версию и проверяете незапущенные задания и уже изготовленные серии?", "ro": "Cum retrageți o versiune greșită și verificați sarcinile neîncepute și loturile deja fabricate?"},
+        {"id": "05-14", "phase": 5, "ru": "Приложите карточку SKU, BOM, изменение версии и расчётный пример. Какие правила ERP должны запрещать ошибки?", "ro": "Atașați fișa SKU, BOM-ul, modificarea versiunii și exemplul de calcul. Ce reguli ERP trebuie să prevină erorile?"}
+      ]
+    },
+    "04": {
+      "dept": "operator",
+      "title": {"ru": "Оператор производства", "ro": "Operator de producție"},
+      "mission": {"ru": "Точное выполнение операции по действующей инструкции с своевременными записями и остановкой при отклонении.", "ro": "Executarea exactă a operației conform instrucțiunii curente, cu înregistrări la timp și oprire la abatere."},
+      "practices": ["EU GMP Chapters 2, 4 and 5", "FDA 21 CFR 211.25 and 211.28", "MHRA ALCOA+"],
+      "profile": {
+        "responsibilities": ["Принятие задания", "Инструкция и рабочее место", "Проверка материалов", "Операция и параметры", "Фактические записи и исправления", "Остановка и передача"],
+        "decisions": ["Принятие своего задания", "Подтверждение проверки", "Старт при готовности", "Остановка при риске", "Подтверждение своего факта"],
+        "documents": ["Задание DOC05", "Операция DOC06", "Простой DOC07", "Выдача DOC22", "Отклонение DOC34", "Факт DOC23", "Смена DOC33"],
+        "kpis": ["Выполнение операции", "Полнота замеров", "Своевременность записей", "Выход и брак", "Простои", "Ошибки и исправления"]
+      },
+      "coverage_ru": ["Своё задание", "Инструкция и версия", "Обучение и допуск", "Материалы и маркировка", "Line clearance", "Старт", "Параметры и замеры", "Выпуск и расход", "Исправления", "Остановка", "Отклонения", "Завершение и баланс", "Передача смены", "Мобильные доказательства"],
+      "questions": [
+        {"id": "04-01", "phase": 1, "ru": "Какие операции, линии и продукты вы выполняете и к каким из них имеете допуск?", "ro": "Ce operații, linii și produse executați și pentru care aveți autorizație?"},
+        {"id": "04-02", "phase": 2, "ru": "Как принимаете именно своё задание и проверяете SKU, партию, линию и последовательность?", "ro": "Cum preluați sarcina proprie și verificați SKU-ul, lotul, linia și succesiunea?"},
+        {"id": "04-03", "phase": 2, "ru": "Как получаете действующую инструкцию и подтверждаете понимание изменённых пунктов?", "ro": "Cum obțineți instrucțiunea curentă și confirmați înțelegerea punctelor modificate?"},
+        {"id": "04-04", "phase": 2, "ru": "Как проверяете материалы, серии, количество и маркировку перед операцией?", "ro": "Cum verificați materialele, seriile, cantitatea și marcarea înainte de operație?"},
+        {"id": "04-05", "phase": 2, "ru": "Как подтверждаете очистку, line clearance, готовность оборудования и средств защиты?", "ro": "Cum confirmați curățarea, eliberarea liniei, pregătirea echipamentului și a echipamentului de protecție?"},
+        {"id": "04-06", "phase": 2, "ru": "Что должно быть выполнено до нажатия старта и что делаете при изменении задания после открытия экрана?", "ro": "Ce trebuie finalizat înainte de pornire și ce faceți dacă sarcina se modifică după deschiderea ecranului?"},
+        {"id": "04-07", "phase": 2, "ru": "Какие параметры, замеры, количество и расход вы вводите и в какой момент фактически?", "ro": "Ce parametri, măsurători, cantități și consum introduceți și când efectiv?"},
+        {"id": "04-08", "phase": 3, "ru": "Как исправляете ошибочную запись с причиной и что делаете после закрытия периода или приёмки склада?", "ro": "Cum corectați o înregistrare greșită cu motiv și ce faceți după închiderea perioadei sau recepția depozitului?"},
+        {"id": "04-09", "phase": 3, "ru": "Разберите остановку: безопасное состояние, причина, время события и передача начальнику.", "ro": "Analizați o oprire: stare sigură, motiv, momentul evenimentului și transmiterea șefului."},
+        {"id": "04-10", "phase": 3, "ru": "Что делаете при значении вне диапазона, дефекте или подозрении на смешение серий?", "ro": "Ce faceți la o valoare în afara intervalului, defect sau suspiciune de amestecare a seriilor?"},
+        {"id": "04-11", "phase": 3, "ru": "Какие условия проверяете перед возобновлением после устранения причины?", "ro": "Ce condiții verificați înainte de reluare după eliminarea cauzei?"},
+        {"id": "04-12", "phase": 2, "ru": "Как завершаете операцию и сверяете выпуск, брак, остатки и незакрытые замеры?", "ro": "Cum finalizați operația și verificați producția, rebutul, resturile și măsurătorile neînchise?"},
+        {"id": "04-13", "phase": 2, "ru": "Как передаёте незавершённую операцию и физическое состояние линии следующей смене?", "ro": "Cum transmiteți operația nefinalizată și starea fizică a liniei următorului schimb?"},
+        {"id": "04-14", "phase": 5, "ru": "Приложите задание или журнал без конфиденциальных данных. Какие действия и доказательства должны фиксироваться на терминале?", "ro": "Atașați o sarcină sau un jurnal fără date confidențiale. Ce acțiuni și dovezi trebuie înregistrate pe terminal?"}
+      ]
+    },
+    "09": {
+      "dept": "sales",
+      "title": {"ru": "Менеджер продаж", "ro": "Manager de vânzări"},
+      "mission": {"ru": "Точные заказы и исполнимые обязательства клиентам от согласования до доставки и закрытия.", "ro": "Comenzi corecte și angajamente realizabile față de clienți, de la aprobare la livrare și închidere."},
+      "practices": ["ILO ISCO commercial sales", "EU GDP", "ASCM SCOR Order and Fulfill"],
+      "profile": {
+        "responsibilities": ["Принятие сделки", "SKU и заказ", "Спрос и доступность", "Цена и сроки", "Отгрузка и доставка", "Закрытие и возвраты"],
+        "decisions": ["Создание заказа", "Выбор SKU", "Предложение даты", "Передача потребности", "Подтверждение клиентского исхода"],
+        "documents": ["Сделка DOC31", "Заказ DOC17", "Потребность DOC16", "Прогноз DOC32", "Отгрузка DOC26", "Возврат DOC36"],
+        "kpis": ["Исполнение заказов", "OTIF", "Ошибки заказов", "Изменения после подтверждения", "Доставка клиенту", "Возвраты"]
+      },
+      "coverage_ru": ["Клиенты и сделки", "SKU и кратность", "Прогноз и заказ", "Доступность и качество", "Обещанная дата", "Цена и кредит", "Клиентское согласие", "Подтверждение заказа", "Передача спроса", "Изменения объёма и срока", "Критический спрос", "Доставка", "Закрытие и возвраты", "Доказательства"],
+      "questions": [
+        {"id": "09-01", "phase": 1, "ru": "За каких клиентов, рынки, продукты и типы заказов вы отвечаете?", "ro": "Pentru ce clienți, piețe, produse și tipuri de comenzi răspundeți?"},
+        {"id": "09-02", "phase": 2, "ru": "Как принимаете квалифицированную сделку и избегаете повторного заказа и повторного ввода клиента?", "ro": "Cum preluați tranzacția calificată și evitați comanda duplicată și reintroducerea datelor clientului?"},
+        {"id": "09-03", "phase": 2, "ru": "Как сопоставляете клиентское название с точным SKU, фасовкой, единицей и кратностью?", "ro": "Cum asociați denumirea clientului cu SKU-ul exact, ambalajul, unitatea și multiplicitatea?"},
+        {"id": "09-04", "phase": 2, "ru": "Как связываете заказ с прогнозом и исключаете двойной спрос?", "ro": "Cum legați comanda de prognoză și evitați dublarea cererii?"},
+        {"id": "09-05", "phase": 2, "ru": "Как разделяете готовый разрешённый товар, будущий выпуск и недоступный или карантинный остаток?", "ro": "Cum separați produsul finit eliberat, producția viitoare și stocul indisponibil sau în carantină?"},
+        {"id": "09-06", "phase": 2, "ru": "Как формируете реалистичную дату или график частей с учётом производства, комплектации и доставки?", "ro": "Cum formați o dată realistă sau un grafic parțial ținând cont de producție, colectare și livrare?"},
+        {"id": "09-07", "phase": 3, "ru": "Как согласуются цена, скидка, отсрочка и кредитный лимит до обещания клиенту?", "ro": "Cum sunt aprobate prețul, reducerea, amânarea și limita de credit înainte de promisiunea către client?"},
+        {"id": "09-08", "phase": 3, "ru": "Как фиксируете явное согласие клиента на точную версию состава, цены, даты и частей?", "ro": "Cum înregistrați acordul explicit al clientului pentru versiunea exactă a conținutului, prețului, datei și părților?"},
+        {"id": "09-09", "phase": 3, "ru": "Что проверяете перед подтверждением заказа и передачей непокрытой потребности планировщику?", "ro": "Ce verificați înainte de confirmarea comenzii și transmiterea necesarului neacoperit planificatorului?"},
+        {"id": "09-10", "phase": 3, "ru": "Разберите изменение объёма или срока после запуска: клиент, резерв, производство и новая версия.", "ro": "Analizați modificarea volumului sau termenului după pornire: client, rezervă, producție și noua versiune."},
+        {"id": "09-11", "phase": 3, "ru": "Как обосновываете критический спрос и кто решает приоритет без снятия ограничений качества?", "ro": "Cum justificați cererea critică și cine stabilește prioritatea fără eliminarea restricțiilor calității?"},
+        {"id": "09-12", "phase": 2, "ru": "Как отслеживаете отгрузку, доставку и расхождение между выездом склада и приёмкой клиентом?", "ro": "Cum urmăriți expedierea, livrarea și diferența dintre ieșirea din depozit și recepția clientului?"},
+        {"id": "09-13", "phase": 3, "ru": "Как закрываете заказ или возврат после проверки остатка, претензии, качества и финансового статуса?", "ro": "Cum închideți comanda sau returul după verificarea restului, reclamației, calității și statusului financiar?"},
+        {"id": "09-14", "phase": 5, "ru": "Приложите заказ, изменение срока и подтверждение доставки без конфиденциальных данных. Какие связи нужны в ERP?", "ro": "Atașați comanda, modificarea termenului și confirmarea livrării fără date confidențiale. Ce legături sunt necesare în ERP?"}
+      ]
+    },
+    "10": {
+      "dept": "crm",
+      "title": {"ru": "CRM менеджер", "ro": "Manager CRM"},
+      "mission": {"ru": "Полная история клиентских обязательств, доказанный следующий шаг и передача квалифицированного спроса.", "ro": "Istoric complet al angajamentelor clienților, pas următor dovedit și transmiterea cererii calificate."},
+      "practices": ["ILO ISCO sales professionals", "APQC Customer Service", "EU GDP complaints"],
+      "profile": {
+        "responsibilities": ["Очередь контактов", "Контекст клиента", "Результат коммуникации", "Квалификация сделки", "Следующее действие", "Передача, удержание и проигрыши"],
+        "decisions": ["Принятие задачи", "Содержательный результат", "Стадия по событию", "План выхода из зависания", "Причина проигрыша"],
+        "documents": ["Контакты DOC11", "Сделки DOC31", "Заказы DOC17", "Отгрузки DOC26", "Возвраты DOC36", "Прогноз DOC32"],
+        "kpis": ["Просроченные контакты", "Сделки без следующего шага", "Конверсия", "Полнота CRM", "Принятие передач", "Причины проигрышей"]
+      },
+      "coverage_ru": ["Клиенты и очередь", "Просроченные обещания", "Контекст и дубли", "Результат контакта", "Следующий шаг", "Квалификация", "Стадии и вероятность", "Молчание после КП", "Зависшие сделки", "Передача в продажи", "Повторный заказ", "Проигрыши", "KPI и качество данных", "Доказательства"],
+      "questions": [
+        {"id": "10-01", "phase": 1, "ru": "За каких клиентов, сделки, каналы и типы контактов вы отвечаете?", "ro": "Pentru ce clienți, tranzacții, canale și tipuri de contacte răspundeți?"},
+        {"id": "10-02", "phase": 2, "ru": "Как выбираете контакты дня по обещанному результату, сроку и отсутствию следующего действия?", "ro": "Cum selectați contactele zilei după rezultatul promis, termen și lipsa acțiunii următoare?"},
+        {"id": "10-03", "phase": 3, "ru": "Что делаете с просроченным обещанием клиенту: факт выполнения, новая дата, уведомление и владелец?", "ro": "Ce faceți cu o promisiune întârziată către client: realizare, nouă dată, notificare și responsabil?"},
+        {"id": "10-04", "phase": 2, "ru": "Какой контекст проверяете перед контактом: история, сделки, заказы, претензии и действующие лица?", "ro": "Ce context verificați înainte de contact: istoric, tranzacții, comenzi, reclamații și persoane actuale?"},
+        {"id": "10-05", "phase": 2, "ru": "Как фиксируете содержательный результат звонка, письма или встречи, а не просто факт контакта?", "ro": "Cum înregistrați rezultatul substanțial al apelului, e-mailului sau întâlnirii, nu doar contactul?"},
+        {"id": "10-06", "phase": 2, "ru": "Как назначаете конкретное следующее действие, владельца, срок и ожидаемый результат?", "ro": "Cum stabiliți acțiunea concretă următoare, responsabilul, termenul și rezultatul așteptat?"},
+        {"id": "10-07", "phase": 2, "ru": "Какие доказательства квалифицируют реальную потребность: SKU, объём, бюджет, срок и участники решения?", "ro": "Ce dovezi califică necesarul real: SKU, volum, buget, termen și participanții la decizie?"},
+        {"id": "10-08", "phase": 3, "ru": "По каким событиям меняется стадия и вероятность? Что запрещает улучшение без подтверждения?", "ro": "Ce evenimente schimbă etapa și probabilitatea? Ce împiedică îmbunătățirea lor fără confirmare?"},
+        {"id": "10-09", "phase": 3, "ru": "Как выясняете причину молчания после КП и выбираете оживление, паузу или закрытие сделки?", "ro": "Cum identificați motivul tăcerii după ofertă și alegeți reactivarea, pauza sau închiderea tranzacției?"},
+        {"id": "10-10", "phase": 3, "ru": "Какой пакет передаёте менеджеру продаж и какие вопросы нельзя скрывать при передаче?", "ro": "Ce pachet transmiteți managerului de vânzări și ce întrebări nu pot fi ascunse la transfer?"},
+        {"id": "10-11", "phase": 2, "ru": "Как начинаете повторный заказ из истории, заново проверяя объём, цену, срок и претензии?", "ro": "Cum inițiați comanda repetată din istoric, reverificând volumul, prețul, termenul și reclamațiile?"},
+        {"id": "10-12", "phase": 3, "ru": "Как фиксируете доказанную причину проигрыша и исключаете её из следующего прогноза?", "ro": "Cum înregistrați motivul dovedit al pierderii și îl excludeți din prognoza următoare?"},
+        {"id": "10-13", "phase": 4, "ru": "Какие KPI показывают качество обязательств и CRM, а не только количество звонков?", "ro": "Ce KPI-uri arată calitatea angajamentelor și a CRM-ului, nu doar numărul apelurilor?"},
+        {"id": "10-14", "phase": 5, "ru": "Приложите обезличенную карточку сделки, контакт и передачу. Какие поля должны быть обязательными в ERP?", "ro": "Atașați o fișă anonimizată de tranzacție, contact și transfer. Ce câmpuri trebuie să fie obligatorii în ERP?"}
+      ]
+    },
+    "16": {
+      "dept": "regulatory",
+      "title": {"ru": "Регистрация и регуляторика", "ro": "Înregistrare și afaceri de reglementare"},
+      "mission": {"ru": "Действующие регистрации и своевременные изменения досье с прослеживаемостью обязательств по каждому рынку.", "ro": "Autorizații de comercializare valide și modificări la timp ale dosarului, cu trasabilitatea obligațiilor pe fiecare piață."},
+      "practices": ["ICH Q8 Q10 and Q12", "EMA variations framework", "EU GMP Chapter 5.71"],
+      "profile": {
+        "responsibilities": ["Регистрационный портфель", "Досье и соответствие", "Изменения и вариации", "Сроки и обязательства", "Продуктовая информация", "Связь с качеством, производством и рынками"],
+        "decisions": ["Классификация изменения", "Полнота пакета", "Маршрут подачи", "Дата внедрения", "Эскалация регуляторного риска"],
+        "documents": ["Регистрационные досье", "Вариации и формы", "Утверждённые приложения", "PLCM/PACMP если применимо", "Обязательства и переписка", "Изменения DOC41"],
+        "kpis": ["Своевременность подач", "Возвраты на доработку", "Просроченные обязательства", "Сроки внедрения", "Полнота досье", "Рынки с устаревшими данными"]
+      },
+      "coverage_ru": ["Продукты и рынки", "Статус регистраций", "Владелец досье", "Классификация изменений", "Present proposed", "Пакет и валидация", "Сроки и обязательства", "Внедрение изменения", "Продуктовая информация", "Связь с производством", "Ограничения поставок", "Внешняя переписка", "KPI", "Доказательства"],
+      "questions": [
+        {"id": "16-01", "phase": 1, "ru": "За какие продукты, рынки, регистрационные процедуры и части досье вы отвечаете?", "ro": "Pentru ce produse, piețe, proceduri de înregistrare și părți ale dosarului răspundeți?"},
+        {"id": "16-02", "phase": 2, "ru": "Как видите статус каждой регистрации, действующие приложения, сроки и обязательства?", "ro": "Cum urmăriți statusul fiecărei înregistrări, anexele actuale, termenele și obligațiile?"},
+        {"id": "16-03", "phase": 3, "ru": "Какие изменения вы классифицируете сами и кто утверждает тип вариации и дату внедрения?", "ro": "Ce modificări clasificați personal și cine aprobă tipul variației și data implementării?"},
+        {"id": "16-04", "phase": 2, "ru": "Как формируется таблица present/proposed и доказательный пакет по каждому изменению?", "ro": "Cum se formează tabelul situație actuală/propusă și pachetul de dovezi pentru fiecare modificare?"},
+        {"id": "16-05", "phase": 2, "ru": "Как проверяется полнота и согласованность досье до подачи, включая связанные документы и версии?", "ro": "Cum se verifică completitudinea și coerența dosarului înainte de depunere, inclusiv documentele și versiunile legate?"},
+        {"id": "16-06", "phase": 2, "ru": "Как регистрируются подача, валидация, вопросы органа, ответы и итоговое решение?", "ro": "Cum sunt înregistrate depunerea, validarea, întrebările autorității, răspunsurile și decizia finală?"},
+        {"id": "16-07", "phase": 3, "ru": "Как согласуется дата внедрения с качеством, производством, складом, продажами и поставщиками?", "ro": "Cum se coordonează data implementării cu calitatea, producția, depozitul, vânzările și furnizorii?"},
+        {"id": "16-08", "phase": 3, "ru": "Что происходит с уже начатыми сериями, запасами и упаковкой при изменении зарегистрированных условий?", "ro": "Ce se întâmplă cu loturile începute, stocurile și ambalajul la modificarea condițiilor înregistrate?"},
+        {"id": "16-09", "phase": 2, "ru": "Как контролируются актуальность SmPC, этикетки, инструкции и других продуктовых материалов?", "ro": "Cum se controlează actualitatea SmPC-ului, etichetei, prospectului și celorlalte materiale de produs?"},
+        {"id": "16-10", "phase": 3, "ru": "Как уведомляются ограничения производства или поставок и кто принимает регуляторное решение?", "ro": "Cum sunt notificate restricțiile de producție sau aprovizionare și cine ia decizia de reglementare?"},
+        {"id": "16-11", "phase": 2, "ru": "Как управляются сроки обязательств, пострегистрационные исследования и ответы без просрочки?", "ro": "Cum sunt gestionate termenele obligațiilor, studiile post-autorizare și răspunsurile fără întârziere?"},
+        {"id": "16-12", "phase": 4, "ru": "Какие KPI показывают своевременность и качество регуляторной работы, а не только число подач?", "ro": "Ce KPI-uri arată promptitudinea și calitatea activității de reglementare, nu doar numărul depunerilor?"},
+        {"id": "16-13", "phase": 5, "ru": "Где сейчас теряются версии, сроки и связь изменения с серией или упаковкой? Что должна связывать ERP?", "ro": "Unde se pierd versiunile, termenele și legătura modificării cu lotul sau ambalajul? Ce trebuie să lege ERP-ul?"},
+        {"id": "16-14", "phase": 5, "ru": "Приложите обезличенный пример вариации, календарь обязательств и таблицу изменений. Какие поля обязательны?", "ro": "Atașați un exemplu anonimizat de variație, calendarul obligațiilor și tabelul modificărilor. Ce câmpuri sunt obligatorii?"}
+      ]
+    },
+    "17": {
+      "dept": "packaging",
+      "title": {"ru": "Упаковка и печать", "ro": "Ambalare și tipar"},
+      "mission": {"ru": "Правильные макеты, печатные материалы и упаковка с предотвращением смешения и полной сверкой.", "ro": "Machete, materiale tipărite și ambalare corecte, cu prevenirea amestecării și reconciliere completă."},
+      "practices": ["EU GMP Chapter 5.45–5.62", "EU Falsified Medicines safety features", "ICH Q12"],
+      "profile": {
+        "responsibilities": ["Макеты и версии", "Печатные материалы", "Поставщики печати", "Line clearance", "Печать и контроль", "Сверка и уничтожение"],
+        "decisions": ["Версия макета", "Пакет в печать", "Приёмка оттиска", "Возврат на исправление", "Остановка при смешении"],
+        "documents": ["Макеты и спецификации", "Печатные материалы", "Инструкции упаковки", "Линейные проверки", "Отклонения DOC34", "Возвраты DOC40"],
+        "kpis": ["Ошибки макетов", "Сроки согласования", "Правильность оттисков", "Сверка материалов", "Смешения и отклонения", "Повторные печати"]
+      },
+      "coverage_ru": ["SKU и рынки", "Макеты и версии", "Тексты и регуляторика", "Поставщики печати", "Приёмка материалов", "Хранение и доступ", "Line clearance", "Переменная печать", "Сериализация и ATD", "Онлайн контроль", "Сверка", "Устаревшие материалы", "Отклонения", "Доказательства"],
+      "questions": [
+        {"id": "17-01", "phase": 1, "ru": "За какие SKU, типы упаковки, макеты, печатные материалы и подрядчиков вы отвечаете?", "ro": "Pentru ce SKU-uri, tipuri de ambalaj, machete, materiale tipărite și contractor răspundeți?"},
+        {"id": "17-02", "phase": 2, "ru": "Как создаётся и согласуется версия макета с текстами, рынком, языком, штрихкодом и переменными полями?", "ro": "Cum se creează și se aprobă versiunea machetei cu texte, piață, limbă, cod de bare și câmpuri variabile?"},
+        {"id": "17-03", "phase": 3, "ru": "Кто подтверждает соответствие макета регистрационным данным и как блокируется печать старой версии?", "ro": "Cine confirmă conformitatea machetei cu datele de înregistrare și cum se blochează tipărirea versiunii vechi?"},
+        {"id": "17-04", "phase": 2, "ru": "Как формируется пакет в печать и подтверждаются объём, версия, материал, срок и условия подрядчика?", "ro": "Cum se formează pachetul de tipar și se confirmă volumul, versiunea, materialul, termenul și condițiile contractorului?"},
+        {"id": "17-05", "phase": 2, "ru": "Как принимаются оттиски и печатные материалы с проверкой содержания, качества и количества?", "ro": "Cum sunt primite probele de tipar și materialele tipărite cu verificarea conținutului, calității și cantității?"},
+        {"id": "17-06", "phase": 2, "ru": "Как хранятся и выдаются печатные материалы с ограничением доступа и предотвращением смешения?", "ro": "Cum sunt depozitate și eliberate materialele tipărite cu acces limitat și prevenirea amestecării?"},
+        {"id": "17-07", "phase": 2, "ru": "Как выполняются line clearance и проверка линии от прежних продуктов, материалов и документов?", "ro": "Cum se efectuează eliberarea liniei și verificarea produselor, materialelor și documentelor anterioare?"},
+        {"id": "17-08", "phase": 2, "ru": "Как контролируются номер серии, срок годности, переменная печать и читаемость?", "ro": "Cum sunt controlate numărul seriei, termenul de valabilitate, tipărirea variabilă și lizibilitatea?"},
+        {"id": "17-09", "phase": 3, "ru": "Где требуется DataMatrix, сериализация или защита от вскрытия и как проверяются данные и отчёты об ошибках?", "ro": "Unde sunt necesare DataMatrix, serializarea sau protecția antiefractionare și cum sunt verificate datele și rapoartele de erori?"},
+        {"id": "17-10", "phase": 2, "ru": "Какие онлайн-проверки подтверждают продукт, материал, печать, комплектность и работу счётчиков/сканеров?", "ro": "Ce verificări în linie confirmă produsul, materialul, tiparul, completitudinea și funcționarea contoarelor/scannerelor?"},
+        {"id": "17-11", "phase": 3, "ru": "Как расследуется расхождение между bulk, печатными материалами и произведёнными упаковками?", "ro": "Cum se investighează diferența dintre bulk, materialele tipărite și ambalajele produse?"},
+        {"id": "17-12", "phase": 3, "ru": "Как уничтожаются устаревшие и использованные кодированные материалы и как подтверждается возврат некодированных?", "ro": "Cum sunt distruse materialele expirate și cele codificate utilizate și cum se confirmă returul celor necodificate?"},
+        {"id": "17-13", "phase": 4, "ru": "Какие KPI показывают правильность макета, печати и сверки без стимулирования скрытия брака?", "ro": "Ce KPI-uri arată corectitudinea machetei, tiparului și reconcilierii fără a încuraja ascunderea rebutului?"},
+        {"id": "17-14", "phase": 5, "ru": "Приложите макет, пакет в печать, line clearance и пример расхождения. Какие версии и блокировки нужны в ERP?", "ro": "Atașați macheta, pachetul de tipar, eliberarea liniei și un exemplu de discrepanță. Ce versiuni și blocări sunt necesare în ERP?"}
+      ]
+    },
+    "18": {
+      "dept": "marketing",
+      "title": {"ru": "Маркетинг", "ro": "Marketing"},
+      "mission": {"ru": "Доказательное развитие рынка и продуктовых материалов без ввода в заблуждение и с соблюдением правил рынка.", "ro": "Dezvoltarea bazată pe dovezi a pieței și a materialelor de produs, fără informații înșelătoare și cu respectarea regulilor pieței."},
+      "practices": ["WHO Ethical Criteria for Medicinal Drug Promotion", "ILO ISCO 1222", "ICH Q12"],
+      "profile": {
+        "responsibilities": ["Исследование рынка", "Портфель и кампании", "Продуктовые материалы", "Доказательства утверждений", "Согласования и версии", "Оценка эффективности"],
+        "decisions": ["Целевая аудитория", "Канал и кампания", "Версия материала", "Остановка материала", "Эскалация риска утверждения"],
+        "documents": ["Исследования", "Планы кампаний", "Материалы и макеты", "Доказательства claims", "Согласования", "Отчёты эффективности"],
+        "kpis": ["Сроки согласования", "Ошибки материалов", "Использование актуальных версий", "Эффективность кампаний", "Жалобы и нарушения", "Качество источников"]
+      },
+      "coverage_ru": ["Рынки и аудитории", "Исследования и доказательства", "Портфель и кампании", "Продуктовая информация", "Claims и источники", "Сравнения и честность", "Согласования", "Версии и каналы", "Отзыв материалов", "Взаимодействие с продажами", "Медицина и регуляторика", "KPI", "Риски и жалобы", "Доказательства"],
+      "questions": [
+        {"id": "18-01", "phase": 1, "ru": "За какие продукты, рынки, аудитории, каналы и типы материалов вы отвечаете?", "ro": "Pentru ce produse, piețe, audiențe, canale și tipuri de materiale răspundeți?"},
+        {"id": "18-02", "phase": 2, "ru": "Как исследования рынка превращаются в сегменты, потребности, продуктовые гипотезы и план кампании?", "ro": "Cum se transformă cercetarea pieței în segmente, nevoi, ipoteze de produs și planul campaniei?"},
+        {"id": "18-03", "phase": 2, "ru": "Какие утверждения о продукте вы используете и какие источники подтверждают каждое?", "ro": "Ce afirmații despre produs utilizați și ce surse confirmă fiecare afirmație?"},
+        {"id": "18-04", "phase": 3, "ru": "Как проверяете, что материал не вводит в заблуждение и соответствует утверждённой продуктовой информации?", "ro": "Cum verificați că materialul nu induce în eroare și corespunde informațiilor aprobate despre produs?"},
+        {"id": "18-05", "phase": 3, "ru": "Как согласуются сравнения с другими продуктами, доказательства преимуществ и обязательные предупреждения?", "ro": "Cum se aprobă comparațiile cu alte produse, dovezile avantajelor și avertismentele obligatorii?"},
+        {"id": "18-06", "phase": 3, "ru": "Кто утверждает материал перед публикацией: маркетинг, медицина, регуляторика, качество и руководитель?", "ro": "Cine aprobă materialul înainte de publicare: marketing, medical, reglementare, calitate și conducere?"},
+        {"id": "18-07", "phase": 2, "ru": "Как управляются версии, языки, каналы, даты публикации и доступность только действующих материалов?", "ro": "Cum sunt gestionate versiunile, limbile, canalele, datele publicării și accesul doar la materialele actuale?"},
+        {"id": "18-08", "phase": 3, "ru": "Что происходит при изменении регистрации или продуктовой информации: старые материалы, печать и каналы?", "ro": "Ce se întâmplă la modificarea înregistrării sau informațiilor de produs: materialele vechi, tiparul și canalele?"},
+        {"id": "18-09", "phase": 3, "ru": "Как останавливается и отзывается ошибочный материал и подтверждается прекращение его использования?", "ro": "Cum este oprit și retras un material greșit și cum se confirmă încetarea utilizării lui?"},
+        {"id": "18-10", "phase": 2, "ru": "Как продажи и CRM получают материалы, инструкции и обратную связь без неофициальных версий?", "ro": "Cum primesc vânzările și CRM-ul materialele, instrucțiunile și feedback-ul fără versiuni neoficiale?"},
+        {"id": "18-11", "phase": 3, "ru": "Как регистрируются жалобы, нежелательные сигналы и сомнительные утверждения и куда они передаются?", "ro": "Cum sunt înregistrate reclamațiile, semnalele nedorite și afirmațiile dubioase și unde sunt transmise?"},
+        {"id": "18-12", "phase": 4, "ru": "Какие KPI оценивают результат и соответствие кампании без стимулирования неподтверждённых обещаний?", "ro": "Ce KPI-uri evaluează rezultatul și conformitatea campaniei fără a încuraja promisiuni neconfirmate?"},
+        {"id": "18-13", "phase": 5, "ru": "Где сейчас теряются источники, согласования и актуальные версии? Как ERP должна показать их связь?", "ro": "Unde se pierd sursele, aprobările și versiunile actuale? Cum trebuie ERP-ul să arate legătura lor?"},
+        {"id": "18-14", "phase": 5, "ru": "Приложите материал, доказательный пакет и схему согласования. Какие статусы и права нужны в ERP?", "ro": "Atașați materialul, pachetul de dovezi și schema aprobării. Ce statusuri și drepturi sunt necesare în ERP?"}
+      ]
+    },
+    "19": {
+      "dept": "logistics",
+      "title": {"ru": "Логистика и отгрузка", "ro": "Logistică și expediere"},
+      "mission": {"ru": "Доставка правильного заказа в срок с сохранением условий, документов и прослеживаемости.", "ro": "Livrarea comenzii corecte la timp, cu păstrarea condițiilor, documentelor și trasabilității."},
+      "practices": ["EU GDP Chapter 9", "ASCM SCOR Fulfill and Return", "ILO ISCO 1324"],
+      "profile": {
+        "responsibilities": ["План доставки", "Перевозчики и маршруты", "Условия и упаковка", "Транспортные документы", "Отправление и получение", "Отклонения и возвраты"],
+        "decisions": ["Окно отгрузки", "Маршрут и перевозчик", "Температурный режим", "Экстренная доставка", "Остановка при риске"],
+        "documents": ["Заказ DOC17", "Отгрузка DOC26", "Допуск DOC24", "Транспортные документы", "Возвраты DOC36", "Отклонения DOC34"],
+        "kpis": ["OTIF доставки", "Стоимость доставки", "Температурные отклонения", "Повреждения и потери", "Полнота документов", "Подтверждение получения"]
+      },
+      "coverage_ru": ["Заказы и маршруты", "Окна отгрузки", "Перевозчики и договоры", "Условия продукта", "Упаковка и мониторинг", "Документы", "Качество и финансовые допуски", "Факт передачи", "Доставка и POD", "Отклонения", "Возвраты", "KPI", "Офлайн и связь", "Доказательства"],
+      "questions": [
+        {"id": "19-01", "phase": 1, "ru": "За какие заказы, регионы, перевозчиков, маршруты и типы доставки вы отвечаете?", "ro": "Pentru ce comenzi, regiuni, transportatori, rute și tipuri de livrare răspundeți?"},
+        {"id": "19-02", "phase": 2, "ru": "Как планируете окна отгрузки с учётом готовности заказа, склада, клиента и транспорта?", "ro": "Cum planificați ferestrele de expediere ținând cont de pregătirea comenzii, depozit, client și transport?"},
+        {"id": "19-03", "phase": 3, "ru": "Как выбираются и оцениваются перевозчики и кто согласует условия договора и ответственность?", "ro": "Cum sunt selectați și evaluați transportatorii și cine aprobă condițiile contractului și responsabilitatea?"},
+        {"id": "19-04", "phase": 2, "ru": "Как определяются температурный режим, упаковка, мониторинг, маршрут и допустимое время в пути?", "ro": "Cum se stabilesc regimul de temperatură, ambalajul, monitorizarea, ruta și durata acceptabilă de transport?"},
+        {"id": "19-05", "phase": 2, "ru": "Как проверяются калибровка и исправность оборудования мониторинга и транспортной тары?", "ro": "Cum se verifică calibrarea și funcționarea echipamentului de monitorizare și a ambalajului de transport?"},
+        {"id": "19-06", "phase": 2, "ru": "Какие документы и данные должны сопровождать груз и как проверяются адрес, получатель и серии?", "ro": "Ce documente și date trebuie să însoțească marfa și cum se verifică adresa, destinatarul și seriile?"},
+        {"id": "19-07", "phase": 3, "ru": "Какие качественные и финансовые разрешения обязательны до передачи груза перевозчику?", "ro": "Ce autorizări calitative și financiare sunt obligatorii înainte de predarea mărfii transportatorului?"},
+        {"id": "19-08", "phase": 2, "ru": "Как подтверждаются фактическая передача, выезд, промежуточное хранение и перегрузка?", "ro": "Cum sunt confirmate predarea efectivă, ieșirea, depozitarea intermediară și reîncărcarea?"},
+        {"id": "19-09", "phase": 2, "ru": "Как получаете доказательство доставки и обрабатываете частичную приёмку или отказ клиента?", "ro": "Cum obțineți dovada livrării și tratați recepția parțială sau refuzul clientului?"},
+        {"id": "19-10", "phase": 3, "ru": "Разберите температурное отклонение или повреждение: уведомление, изоляция, оценка и решение качества.", "ro": "Analizați o abatere de temperatură sau deteriorare: notificare, izolare, evaluare și decizia calității."},
+        {"id": "19-11", "phase": 3, "ru": "Как организуется возврат и сохраняются идентичность, условия и история перевозки?", "ro": "Cum este organizat returul și cum sunt păstrate identitatea, condițiile și istoricul transportului?"},
+        {"id": "19-12", "phase": 4, "ru": "Какие KPI показывают срок, стоимость, сохранность и полноту доставки?", "ro": "Ce KPI-uri arată termenul, costul, integritatea și completitudinea livrării?"},
+        {"id": "19-13", "phase": 4, "ru": "Как действуете при потере связи или ERP и как затем исключаете дубли отгрузок и документов?", "ro": "Cum acționați la pierderea conexiunii sau a ERP-ului și cum evitați duplicatele de livrări și documente ulterior?"},
+        {"id": "19-14", "phase": 5, "ru": "Приложите маршрутный лист, температурный журнал и доказательство доставки. Какие связи должны быть в ERP?", "ro": "Atașați foaia de parcurs, jurnalul de temperatură și dovada livrării. Ce legături trebuie să existe în ERP?"}
+      ]
+    },
+    "12": {
+      "dept": "analytics",
+      "title": {"ru": "Аналитик DWH / владелец данных", "ro": "Analist DWH / responsabil date"},
+      "mission": {"ru": "Достоверные и прослеживаемые данные и KPI от источника до управленческого решения.", "ro": "Date și KPI-uri fiabile și trasabile, de la sursă până la decizia managerială."},
+      "practices": ["ISO 8000", "EU GMP Annex 11", "MHRA ALCOA+", "NIST CSF 2.0"],
+      "profile": {
+        "responsibilities": ["Источники и пакеты", "Staging и DQ", "Сопоставление НСИ", "Контрольные итоги", "Релизы и витрины", "Инциденты и происхождение KPI"],
+        "decisions": ["Границы пакета", "Закрытие DQ по тесту", "Кандидат релиза", "Публикация", "Откат и закрытие инцидента"],
+        "documents": ["DQ DOC10", "Релиз DOC13", "Сверка DOC27", "Инцидент DOC30", "KPI DOC37", "Восстановление DOC38"],
+        "kpis": ["Свежесть релиза", "DQ-ошибки", "Полнота источников", "Несопоставленные SKU", "Инциденты данных", "Воспроизводимость KPI"]
+      },
+      "coverage_ru": ["Источники и владельцы", "Период и полнота", "Staging без влияния", "DQ и блокеры", "Сопоставление НСИ", "Контрольные итоги", "Финансовая сверка", "Релиз и версии", "KPI и паспорта", "Инциденты и влияние", "Откат", "Исправление и приёмка", "ALCOA+ и происхождение", "Доказательства"],
+      "questions": [
+        {"id": "12-01", "phase": 1, "ru": "За какие источники, витрины, KPI и потребителей данных вы отвечаете?", "ro": "Pentru ce surse, vitrine, KPI-uri și consumatori de date răspundeți?"},
+        {"id": "12-02", "phase": 2, "ru": "Как регистрируете источник, владельца, период, полноту и время последнего успешного обновления?", "ro": "Cum înregistrați sursa, proprietarul, perioada, completitudinea și momentul ultimei actualizări reușite?"},
+        {"id": "12-03", "phase": 2, "ru": "Как загружаете пакет в staging без влияния на действующие витрины и как обрабатываете повтор?", "ro": "Cum încărcați pachetul în staging fără a afecta vitrinele actuale și cum tratați repetarea?"},
+        {"id": "12-04", "phase": 2, "ru": "Какие DQ-проверки блокируют релиз: поля, дубли, ключи, объёмы, периоды и типы?", "ro": "Ce verificări DQ blochează lansarea: câmpuri, duplicate, chei, volume, perioade și tipuri?"},
+        {"id": "12-05", "phase": 3, "ru": "Как закрываете ошибку только повторным тестом и назначаете владельца исправления?", "ro": "Cum închideți o eroare doar prin retestare și atribuiți responsabilul corecției?"},
+        {"id": "12-06", "phase": 2, "ru": "Как связываются внешние коды с каноническими SKU без автоматического выбора при неоднозначности?", "ro": "Cum sunt legate codurile externe de SKU-urile canonice fără alegere automată în caz de ambiguitate?"},
+        {"id": "12-07", "phase": 2, "ru": "Как сверяете строки, объёмы и суммы источника с преобразованным набором и финансовым итогом?", "ro": "Cum reconciliați rândurile, volumele și sumele sursei cu setul transformat și rezultatul financiar?"},
+        {"id": "12-08", "phase": 3, "ru": "Что делаете при изменении источника или НСИ после проверок? Какие подтверждения сбрасываются?", "ro": "Ce faceți când sursa sau datele master se modifică după verificări? Ce confirmări sunt resetate?"},
+        {"id": "12-09", "phase": 3, "ru": "Как публикуете релиз с нулевыми блокерами и что видят потребители при частичной ошибке?", "ro": "Cum publicați lansarea cu zero blocaje și ce văd consumatorii la o eroare parțială?"},
+        {"id": "12-10", "phase": 2, "ru": "Как проверяете KPI глазами потребителя и трассируете цифру до источника и формулы?", "ro": "Cum verificați KPI-ul din perspectiva consumatorului și urmăriți cifra până la sursă și formulă?"},
+        {"id": "12-11", "phase": 3, "ru": "Разберите ошибку после публикации: область влияния, утверждённые решения, откат и уведомления.", "ro": "Analizați o eroare după publicare: aria de impact, deciziile aprobate, revenirea și notificările."},
+        {"id": "12-12", "phase": 3, "ru": "Как закрываете инцидент после исправления и подтверждения зависимых расчётов потребителями?", "ro": "Cum închideți incidentul după corecție și confirmarea calculelor dependente de consumatori?"},
+        {"id": "12-13", "phase": 4, "ru": "Как обеспечиваются ALCOA+, доступность, история миграций и происхождение каждого значения?", "ro": "Cum sunt asigurate ALCOA+, disponibilitatea, istoricul migrațiilor și proveniența fiecărei valori?"},
+        {"id": "12-14", "phase": 5, "ru": "Приложите DQ-отчёт, паспорт KPI и пример инцидента. Какие проверки и связи обязательны для ERP?", "ro": "Atașați raportul DQ, pașaportul KPI și un exemplu de incident. Ce verificări și legături sunt obligatorii pentru ERP?"}
+      ]
+    },
+    "21": {
+      "dept": "hr",
+      "title": {"ru": "Кадры / HR", "ro": "Resurse umane / HR"},
+      "mission": {"ru": "Достаточная квалификация людей, понятные роли, обучение и своевременный доступ к работе.", "ro": "Personal suficient și calificat, roluri clare, instruire și acces la timp la activitate."},
+      "practices": ["EU GMP Chapter 2", "ISO 9001 competence and awareness", "ILO ISCO 1212"],
+      "profile": {
+        "responsibilities": ["Планирование персонала", "Подбор и адаптация", "Должностные инструкции", "Обучение и эффективность", "Оценка и развитие", "Заместители и выход"],
+        "decisions": ["Потребность в найме", "Программа адаптации", "Допуск после обучения", "Развитие и замещение", "Прекращение доступа совместно с владельцами"],
+        "documents": ["Штатное расписание", "Должностные инструкции", "Матрица компетенций", "Планы и записи обучения", "Оценки и развитие", "Заявки DOC29"],
+        "kpis": ["Время адаптации", "Действующие допуски", "Завершение обучения", "Эффективность обучения", "Заместители критических ролей", "Своевременность отзыва доступа"]
+      },
+      "coverage_ru": ["Штат и критические роли", "Подбор и квалификация", "Должностные инструкции", "Адаптация", "GMP и профильное обучение", "Эффективность обучения", "Допуски и записи", "Оценка и развитие", "Заместители и преемственность", "Переводы", "Увольнение и доступ", "Здоровье и гигиена", "KPI", "Доказательства"],
+      "questions": [
+        {"id": "21-01", "phase": 1, "ru": "За какие подразделения, роли, численность и критические компетенции вы отвечаете?", "ro": "Pentru ce departamente, roluri, număr de personal și competențe critice răspundeți?"},
+        {"id": "21-02", "phase": 2, "ru": "Как определяется потребность в найме и достаточная численность для процессов и смен?", "ro": "Cum se determină necesarul de recrutare și numărul suficient pentru procese și schimburi?"},
+        {"id": "21-03", "phase": 2, "ru": "Как проверяются образование, опыт, обучение и соответствие кандидата требованиям роли?", "ro": "Cum sunt verificate studiile, experiența, instruirea și potrivirea candidatului cu cerințele rolului?"},
+        {"id": "21-04", "phase": 2, "ru": "Как создаются и актуализируются должностные инструкции, полномочия и отсутствие пробелов или пересечений?", "ro": "Cum sunt create și actualizate fișele postului, competențele și absența golurilor sau suprapunerilor?"},
+        {"id": "21-05", "phase": 2, "ru": "Как устроена адаптация до самостоятельной работы и кто подтверждает готовность сотрудника?", "ro": "Cum funcționează integrarea înainte de activitatea independentă și cine confirmă pregătirea angajatului?"},
+        {"id": "21-06", "phase": 2, "ru": "Как формируются программы GMP, гигиены и профильного обучения с периодическим продолжением?", "ro": "Cum sunt formate programele GMP, de igienă și instruire profesională cu continuare periodică?"},
+        {"id": "21-07", "phase": 3, "ru": "Как оценивается практическая эффективность обучения и кто выдаёт допуск к операции?", "ro": "Cum este evaluată eficacitatea practică a instruirii și cine acordă autorizația pentru operație?"},
+        {"id": "21-08", "phase": 2, "ru": "Как хранятся версии программ, записи обучения, подписи и сроки следующего обучения?", "ro": "Cum sunt păstrate versiunile programelor, evidențele instruirii, semnăturile și termenele următoare?"},
+        {"id": "21-09", "phase": 3, "ru": "Как проводятся оценка, развитие и разбор результата без оценки человека по непроверенным цифрам?", "ro": "Cum se realizează evaluarea, dezvoltarea și analiza rezultatului fără aprecierea persoanei după cifre neverificate?"},
+        {"id": "21-10", "phase": 3, "ru": "Как обеспечиваются заместители и преемственность критических ролей и подтверждается их квалификация?", "ro": "Cum sunt asigurați înlocuitorii și continuitatea rolurilor critice și cum se confirmă calificarea lor?"},
+        {"id": "21-11", "phase": 3, "ru": "Как при переводе передаются задачи, меняются роли и исключается накопление старых прав?", "ro": "Cum sunt transferate sarcinile la mutare, schimbate rolurile și evitată acumularea drepturilor vechi?"},
+        {"id": "21-12", "phase": 3, "ru": "Как при увольнении синхронизируются прекращение доступа, передача задач и назначение заместителя?", "ro": "Cum sunt sincronizate la plecare revocarea accesului, transferul sarcinilor și numirea înlocuitorului?"},
+        {"id": "21-13", "phase": 2, "ru": "Как управляются медосмотры, сообщения о состоянии здоровья и ограничения прямого контакта с продукцией?", "ro": "Cum sunt gestionate examenele medicale, raportarea stării sănătății și restricțiile contactului direct cu produsul?"},
+        {"id": "21-14", "phase": 5, "ru": "Приложите матрицу компетенций, программу адаптации и пример перевода. Какие связи HR и ERP обязательны?", "ro": "Atașați matricea competențelor, programul de integrare și un exemplu de transfer. Ce legături HR și ERP sunt obligatorii?"}
+      ]
+    },
+    "15": {
+      "dept": "it",
+      "title": {"ru": "ИТ и администрирование ERP", "ro": "IT și administrare ERP"},
+      "mission": {"ru": "Доступность, безопасность и восстановимость систем с минимальными правами и целостностью данных.", "ro": "Disponibilitatea, securitatea și recuperabilitatea sistemelor, cu drepturi minime și integritatea datelor."},
+      "practices": ["EU GMP Annex 11", "NIST CSF 2.0", "MHRA ALCOA+"],
+      "profile": {
+        "responsibilities": ["Учётные записи и роли", "Изменения конфигурации", "Мониторинг и интеграции", "Инциденты", "Резервное копирование и восстановление", "Аудит и поставщики"],
+        "decisions": ["Техническое исполнение заявки", "Обратимое изменение", "Приоритет восстановления", "Безопасный повтор", "Техническое закрытие после приёмки"],
+        "documents": ["Доступ DOC29", "Инциденты DOC30", "KPI и правила DOC37", "Восстановление DOC38", "Аудит и конфигурации", "Соглашения поставщиков"],
+        "kpis": ["Доступность критических маршрутов", "Время восстановления", "Успешные восстановления", "Просроченные доступы", "Ошибки интеграций", "Инциденты без причины"]
+      },
+      "coverage_ru": ["Process Owner и System Owner", "Заявки и минимальные права", "Разделение полномочий", "Проверка доступа", "Переводы и увольнения", "Аудит привилегий", "URS и валидация", "Изменения конфигурации", "Мониторинг маршрутов", "Интеграции и идемпотентность", "Резервное копирование", "Восстановление и приёмка", "Поставщики", "KPI и доказательства"],
+      "questions": [
+        {"id": "15-01", "phase": 1, "ru": "За какие системы, интеграции, пользователей и критические бизнес-маршруты вы отвечаете?", "ro": "Pentru ce sisteme, integrări, utilizatori și rute critice de business răspundeți?"},
+        {"id": "15-02", "phase": 3, "ru": "Как распределены Process Owner, System Owner, качество и ИТ по решениям и ответственности?", "ro": "Cum sunt distribuite responsabilitățile Process Owner, System Owner, calitate și IT?"},
+        {"id": "15-03", "phase": 2, "ru": "Как принимаете согласованную заявку и выдаёте минимальные права без конфликта инициирования и утверждения?", "ro": "Cum preluați cererea aprobată și acordați drepturi minime fără conflict între inițiere și aprobare?"},
+        {"id": "15-04", "phase": 2, "ru": "Как проверяете с сотрудником доступ к нужным функциям и отсутствие доступа вне его области?", "ro": "Cum verificați cu angajatul accesul la funcțiile necesare și lipsa accesului în afara domeniului său?"},
+        {"id": "15-05", "phase": 3, "ru": "Как при переводе и увольнении передаются задачи, заменяются роли и отзываются сессии?", "ro": "Cum sunt transferate sarcinile la mutare și plecare, înlocuite rolurile și revocate sesiunile?"},
+        {"id": "15-06", "phase": 3, "ru": "Как сопоставляете привилегированные действия с основанием и кто независимо оценивает ваши спорные действия?", "ro": "Cum corelați acțiunile privilegiate cu justificarea și cine evaluează independent acțiunile dumneavoastră dispute?"},
+        {"id": "15-07", "phase": 2, "ru": "Как требования пользователя, риск, валидация, тесты и трассируемость фиксируются для системы и изменений?", "ro": "Cum sunt documentate cerințele utilizatorului, riscul, validarea, testele și trasabilitatea pentru sistem și modificări?"},
+        {"id": "15-08", "phase": 3, "ru": "Как вносите обратимое техническое изменение и отделяете его от изменения бизнес-правил и лимитов?", "ro": "Cum implementați o modificare tehnică reversibilă și o separați de schimbarea regulilor de business și a limitelor?"},
+        {"id": "15-09", "phase": 2, "ru": "Как проверяете здоровье компонентов и полный критический маршрут пользователя, а не только доступность сервиса?", "ro": "Cum verificați starea componentelor și ruta completă a utilizatorului, nu doar disponibilitatea serviciului?"},
+        {"id": "15-10", "phase": 3, "ru": "Как определяете, завершилась ли операция до ошибки, и исключаете небезопасный повтор и дубли?", "ro": "Cum determinați dacă operația s-a finalizat înainte de eroare și evitați repetarea nesigură și duplicatele?"},
+        {"id": "15-11", "phase": 3, "ru": "Как проверяются резервные копии, возможность восстановления и граница потери данных?", "ro": "Cum sunt verificate copiile de rezervă, posibilitatea restaurării și limita pierderii datelor?"},
+        {"id": "15-12", "phase": 3, "ru": "Как восстанавливаете сервис и подтверждаете целостность до возобновления записи?", "ro": "Cum restaurați serviciul și confirmați integritatea înainte de reluarea scrierii?"},
+        {"id": "15-13", "phase": 4, "ru": "Как закрываете инцидент после прохождения реального сценария пользователем и фиксируете причину?", "ro": "Cum închideți incidentul după trecerea scenariului real de utilizator și documentați cauza?"},
+        {"id": "15-14", "phase": 5, "ru": "Приложите матрицу доступа, план восстановления и пример инцидента. Какие проверки и KPI должны быть в ERP?", "ro": "Atașați matricea accesului, planul de recuperare și un exemplu de incident. Ce verificări și KPI-uri trebuie să existe în ERP?"}
+      ]
+    },
+    "00": {
+      "dept": "other",
+      "title": {"ru": "Другая должность / универсальный профиль", "ro": "Alt post / profil universal"},
+      "mission": {"ru": "Полное описание фактической роли, процессов, решений и взаимодействий, если готовый профиль не подходит.", "ro": "Descrierea completă a rolului real, proceselor, deciziilor și interacțiunilor, dacă profilul existent nu se potrivește."},
+      "practices": ["ILO ISCO role discovery", "ISO 9001 process approach", "EU GMP Annex 11"],
+      "profile": {
+        "responsibilities": ["Назначение и результат", "Регулярные задачи", "Решения и полномочия", "Документы и системы", "Взаимодействия", "Исключения и улучшения"],
+        "decisions": ["Самостоятельные решения", "Согласования", "Лимиты", "Эскалации", "Замещение"],
+        "documents": ["Должностная инструкция", "Регламенты и формы", "Отчёты", "Рабочие файлы", "Примеры исключений"],
+        "kpis": ["Результат роли", "Частота и время", "Качество", "Сроки", "Ошибки и переделки", "Ожидание"]
+      },
+      "coverage_ru": ["Назначение", "Результат", "Обычная неделя", "Частые задачи", "Входы", "Выходы", "Документы и системы", "Решения и лимиты", "Согласования", "Исключения", "Заместители", "KPI", "Повторяемая ручная работа", "Доказательства"],
+      "questions": [
+        {"id": "00-01", "phase": 1, "ru": "Как называется ваша фактическая роль и за какой результат работы вы отвечаете?", "ro": "Cum se numește rolul dumneavoastră real și pentru ce rezultat al activității răspundeți?"},
+        {"id": "00-02", "phase": 1, "ru": "Что вы делаете ежедневно, еженедельно, ежемесячно и в нестандартных ситуациях?", "ro": "Ce faceți zilnic, săptămânal, lunar și în situații neobișnuite?"},
+        {"id": "00-03", "phase": 2, "ru": "Назовите три–пять самых частых или долгих задач. Как часто и сколько времени занимает каждая?", "ro": "Numiți trei–cinci dintre cele mai frecvente sau lungi sarcini. Cât de des și cât durează fiecare?"},
+        {"id": "00-04", "phase": 2, "ru": "От кого и из каких систем, файлов или документов поступают исходные данные?", "ro": "De la cine și din ce sisteme, fișiere sau documente primiți datele de intrare?"},
+        {"id": "00-05", "phase": 2, "ru": "Что получается в результате каждой задачи и кто принимает результат?", "ro": "Care este rezultatul fiecărei sarcini și cine primește acest rezultat?"},
+        {"id": "00-06", "phase": 3, "ru": "Какие решения принимаете сами и какие лимиты или правила их ограничивают?", "ro": "Ce decizii luați personal și ce limite sau reguli le restricționează?"},
+        {"id": "00-07", "phase": 3, "ru": "Какие проверки, согласования и подписи нужны? Кто принимает решение при разногласии?", "ro": "Ce verificări, aprobări și semnături sunt necesare? Cine decide în caz de dezacord?"},
+        {"id": "00-08", "phase": 2, "ru": "Какие документы, версии, сроки хранения и доказательства выполнения обязательны?", "ro": "Ce documente, versiuni, termene de păstrare și dovezi de realizare sunt obligatorii?"},
+        {"id": "00-09", "phase": 3, "ru": "Разберите последнее исключение: что произошло, кто участвовал, как решали и что зафиксировали?", "ro": "Analizați ultima excepție: ce s-a întâmplat, cine a participat, cum a fost rezolvată și ce s-a documentat?"},
+        {"id": "00-10", "phase": 3, "ru": "Кто вас замещает и как передаются полномочия и незавершённые задачи?", "ro": "Cine vă înlocuiește și cum sunt transferate competențele și sarcinile nefinalizate?"},
+        {"id": "00-11", "phase": 4, "ru": "Какие показатели отражают ваш результат? Назовите формулу, источник и периодичность.", "ro": "Ce indicatori reflectă rezultatul dumneavoastră? Precizați formula, sursa și frecvența."},
+        {"id": "00-12", "phase": 4, "ru": "Где возникают ошибки, ожидание, дублирование и ручной перенос данных?", "ro": "Unde apar erori, așteptări, dublări și transfer manual de date?"},
+        {"id": "00-13", "phase": 5, "ru": "Что должно остаться за человеком, а что помощник или ERP может подготовить и проверить по правилам?", "ro": "Ce trebuie să rămână la om și ce poate pregăti și verifica asistentul sau ERP-ul după reguli?"},
+        {"id": "00-14", "phase": 5, "ru": "Приложите должностную инструкцию, форму или реальный пример работы. Какие поля и связи нужны для ERP?", "ro": "Atașați fișa postului, un formular sau un exemplu real de lucru. Ce câmpuri și legături sunt necesare pentru ERP?"}
+      ]
+    }
+  }
+}

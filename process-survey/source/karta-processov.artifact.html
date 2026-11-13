@@ -1,0 +1,2334 @@
+<title>Карта процессов Balkan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@500&family=PT+Serif:wght@700&display=swap">
+<style>
+/* Layout: one working column (max 1040px) under a sticky band with brand, language and the five-phase rail */
+:root{
+  --bg:#F3F5F8; --surface:#FFFFFF; --sunken:#E8EDF5; --ink:#16212A; --muted:#5B6770; --line:#D6DDE8;
+  --accent:#21439B; --accent-ink:#FFFFFF; --accent-soft:#E3EAF8;
+  --amber:#93560A; --amber-soft:#F5E6CF; --danger:#A8352A; --danger-soft:#F6DDD8; --ok:#2E7550; --ok-soft:#DCEFE3;
+  --shadow:0 1px 2px rgba(22,33,42,.06),0 8px 24px rgba(22,33,42,.06);
+  --f-display:"PT Serif",Georgia,"Times New Roman",serif;
+  --f-body:"Golos Text","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101619; --surface:#172024; --sunken:#1D282D; --ink:#E4EBE8; --muted:#97A5A2; --line:#2A363B;
+  --accent:#7EA4F0; --accent-ink:#101A33; --accent-soft:#1D2B4A;
+  --amber:#E4AA5C; --amber-soft:#3A2C17; --danger:#F08B7E; --danger-soft:#3D2420; --ok:#7FD0A0; --ok-soft:#1C3527;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101619; --surface:#172024; --sunken:#1D282D; --ink:#E4EBE8; --muted:#97A5A2; --line:#2A363B;
+  --accent:#7EA4F0; --accent-ink:#101A33; --accent-soft:#1D2B4A;
+  --amber:#E4AA5C; --amber-soft:#3A2C17; --danger:#F08B7E; --danger-soft:#3D2420; --ok:#7FD0A0; --ok-soft:#1C3527;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{overflow-x:clip}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar-in{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:10px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.mark{width:30px;height:30px;border-radius:7px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 17px/1 var(--f-display);flex:none}
+.brand-logo{display:block;width:112px;height:auto;max-height:64px;object-fit:contain;background:#fff;border-radius:6px;padding:2px 4px;flex:none}
+.brand-t{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.brand-t b{font:700 15px/1.2 var(--f-display);letter-spacing:.01em}
+.brand-t span{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:5px 11px;font-size:13px;font-weight:600;letter-spacing:.04em;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink)}
+.rail{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding-block:0 10px}
+.rail-step{display:flex;flex-direction:column;gap:5px;min-width:0}
+.rail-bar{height:4px;border-radius:2px;background:var(--sunken)}
+.rail-step.done .rail-bar{background:var(--accent)}
+.rail-step.cur .rail-bar{background:linear-gradient(90deg,var(--accent) 50%,var(--accent-soft) 50%)}
+.rail-l{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rail-step.cur .rail-l{color:var(--ink);font-weight:600}
+.rail-l b{font-family:var(--f-mono);font-weight:500;margin-right:4px}
+
+/* Buttons, fields */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 14px;font-weight:500;font-size:14px;cursor:pointer;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink);background:var(--sunken)}
+.btn.danger{color:var(--danger);border-color:var(--danger-soft)}
+.btn.small{padding:5px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed;filter:none}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:600}
+.input,select.input,textarea.input{width:100%;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:10px 12px;min-width:0}
+.input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;cursor:pointer}
+.check input{margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex:none}
+.role-picker{border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.role-picker>summary{min-height:44px;display:flex;align-items:center;padding:9px 12px;cursor:pointer;color:var(--accent);font-weight:600;list-style-position:inside}
+.role-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 12px;max-height:320px;overflow-y:auto;border-top:1px solid var(--line);padding:8px 12px;overscroll-behavior:contain}
+.role-option{min-height:44px;align-items:center;padding:3px 2px}
+.role-option input{margin-top:0}
+@media (max-width:640px){.role-options{grid-template-columns:1fr}.brand-logo{width:96px;height:auto;max-height:64px}}
+
+/* Generic */
+.main{padding-block:28px 64px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.notice{border-radius:10px;padding:11px 14px;font-size:14px;background:var(--amber-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--amber) 30%,transparent)}
+.notice.info{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+.notice.err{background:var(--danger-soft);border-color:color-mix(in srgb,var(--danger) 30%,transparent)}
+.muted{color:var(--muted)}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--sunken);color:var(--muted)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.prog{background:var(--amber-soft);color:var(--amber)}
+.chip.rev{background:var(--accent-soft);color:var(--accent)}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--f-mono)}
+
+/* Welcome */
+.welcome{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);gap:28px;align-items:start}
+.welcome h1{font:700 clamp(26px,4vw,36px)/1.15 var(--f-display);letter-spacing:-.005em;margin:6px 0 14px}
+.welcome .intro{display:flex;flex-direction:column;gap:12px;max-width:62ch}
+.welcome .intro p{color:var(--ink)}
+.facts{display:flex;flex-direction:column;gap:8px;margin-top:6px;padding:0;list-style:none}
+.facts li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:14px;color:var(--muted)}
+.facts li::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--accent);margin-top:7px;justify-self:center}
+.form{padding:22px;display:flex;flex-direction:column;gap:16px;margin-top:22px}
+.form .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.steps{padding:22px}
+.steps h2{font:700 18px/1.3 var(--f-display);margin-bottom:14px}
+.steps ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+.steps li{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.steps li:first-child{border-top:0;padding-top:2px}
+.steps .n{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);display:grid;place-items:center;font:500 13px/1 var(--f-mono)}
+.steps b{display:block;font-weight:600;font-size:14.5px}
+.steps span{font-size:13.5px;color:var(--muted)}
+
+/* Chat */
+.chat{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.log{display:flex;flex-direction:column;gap:14px;min-height:40vh}
+.msg{display:flex;flex-direction:column;gap:4px;max-width:88%;min-width:0}
+.msg .who{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.msg-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+.msg-voice,.voice-toggle{min-width:44px;min-height:44px;padding:5px 9px;border:0;background:transparent;color:var(--accent);cursor:pointer;font-size:17px;line-height:1;border-radius:7px;display:inline-flex;align-items:center;justify-content:center}
+.msg-voice:hover,.voice-toggle:hover{background:var(--accent-soft)}
+.msg-voice[aria-pressed="true"],.voice-toggle[aria-pressed="true"]{background:var(--accent-soft)}
+.msg-voice svg,.voice-toggle svg,.mic-btn svg{width:20px;height:20px;flex:none;pointer-events:none}
+.mic-btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.mic-btn.recording{background:var(--danger-soft);color:var(--danger);border-color:var(--danger)}
+.mic-status{color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mic-hint{font-size:12px;line-height:1.45;color:var(--muted);max-width:70ch}
+.msg .txt{padding:11px 15px;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.a{align-self:flex-start}
+.msg.a .txt{background:var(--surface);border:1px solid var(--line);border-top-left-radius:4px}
+.msg.u{align-self:flex-end;align-items:flex-end}
+.msg.u .txt{background:var(--accent-soft);border-top-right-radius:4px}
+.msg.a.pending .txt{color:var(--muted)}
+.dots::after{content:"…";display:inline-block;animation:blink 1.2s steps(4) infinite;width:1.2em;overflow:hidden;vertical-align:bottom}
+@keyframes blink{0%{width:0}100%{width:1.2em}}
+@media (prefers-reduced-motion: reduce){.dots::after{animation:none}}
+.composer{position:sticky;bottom:0;background:linear-gradient(to bottom,transparent,var(--bg) 18px);padding-top:18px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.composer-box{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:10px;display:flex;flex-direction:column;gap:8px}
+.composer textarea{border:0;resize:none;min-height:52px;max-height:200px;padding:6px 8px;background:transparent;width:100%}
+.composer textarea:focus{outline:none}
+.composer-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.composer-row .left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.opts{display:flex;flex-direction:column;gap:8px;padding:2px 4px 4px}
+.opts-hint{font-size:12.5px;color:var(--muted)}
+.opts-list{display:flex;flex-wrap:wrap;gap:8px}
+.opt{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px 6px 10px;font-size:14px;line-height:1.3;cursor:pointer;text-align:left;max-width:100%;overflow-wrap:anywhere}
+.opt::before{content:"";width:14px;height:14px;flex:none;border:1.5px solid var(--muted);border-radius:4px}
+.opt.one::before{border-radius:50%}
+.opt:hover{border-color:var(--accent)}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt[aria-pressed="true"]::before{border-color:var(--accent);background:var(--accent);box-shadow:inset 0 0 0 2px var(--accent-soft)}
+.msg.u .txt.has-picked{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.picked{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.picked span{border-radius:999px;background:var(--surface);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);padding:2px 10px;font-size:13.5px}
+.msg.u .own{align-self:stretch;text-align:left}
+.attach-panel{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:8px}
+.attach-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.attach-actions .btn{min-height:44px}
+.attach-hint{font-size:12px;color:var(--muted);flex:1 1 210px}
+.attach-list{display:flex;flex-direction:column;gap:6px}
+.attachment-chip{display:flex;align-items:center;gap:8px;min-width:0;border:1px solid var(--line);background:var(--sunken);border-radius:9px;padding:5px 8px;font-size:12.5px}
+.attachment-chip .attachment-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.attachment-chip .attachment-size{color:var(--muted);font-family:var(--f-mono);font-size:11px;white-space:nowrap}
+.attachment-chip a,.attachment-chip button.attachment-open{color:var(--accent);background:transparent;border:0;padding:8px 2px;min-height:40px;cursor:pointer;text-decoration:none;font-weight:600;white-space:nowrap}
+.attachment-remove{width:44px;height:44px;border:0;background:transparent;color:var(--danger);cursor:pointer;font-size:20px;line:1;flex:none}
+.attach-link-form{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+.attach-link-form .field{flex:1 1 260px}
+.attach-link-form .btn{min-height:44px}
+.attach-progress{display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--accent);font-variant-numeric:tabular-nums}
+.attach-progress-track{height:8px;overflow:hidden;border-radius:999px;background:var(--sunken);border:1px solid var(--line)}
+.attach-progress-fill{height:100%;width:0;background:var(--accent);border-radius:inherit;transition:width .12s linear}
+.attach-progress-text{font-family:var(--f-mono);font-size:11.5px;line-height:1.45;overflow-wrap:anywhere}
+@media (prefers-reduced-motion: reduce){.attach-progress-fill{transition:none}}
+.attachments-admin{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:14px}
+.attachments-admin h3{font-size:14px}
+.attachments-admin .attachment-question{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.knowledge-grid{display:grid;gap:16px}
+.knowledge-card{display:flex;flex-direction:column;gap:12px;min-width:0}
+.knowledge-card h2{font-size:18px;overflow-wrap:anywhere}
+.knowledge-card h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:4px 0 6px}
+.knowledge-points{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:5px}
+.knowledge-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px}
+.knowledge-field{display:flex;flex-direction:column;gap:4px;border-bottom:1px solid var(--line);padding:6px 0;min-width:0}
+.knowledge-field span{font-size:13px;color:var(--muted)}
+.knowledge-field code{font-size:12px;overflow-wrap:anywhere;color:var(--accent)}
+.knowledge-text{white-space:pre-wrap;overflow-wrap:anywhere;max-height:360px;overflow:auto;font:12px/1.55 var(--f-mono);background:var(--sunken);padding:12px;border-radius:8px}
+.savestate.ok{color:var(--ok)}
+.savestate.bad{color:var(--danger)}
+
+/* Summary */
+.review{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.review h1,.done-view h1{font:700 clamp(24px,3.6vw,32px)/1.2 var(--f-display)}
+.summary{display:flex;flex-direction:column;gap:20px}
+.sum-block{display:flex;flex-direction:column;gap:10px}
+.sum-block h3{font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;gap:8px;align-items:center}
+.count{font-family:var(--f-mono);font-weight:500;color:var(--accent);letter-spacing:0}
+.lead-p{font-size:16px;max-width:68ch}
+.proc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:12px}
+.proc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.proc-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.proc h4{font-size:15.5px;font-weight:600;line-height:1.3}
+.proc-desc{font-size:14px;color:var(--muted)}
+.proc-meta{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0;font-size:13.5px}
+.proc-meta div{display:contents}
+.proc-meta dt{color:var(--muted)}
+.proc-meta dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.mini-l{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.proc-pains ul,.plain{margin:4px 0 0;padding-left:18px;font-size:14px}
+.proc-idea{font-size:13.5px;background:var(--accent-soft);border-radius:8px;padding:7px 10px}
+.pot{display:inline-flex;gap:3px;flex:none;margin-top:5px}
+.pot i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sunken);border:1px solid var(--line)}
+.pot i.on{background:var(--amber);border-color:var(--amber)}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.fixbox{padding:16px;display:flex;flex-direction:column;gap:10px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.done-view{max-width:640px;margin:8vh auto 0;text-align:left;display:flex;flex-direction:column;gap:14px}
+.center-state{max-width:620px;margin:8vh auto 0;display:flex;flex-direction:column;gap:12px}
+.center-state h1{font:700 26px/1.2 var(--f-display)}
+
+/* Dashboard */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px;overflow-x:auto;scrollbar-width:none}
+.tabs button{border:0;background:transparent;padding:10px 14px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tabs .c{font-family:var(--f-mono);font-size:12px;margin-left:6px;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:22px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.tile .v{font:500 26px/1.1 var(--f-mono);font-variant-numeric:tabular-nums}
+.tile .v small{font-size:14px;color:var(--muted)}
+.tile .k{font-size:12.5px;color:var(--muted);margin-top:4px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:18px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
+.panel h2{font:700 17px/1.3 var(--f-display);margin-bottom:12px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.panel h2 .muted{font:400 12.5px var(--f-body)}
+.bars{display:flex;flex-direction:column;gap:9px}
+.barrow{display:grid;grid-template-columns:minmax(0,1fr) 120px 34px;gap:10px;align-items:center;font-size:13.5px}
+.barrow .l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track{height:8px;border-radius:4px;background:var(--sunken);display:flex;overflow:hidden}
+.track i{display:block;height:100%}
+.track .d{background:var(--accent)}
+.track .p{background:color-mix(in srgb,var(--amber) 55%,transparent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.feed{display:flex;flex-direction:column;margin:0;padding:0;list-style:none}
+.feed li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:14px;cursor:pointer}
+.feed li:first-child{border-top:0}
+.feed li:hover .nm{color:var(--accent)}
+.feed .nm{font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{padding:34px 22px;text-align:left;display:flex;flex-direction:column;gap:10px;max-width:640px}
+.empty h2{font:700 20px/1.3 var(--f-display)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.toolbar .input{width:auto;min-width:0;flex:1 1 180px;padding:8px 11px}
+.toolbar select.input{flex:0 1 230px}
+
+/* Fit tables (no sideways scroll) */
+.tbl{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13.5px}
+.tbl th{text-align:left;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:10px 10px;border-bottom:1px solid var(--line);background:var(--sunken)}
+.tbl td{padding:10px 10px;border-top:1px solid var(--line);vertical-align:top;min-width:0}
+.tbl tr:first-child td{border-top:0}
+.tbl .clip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbl .clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tbl tbody tr.click{cursor:pointer}
+.tbl tbody tr.click:hover td{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
+.tbl .sub{font-size:12.5px;color:var(--muted)}
+.tbl .r{text-align:right}
+
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(10,16,20,.42);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--bg);z-index:41;overflow-y:auto;box-shadow:-10px 0 30px rgba(0,0,0,.18);padding:calc(18px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) 20px;display:flex;flex-direction:column;gap:18px}
+.drawer-h{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.drawer-h h2{font:700 22px/1.2 var(--f-display)}
+.transcript{display:flex;flex-direction:column;gap:10px}
+.transcript .msg{max-width:100%}
+details.tr summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
+
+/* Analysis */
+.an-head{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.an-head .hl{font:700 clamp(19px,2.6vw,24px)/1.35 var(--f-display);max-width:60ch}
+.cands{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.cand{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.cand .rk{font:500 22px/1 var(--f-mono);color:var(--accent);padding-top:2px}
+.cand h3{font-size:16px;font-weight:600;line-height:1.35}
+.cand .meta{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 8px;align-items:center}
+.scores{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:6px 0 10px}
+.score .lab{font-size:11.5px;color:var(--muted)}
+.score .sb{height:6px;border-radius:3px;background:var(--sunken);margin-top:4px;overflow:hidden}
+.score .sb i{display:block;height:100%;background:var(--accent)}
+.score.risk .sb i{background:var(--danger)}
+.kv{display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 14px;font-size:14px;margin:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.an-sec{margin-top:26px;display:flex;flex-direction:column;gap:12px}
+.an-sec h2{font:700 19px/1.3 var(--f-display)}
+.cards2{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+.mini{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.mini b{font-weight:600}
+.progress-line{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+/* Invite */
+.invite{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.howto{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.howto li{display:grid;grid-template-columns:30px 1fr;gap:10px;font-size:14.5px;counter-increment:s}
+.howto li::before{content:counter(s);width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:500 12.5px/1 var(--f-mono)}
+.invite-text{white-space:pre-wrap;font-size:14px;background:var(--sunken);border-radius:10px;padding:12px 14px;margin:8px 0 10px;user-select:all}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:60;max-width:calc(100% - 32px);box-shadow:var(--shadow)}
+
+@media (max-width: 900px){
+  .tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid2,.invite,.twocol{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width: 820px){
+  .welcome{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width: 760px){
+  .composer{position:relative;bottom:auto;max-height:52dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
+  .composer-box{flex:none}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .form .row2{grid-template-columns:1fr}
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl{border:0;background:transparent}
+  .tbl colgroup,.tbl thead{display:none}
+  .tbl tr{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:10px 12px}
+  .tbl td{border:0;padding:3px 0}
+  .tbl td[data-l]::before{content:attr(data-l);display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .tbl .clip{white-space:normal}
+  .tbl .r{text-align:left}
+  .scores{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kv{grid-template-columns:minmax(0,1fr)}
+  .kv dt{margin-top:6px}
+  .msg{max-width:94%}
+  .rail-l{font-size:0}
+  .rail-l b{font-size:11.5px}
+}
+</style>
+
+<header id="bar" class="bar"></header>
+<main id="main" class="main wrap"></main>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- данные справочников ---------- */
+var DEPTS = [
+  ['mgmt','Руководство компании','Conducerea companiei'],
+  ['prod_dir','Производство — руководство','Producție — conducere'],
+  ['planning','Планирование производства','Planificarea producției'],
+  ['prod_area','Производственный участок (мастер, начальник смены)','Sector de producție (maistru, șef de schimb)'],
+  ['operator','Оператор производства','Operator de producție'],
+  ['tech','Технология и НСИ (составы, рецептуры)','Tehnologie și nomenclator (rețete, compoziții)'],
+  ['quality','Качество (ОКК, QA/QC)','Calitate (QA/QC)'],
+  ['regulatory','Регистрация и регуляторика','Înregistrare și afaceri regulatorii'],
+  ['wh_raw','Склад сырья и материалов','Depozit materii prime și materiale'],
+  ['wh_fg','Склад готовой продукции','Depozit produse finite'],
+  ['procurement','Закупки','Achiziții'],
+  ['packaging','Упаковка и печать (макеты, ножи)','Ambalaj și tipar (machete, cuțite)'],
+  ['sales','Продажи','Vânzări'],
+  ['crm','Работа с клиентами (CRM)','Relații cu clienții (CRM)'],
+  ['marketing','Маркетинг','Marketing'],
+  ['logistics','Логистика и отгрузка','Logistică și expediere'],
+  ['finance','Финансы и бухгалтерия','Finanțe și contabilitate'],
+  ['analytics','Аналитика и отчётность','Analiză și raportare'],
+  ['hr','Кадры','Resurse umane'],
+  ['it','ИТ и администрирование','IT și administrare'],
+  ['other','Другое','Altele']
+];
+function deptName(key, lang){
+  for (var i = 0; i < DEPTS.length; i++) if (DEPTS[i][0] === key) return lang === 'ro' ? DEPTS[i][2] : DEPTS[i][1];
+  return key || '—';
+}
+
+var T = {
+  ru: {
+    brand: 'Интервью о вашей работе',
+    phases: ['Роль и неделя','Регулярные задачи','Стыки с отделами','Рутина и боли','Что оставить людям'],
+    phaseHints: ['За что вы отвечаете и как выглядит обычная неделя','3–5 повторяющихся дел: как часто, сколько времени, в каких программах','С какими отделами вы работаете, где ждёте и что согласуете','Что однообразно, где ошибки и переделки','Где нужны опыт и решения человека'],
+    eyebrow: 'Balkan Pharmaceuticals · карта процессов',
+    welcomeTitle: 'Расскажите, как устроена ваша работа',
+    welcomeLead: 'Это короткое интервью с ИИ-помощником. Он задаёт вопросы по одному: чем вы занимаетесь, какие задачи повторяются, с кем вы работаете и что отнимает время. На большинство вопросов можно выбрать один или несколько готовых вариантов или ответить своими словами.',
+    why: 'Зачем: собрать карту процессов компании и убрать рутину — ручной перенос данных, лишние согласования, однообразные отчёты. Это не проверка и не оценка вашей работы.',
+    facts: ['Займёт 20–35 минут. Можно прерваться: ответы сохраняются, вы продолжите с того же места.','Ваши ответы видит только руководитель, запустивший опрос. Другие сотрудники их не видят.','Не называйте пароли, персональные данные пациентов и клиентов, зарплаты и цены.'],
+    fName: 'Как к вам обращаться', fNamePh: 'Имя и фамилия',
+    fDept: 'Отдел', fDeptPh: 'Выберите отдел',
+    fRole: 'Функции в карте процессов', fRoleHint: 'Выберите одну или несколько функций. Первая выбранная — основная, остальные — дополнительные.',
+    fPos: 'Должность', fPosPh: 'Например: мастер участка таблетирования',
+    fAbout: 'Опишите свою работу своими словами (необязательно)',
+    fAboutPh: 'Например: каждый день сверяю остатки сырья, готовлю план смены и проверяю записи операторов…',
+    fAboutHint: 'Сначала зададим вопросы о ваших фактических занятиях, затем по выбранным функциям. Не указывайте конфиденциальные данные.',
+    consent: 'Я понимаю цель интервью и согласен(на) ответить на вопросы',
+    start: 'Начать интервью', connecting: 'Подключение…',
+    needFields: 'Заполните имя, отдел и должность и отметьте согласие.',
+    stepsTitle: 'Как пройдёт интервью',
+    interviewer: 'Интервьюер', you: 'Вы',
+    placeholder: 'Ваш ответ… (Enter — отправить, Shift+Enter — новая строка)',
+    ownPh: 'Свой ответ или уточнение… (Enter — отправить)',
+    optsMany: 'Можно выбрать несколько вариантов и дописать свой ответ',
+    optsOne: 'Выберите вариант или напишите свой ответ',
+    attachFile: 'Файл или фото', attachLink: 'Google Таблица', attachHint: 'Excel, PDF, Word, изображение · до 500 МБ · до 5 на вопрос',
+    attachLinkPh: 'https://docs.google.com/spreadsheets/…', attachAdd: 'Добавить ссылку', attachCancel: 'Отмена',
+    attachUploading: 'Загружаю', attachSaved: 'Материал сохранён и привязан к этому вопросу', attachRemove: 'Удалить вложение',
+    attachType: 'Этот тип файла не поддерживается. Выберите Excel, CSV, PDF, Word или изображение.',
+    attachTooLarge: 'Файл больше 500 МБ. Выберите файл меньшего размера.',
+    attachTooMany: 'К одному вопросу можно прикрепить не больше 5 материалов.',
+    attachBadLink: 'Вставьте HTTPS-ссылку на Google Таблицу (docs.google.com/spreadsheets).',
+    attachFail: 'Не удалось сохранить материал. Проверьте соединение и попробуйте ещё раз.',
+    attachmentsOnly: 'Прикрепил(а) материалы к этому вопросу.', attachOpen: 'Открыть', attachDownload: 'Скачать',
+    analysisProgress: 'Анализирую документы · {done} / {total}', analysisDone: 'Документы добавлены в базу знаний · {done} / {total}',
+    analysisWarning: 'Документы сохранены · {done} / {total}. Часть требует проверки или анализ продолжится в фоне.',
+    send: 'Отправить', stop: 'Остановить', retry: 'Повторить',
+    voiceOn: 'Включить озвучку', voiceOff: 'Выключить озвучку', voicePlay: 'Озвучить вопрос', voiceStop: 'Остановить озвучку',
+    voiceUnsupported: 'Озвучка голосом руководителя сейчас недоступна. Текст вопросов остаётся доступен.',
+    voicePreparing: 'Готовлю голос руководителя',
+    speechError: 'Не удалось включить готовую озвучку. Текст вопроса доступен на экране.',
+    voiceTap: 'Озвучка готова. Нажмите динамик у вопроса, чтобы прослушать её.',
+    voiceMic: 'Ответить голосом', voiceStopMic: 'Остановить и распознать', voiceListening: 'Идёт запись…',
+    voiceStarting: 'Включаю микрофон…', voiceCancelMic: 'Отменить включение микрофона',
+    micHint: 'Микрофон включается только по кнопке. Речь может обрабатываться сервисом браузера. Не произносите секреты.',
+    micUnsupported: 'Голосовой ввод не поддерживается в этом браузере. Напишите ответ текстом.',
+    micError: 'Не удалось включить микрофон. Проверьте разрешение в браузере или напишите ответ.',
+    voiceDenied: 'Нет доступа к микрофону. Разрешите доступ в настройках браузера или напишите ответ.',
+    voiceError: 'Не удалось распознать речь. Попробуйте ещё раз или напишите ответ.',
+    voiceNetwork: 'Сервис распознавания речи недоступен. Проверьте интернет или напишите ответ.',
+    voiceEmpty: 'Речь не распознана. Попробуйте говорить чётче или напишите ответ.',
+    voiceReady: 'Текст добавлен. Проверьте его и при необходимости исправьте перед отправкой.',
+    voiceLang: 'Этот язык распознавания не поддерживается устройством. Можно ответить текстом.',
+    finish: 'Завершить интервью',
+    finishHint: 'Завершить можно после 5 ответов.',
+    thinking: 'Интервьюер думает',
+    saving: 'Сохраняю…', saved: 'Ответы сохранены', saveFail: 'Не удалось сохранить. Проверьте соединение — ответ остался на экране.',
+    scriptNotice: 'ИИ-помощник недоступен для вашей учётной записи. Продолжим по готовым вопросам — ответы так же попадут руководителю.',
+    yes: 'Да, ещё одна задача', no: 'Нет, дальше',
+    errGeneric: 'Интервьюер не ответил. Нажмите «Повторить».', errRate: 'Слишком много запросов. Подождите минуту и нажмите «Повторить».', errSession: 'Сессия claude.ai истекла. Войдите заново и обновите страницу.', errRefused: 'Интервьюер не смог ответить на это сообщение. Переформулируйте ответ.',
+    summarizing: 'Собираю резюме ваших ответов', summarizingLead: 'Обычно это занимает до минуты.',
+    reviewTitle: 'Проверьте резюме',
+    reviewLead: 'Так руководитель увидит вашу работу. Если что-то неточно — напишите, что поправить.',
+    role: 'Роль', processes: 'Регулярные процессы', freq: 'Частота', hours: 'Часов в неделю', systems: 'Программы и документы', from: 'Откуда данные', to: 'Кому результат', pains: 'Что мешает', idea: 'Что можно упростить', potential: 'Потенциал автоматизации',
+    handoffs: 'Стыки с отделами', approvals: 'Согласования и подписи', topPains: 'Главное, что мешает', keepHuman: 'Должно остаться за человеком', helper: 'Отдал(а) бы помощнику', openQ: 'Осталось непонятным',
+    fixPh: 'Что поправить или добавить?', fix: 'Уточнить резюме', submit: 'Всё верно — отправить',
+    fixPrefix: 'Поправка к резюме: ',
+    summaryFail: 'Не получилось собрать резюме. Ответы сохранены — их разберёт руководитель.', sendRaw: 'Отправить без резюме', tryAgain: 'Попробовать ещё раз',
+    doneTitle: 'Спасибо! Ответы отправлены',
+    doneLead: 'Ваше интервью попало в общую карту процессов компании. Если вспомните что-то важное, интервью можно дополнить.',
+    reopen: 'Дополнить интервью', reopenHint: 'Напишите, что хотите добавить или исправить.',
+    offlineTitle: 'Откройте ссылку в claude.ai', offlineLead: 'Эта страница работает внутри claude.ai: там сохраняются ответы и работает ИИ-интервьюер. Откройте ссылку, которую прислал руководитель, войдя в свою учётную запись claude.ai.',
+    noStoreTitle: 'Нужен вход в claude.ai', noStoreLead: 'Чтобы ответы сохранялись, откройте ссылку, войдя в свою учётную запись claude.ai. Если вы уже вошли и видите это сообщение, попросите руководителя дать вам доступ к странице с правом редактирования.',
+    readOnly: 'У вашей учётной записи доступ к странице только на просмотр, поэтому ответы не сохранятся. Попросите руководителя пригласить вас с уровнем «Редактор» (Editor) или «Участник» (Contributor).',
+    greet: 'Здравствуйте, {name}! Я задам несколько вопросов о вашей работе — по одному. Отвечайте своими словами, коротко или подробно, как удобно.'
+  },
+  ro: {
+    brand: 'Interviu despre munca dvs.',
+    phases: ['Rolul și săptămâna','Sarcini regulate','Legături între departamente','Rutină și dificultăți','Ce rămâne la oameni'],
+    phaseHints: ['De ce răspundeți și cum arată o săptămână obișnuită','3–5 sarcini repetitive: cât de des, cât timp, în ce programe','Cu ce departamente lucrați, unde așteptați și ce aprobați','Ce este monoton, unde apar erori și refaceri','Unde sunt necesare experiența și deciziile omului'],
+    eyebrow: 'Balkan Pharmaceuticals · harta proceselor',
+    welcomeTitle: 'Povestiți-ne cum este organizată munca dumneavoastră',
+    welcomeLead: 'Este un interviu scurt cu un asistent AI. Vă pune întrebări pe rând: ce faceți, ce sarcini se repetă, cu cine lucrați și ce vă ia timp. La majoritatea întrebărilor puteți alege una sau mai multe variante gata făcute sau puteți răspunde cu cuvintele dumneavoastră.',
+    why: 'De ce: pentru a face harta proceselor companiei și a elimina rutina — transferul manual de date, aprobările inutile, rapoartele repetitive. Nu este o verificare sau o evaluare a muncii dumneavoastră.',
+    facts: ['Durează 20–35 de minute. Puteți face pauză: răspunsurile se salvează și continuați de unde ați rămas.','Răspunsurile le vede doar conducătorul care a lansat sondajul. Ceilalți angajați nu le văd.','Nu menționați parole, date personale ale pacienților și clienților, salarii sau prețuri.'],
+    fName: 'Cum să ne adresăm', fNamePh: 'Prenume și nume',
+    fDept: 'Departament', fDeptPh: 'Alegeți departamentul',
+    fRole: 'Funcțiile în harta proceselor', fRoleHint: 'Alegeți una sau mai multe funcții. Prima selectată este principală, celelalte sunt suplimentare.',
+    fPos: 'Funcția', fPosPh: 'De exemplu: maistru la secția de comprimate',
+    fAbout: 'Descrieți activitatea dumneavoastră în cuvinte proprii (opțional)',
+    fAboutPh: 'De exemplu: zilnic verific stocul materiei prime, pregătesc planul de schimb și verific notițele operatorilor…',
+    fAboutHint: 'Mai întâi vom pune întrebări despre activitățile reale, apoi despre funcțiile alese. Nu includeți date confidențiale.',
+    consent: 'Înțeleg scopul interviului și sunt de acord să răspund la întrebări',
+    start: 'Începe interviul', connecting: 'Conectare…',
+    needFields: 'Completați numele, departamentul și funcția și bifați acordul.',
+    stepsTitle: 'Cum va decurge interviul',
+    interviewer: 'Intervievator', you: 'Dvs.',
+    placeholder: 'Răspunsul dvs.… (Enter — trimite, Shift+Enter — rând nou)',
+    ownPh: 'Răspunsul sau precizarea dvs.… (Enter — trimite)',
+    optsMany: 'Puteți alege mai multe variante și adăuga răspunsul dvs.',
+    optsOne: 'Alegeți o variantă sau scrieți răspunsul dvs.',
+    attachFile: 'Fișier sau foto', attachLink: 'Google Sheets', attachHint: 'Excel, PDF, Word, imagine · până la 500 MB · maximum 5 pe întrebare',
+    attachLinkPh: 'https://docs.google.com/spreadsheets/…', attachAdd: 'Adaugă linkul', attachCancel: 'Anulează',
+    attachUploading: 'Se încarcă', attachSaved: 'Materialul este salvat și legat de această întrebare', attachRemove: 'Șterge atașamentul',
+    attachType: 'Acest tip de fișier nu este acceptat. Alegeți Excel, CSV, PDF, Word sau o imagine.',
+    attachTooLarge: 'Fișierul depășește 500 MB. Alegeți un fișier mai mic.',
+    attachTooMany: 'Puteți atașa maximum 5 materiale la o întrebare.',
+    attachBadLink: 'Inserați un link HTTPS către Google Sheets (docs.google.com/spreadsheets).',
+    attachFail: 'Materialul nu a putut fi salvat. Verificați conexiunea și încercați din nou.',
+    attachmentsOnly: 'Am atașat materiale la această întrebare.', attachOpen: 'Deschide', attachDownload: 'Descarcă',
+    analysisProgress: 'Analizez documentele · {done} / {total}', analysisDone: 'Documentele sunt adăugate în baza de cunoștințe · {done} / {total}',
+    analysisWarning: 'Documentele sunt salvate · {done} / {total}. O parte necesită verificare sau analiza continuă în fundal.',
+    send: 'Trimite', stop: 'Oprește', retry: 'Reîncearcă',
+    voiceOn: 'Activează citirea vocală', voiceOff: 'Dezactivează citirea vocală', voicePlay: 'Citește întrebarea', voiceStop: 'Oprește citirea',
+    voiceUnsupported: 'Citirea cu vocea conducătorului nu este disponibilă momentan. Textul întrebărilor rămâne disponibil.',
+    voicePreparing: 'Pregătesc vocea conducătorului',
+    speechError: 'Înregistrarea vocală nu a putut fi redată. Textul întrebării este disponibil pe ecran.',
+    voiceTap: 'Înregistrarea este gata. Apăsați difuzorul de lângă întrebare pentru a o asculta.',
+    voiceMic: 'Răspunde vocal', voiceStopMic: 'Oprește și recunoaște', voiceListening: 'Înregistrare…',
+    voiceStarting: 'Se activează microfonul…', voiceCancelMic: 'Anulează activarea microfonului',
+    micHint: 'Microfonul pornește doar la apăsare. Vocea poate fi procesată prin serviciul browserului. Nu rostiți secrete.',
+    micUnsupported: 'Răspunsul vocal nu este acceptat de acest browser. Scrieți răspunsul.',
+    micError: 'Microfonul nu a putut fi pornit. Verificați permisiunea în browser sau scrieți răspunsul.',
+    voiceDenied: 'Nu există acces la microfon. Permiteți accesul în browser sau scrieți răspunsul.',
+    voiceError: 'Vocea nu a putut fi recunoscută. Încercați din nou sau scrieți răspunsul.',
+    voiceNetwork: 'Serviciul de recunoaștere vocală nu este disponibil. Verificați internetul sau scrieți răspunsul.',
+    voiceEmpty: 'Vocea nu a fost recunoscută. Vorbiți mai clar sau scrieți răspunsul.',
+    voiceReady: 'Textul a fost adăugat. Verificați-l și corectați-l înainte de trimitere.',
+    voiceLang: 'Această limbă nu este acceptată pentru recunoaștere pe dispozitiv. Puteți răspunde în scris.',
+    finish: 'Încheie interviul',
+    finishHint: 'Puteți încheia după 5 răspunsuri.',
+    thinking: 'Intervievatorul se gândește',
+    saving: 'Se salvează…', saved: 'Răspunsuri salvate', saveFail: 'Nu s-a putut salva. Verificați conexiunea — răspunsul a rămas pe ecran.',
+    scriptNotice: 'Asistentul AI nu este disponibil pentru contul dvs. Continuăm cu întrebări pregătite — răspunsurile ajung la fel la conducător.',
+    yes: 'Da, încă o sarcină', no: 'Nu, mai departe',
+    errGeneric: 'Intervievatorul nu a răspuns. Apăsați „Reîncearcă”.', errRate: 'Prea multe cereri. Așteptați un minut și apăsați „Reîncearcă”.', errSession: 'Sesiunea claude.ai a expirat. Autentificați-vă din nou și reîncărcați pagina.', errRefused: 'Intervievatorul nu a putut răspunde la acest mesaj. Reformulați răspunsul.',
+    summarizing: 'Pregătesc rezumatul răspunsurilor', summarizingLead: 'De obicei durează până la un minut.',
+    reviewTitle: 'Verificați rezumatul',
+    reviewLead: 'Așa va vedea conducătorul munca dumneavoastră. Dacă ceva nu este exact, scrieți ce trebuie corectat.',
+    role: 'Rolul', processes: 'Procese regulate', freq: 'Frecvența', hours: 'Ore pe săptămână', systems: 'Programe și documente', from: 'De unde vin datele', to: 'Cui merge rezultatul', pains: 'Ce încurcă', idea: 'Ce se poate simplifica', potential: 'Potențial de automatizare',
+    handoffs: 'Legături cu departamentele', approvals: 'Aprobări și semnături', topPains: 'Principalele dificultăți', keepHuman: 'Trebuie să rămână la om', helper: 'Ar da unui asistent', openQ: 'A rămas neclar',
+    fixPh: 'Ce trebuie corectat sau adăugat?', fix: 'Actualizează rezumatul', submit: 'Totul este corect — trimite',
+    fixPrefix: 'Corectare la rezumat: ',
+    summaryFail: 'Nu s-a reușit pregătirea rezumatului. Răspunsurile sunt salvate — le va analiza conducătorul.', sendRaw: 'Trimite fără rezumat', tryAgain: 'Încearcă din nou',
+    doneTitle: 'Mulțumim! Răspunsurile au fost trimise',
+    doneLead: 'Interviul dvs. a intrat în harta comună a proceselor companiei. Dacă vă amintiți ceva important, interviul poate fi completat.',
+    reopen: 'Completează interviul', reopenHint: 'Scrieți ce doriți să adăugați sau să corectați.',
+    offlineTitle: 'Deschideți linkul în claude.ai', offlineLead: 'Această pagină funcționează în claude.ai: acolo se salvează răspunsurile și funcționează intervievatorul AI. Deschideți linkul primit de la conducător, autentificat în contul dvs. claude.ai.',
+    noStoreTitle: 'Este nevoie de autentificare în claude.ai', noStoreLead: 'Pentru ca răspunsurile să se salveze, deschideți linkul autentificat în contul dvs. claude.ai. Dacă sunteți deja autentificat și vedeți acest mesaj, rugați conducătorul să vă dea acces cu drept de editare.',
+    readOnly: 'Contul dvs. are acces doar pentru vizualizare, de aceea răspunsurile nu se vor salva. Rugați conducătorul să vă invite cu nivelul „Editor” sau „Contributor”.',
+    greet: 'Bună ziua, {name}! Vă voi pune câteva întrebări despre munca dumneavoastră — pe rând. Răspundeți cu cuvintele dumneavoastră, scurt sau detaliat, cum vă este comod.'
+  }
+};
+
+// Вопрос анкеты: строка (свободный ответ) или {q, m: 'one'|'many', o: [варианты]}
+var SCRIPT = {
+  ru: {
+    p1: [
+      'Расскажите в двух-трёх предложениях, за что вы отвечаете. Какой результат вашей работы видят другие?',
+      { q: 'Из чего в основном состоит ваша обычная неделя? Отметьте подходящее и допишите, что делаете ежедневно, а что раз в неделю или месяц.', m: 'many', o: ['Производство и контроль процесса', 'Работа с документами и журналами', 'Ввод данных в 1С/ERP', 'Отчёты и сводки', 'Переписка и звонки', 'Совещания и согласования', 'Работа на складе', 'Работа с клиентами и поставщиками'] }
+    ],
+    task: [
+      { q: 'Назовите регулярную задачу №{n} — самую частую или самую долгую из тех, о которых вы ещё не рассказали.', m: 'one', o: ['Ввод данных в 1С/ERP', 'Подготовка отчёта или сводки', 'Оформление заявки или заказа', 'Проверка и сверка документов', 'Заполнение журналов и бланков', 'Планирование работ', 'Переписка и согласования'] },
+      { q: 'Как часто вы её выполняете?', m: 'one', o: ['Несколько раз в день', 'Ежедневно', 'Несколько раз в неделю', 'Раз в неделю', 'Несколько раз в месяц', 'Раз в месяц или реже'] },
+      { q: 'Сколько времени она занимает за один раз?', m: 'one', o: ['До 15 минут', '15–30 минут', '30–60 минут', '1–2 часа', '2–4 часа', 'Больше 4 часов'] },
+      { q: 'Какие программы, файлы и документы вы при этом используете?', m: 'many', o: ['1С', 'Excel или Google Таблицы', 'Почта', 'ERP', 'Бумажные журналы и бланки', 'Мессенджеры', 'Телефон'] },
+      { q: 'От кого приходят исходные данные и кому вы передаёте результат?', m: 'many', o: ['Продажи', 'Закупки', 'Планирование', 'Производство', 'Склад', 'Качество', 'Финансы', 'Руководство', 'Клиенты или поставщики'] },
+      { q: 'Что здесь чаще всего идёт не так?', m: 'many', o: ['Ошибки в данных', 'Жду данные от других', 'Переделки', 'Ручной перенос данных между системами', 'Долго ищу информацию', 'Срочные изменения', 'Обычно всё в порядке'] },
+      'Опишите последний реальный случай, когда вы это делали: что было на входе, что вы сделали, что получилось.'
+    ],
+    more: { q: 'Есть ли ещё регулярная задача, о которой стоит рассказать?', m: 'one', o: ['Да, ещё одна задача', 'Нет, дальше'] },
+    p3: [
+      { q: 'С какими отделами вы взаимодействуете чаще всего?', m: 'many', o: ['Продажи', 'Закупки', 'Планирование', 'Производство', 'Склад', 'Качество', 'Регистрация', 'Упаковка и печать', 'Финансы', 'Руководство'] },
+      { q: 'Где на стыках с другими отделами приходится ждать или переспрашивать?', m: 'many', o: ['Жду данные или документы', 'Жду согласования или подписи', 'Уточняю неполные данные', 'Нет единого источника данных', 'Поздно узнаю об изменениях', 'Почти не жду'] },
+      { q: 'Сколько обычно занимают согласования и подписи в вашей работе?', m: 'one', o: ['Не нужны', 'До часа', 'В пределах дня', 'Несколько дней', 'Больше недели'] }
+    ],
+    p4: [
+      { q: 'Какая часть вашей работы самая однообразная?', m: 'many', o: ['Ввод и перенос данных', 'Отчёты и сводки', 'Сверки', 'Поиск документов и информации', 'Переписка и напоминания', 'Заполнение журналов и бланков'] },
+      { q: 'Где чаще всего случаются ошибки или переделки и почему?', m: 'many', o: ['Ручной ввод данных', 'Устаревшие данные', 'Недопонимание между отделами', 'Срочные изменения плана', 'Нет единого источника данных', 'Ошибок почти нет'] }
+    ],
+    p5: [
+      { q: 'Какие решения в вашей работе требуют опыта и должны оставаться за человеком?', m: 'many', o: ['Решения по качеству и допуску', 'Переговоры с клиентами и поставщиками', 'Планирование и приоритеты', 'Технологические решения', 'Работа с людьми', 'Решения о деньгах'] },
+      { q: 'Если бы у вас появился помощник на два часа в день, что бы вы ему отдали в первую очередь?', m: 'many', o: ['Отчёты', 'Ввод данных', 'Сверки', 'Контроль сроков и напоминания', 'Поиск информации', 'Подготовку документов', 'Переписку'] }
+    ],
+    end: 'Спасибо! Это были все вопросы.',
+    add: 'Что вы хотите добавить к интервью?'
+  },
+  ro: {
+    p1: [
+      'Spuneți în două-trei propoziții de ce răspundeți. Ce rezultat al muncii dumneavoastră văd ceilalți?',
+      { q: 'Din ce constă în principal o săptămână obișnuită? Bifați ce se potrivește și completați ce faceți zilnic și ce o dată pe săptămână sau pe lună.', m: 'many', o: ['Producție și controlul procesului', 'Lucru cu documente și registre', 'Introducere de date în 1C/ERP', 'Rapoarte și centralizări', 'Corespondență și apeluri', 'Ședințe și aprobări', 'Lucru în depozit', 'Lucru cu clienții și furnizorii'] }
+    ],
+    task: [
+      { q: 'Numiți sarcina regulată nr. {n} — cea mai frecventă sau cea mai lungă dintre cele despre care nu ați povestit încă.', m: 'one', o: ['Introducere de date în 1C/ERP', 'Pregătirea unui raport', 'Întocmirea unei cereri sau comenzi', 'Verificarea și reconcilierea documentelor', 'Completarea registrelor și formularelor', 'Planificarea lucrărilor', 'Corespondență și aprobări'] },
+      { q: 'Cât de des o faceți?', m: 'one', o: ['De câteva ori pe zi', 'Zilnic', 'De câteva ori pe săptămână', 'O dată pe săptămână', 'De câteva ori pe lună', 'O dată pe lună sau mai rar'] },
+      { q: 'Cât timp durează o dată?', m: 'one', o: ['Până la 15 minute', '15–30 de minute', '30–60 de minute', '1–2 ore', '2–4 ore', 'Peste 4 ore'] },
+      { q: 'Ce programe, fișiere și documente folosiți?', m: 'many', o: ['1C', 'Excel sau Google Sheets', 'E-mail', 'ERP', 'Registre și formulare pe hârtie', 'Mesagerie', 'Telefon'] },
+      { q: 'De la cine vin datele inițiale și cui transmiteți rezultatul?', m: 'many', o: ['Vânzări', 'Achiziții', 'Planificare', 'Producție', 'Depozit', 'Calitate', 'Finanțe', 'Conducere', 'Clienți sau furnizori'] },
+      { q: 'Ce merge cel mai des prost aici?', m: 'many', o: ['Erori în date', 'Aștept date de la alții', 'Refaceri', 'Transfer manual de date între sisteme', 'Caut mult informația', 'Schimbări urgente', 'De obicei totul e în regulă'] },
+      'Descrieți ultimul caz real când ați făcut acest lucru: ce ați primit, ce ați făcut, ce a ieșit.'
+    ],
+    more: { q: 'Mai este o sarcină regulată despre care merită să povestiți?', m: 'one', o: ['Da, încă o sarcină', 'Nu, mai departe'] },
+    p3: [
+      { q: 'Cu ce departamente colaborați cel mai des?', m: 'many', o: ['Vânzări', 'Achiziții', 'Planificare', 'Producție', 'Depozit', 'Calitate', 'Înregistrare', 'Ambalaj și tipar', 'Finanțe', 'Conducere'] },
+      { q: 'Unde, în colaborarea cu alte departamente, trebuie să așteptați sau să reveniți cu întrebări?', m: 'many', o: ['Aștept date sau documente', 'Aștept aprobări sau semnături', 'Clarific date incomplete', 'Nu există o sursă unică de date', 'Aflu târziu despre schimbări', 'Aproape nu aștept'] },
+      { q: 'Cât durează de obicei aprobările și semnăturile în munca dumneavoastră?', m: 'one', o: ['Nu sunt necesare', 'Până la o oră', 'În aceeași zi', 'Câteva zile', 'Peste o săptămână'] }
+    ],
+    p4: [
+      { q: 'Ce parte a muncii dumneavoastră este cea mai monotonă?', m: 'many', o: ['Introducerea și transferul de date', 'Rapoarte și centralizări', 'Reconcilieri', 'Căutarea documentelor și informațiilor', 'Corespondență și mementouri', 'Completarea registrelor și formularelor'] },
+      { q: 'Unde apar cel mai des erori sau refaceri și de ce?', m: 'many', o: ['Introducerea manuală a datelor', 'Date neactualizate', 'Neînțelegeri între departamente', 'Schimbări urgente ale planului', 'Nu există o sursă unică de date', 'Aproape nu sunt erori'] }
+    ],
+    p5: [
+      { q: 'Ce decizii din munca dumneavoastră cer experiență și trebuie să rămână la om?', m: 'many', o: ['Decizii de calitate și eliberare', 'Negocieri cu clienții și furnizorii', 'Planificare și priorități', 'Decizii tehnologice', 'Lucrul cu oamenii', 'Decizii financiare'] },
+      { q: 'Dacă ați avea un asistent două ore pe zi, ce i-ați da în primul rând?', m: 'many', o: ['Rapoarte', 'Introducere de date', 'Reconcilieri', 'Controlul termenelor și mementouri', 'Căutarea informațiilor', 'Pregătirea documentelor', 'Corespondență'] }
+    ],
+    end: 'Mulțumim! Acestea au fost toate întrebările.',
+    add: 'Ce doriți să adăugați la interviu?'
+  }
+};
+
+/* ---------- состояние ---------- */
+var S = {
+  lang: 'ru', ready: false, offline: false,
+  db: null, user: null, sample: null, downloads: null,
+  uid: null, isOwner: false, meName: '', readOnly: false,
+  myRef: null, iv: null, picked: [], attachments: [], attachBusy: false, attachErr: '', attachProgress: '', attachPercent: 0, linkOpen: false,
+  view: 'welcome', busy: false, ctl: null, analysisCtl: null, saveState: '', chatErr: '', notice: '', sumErr: '', formErr: '',
+  ownerVoice: false, voiceOn: false, voiceSpeaking: false, voiceLoading: false, voiceSeconds: 0, voiceTimer: null, voiceAutoTimer: null, voiceUtterance: null, recog: null, listening: false, micSeconds: 0, micTimer: null,
+  ownerMode: 'dash', tab: 'overview', all: [], analysis: null, selected: null, confirmDel: false, knowledge: [], knowledgeQuery: '',
+  filter: { dept: '', q: '', sort: 'hours' }, anBusy: false, anCtl: null, anErr: '', extracting: {}, extractErr: {}, profiles: {}
+};
+try { var savedLang = localStorage.getItem('bp_lang'); if (savedLang === 'ru' || savedLang === 'ro') S.lang = savedLang; } catch (e) {}
+try { S.voiceOn = localStorage.getItem('bp_voice') === '1'; } catch (e) {}
+
+/* ---------- утилиты ---------- */
+function $(sel, root) { return (root || document).querySelector(sel); }
+function h(tag, attrs) {
+  var el = document.createElement(tag);
+  if (attrs) for (var k in attrs) {
+    var v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'text') el.textContent = v;
+    else if (k === 'value') el.value = v;
+    else if (k.slice(0, 2) === 'on' && typeof v === 'function') el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : String(v));
+  }
+  var kids = Array.prototype.slice.call(arguments, 2);
+  (function add(list) {
+    for (var i = 0; i < list.length; i++) {
+      var kid = list[i];
+      if (kid == null || kid === false || kid === '') continue;
+      if (Array.isArray(kid)) { add(kid); continue; }
+      el.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+    }
+  })(kids);
+  return el;
+}
+function t(k) { var L = T[S.lang] || T.ru; return L[k] != null ? L[k] : (T.ru[k] != null ? T.ru[k] : k); }
+function now() { return new Date().toISOString(); }
+function clone(o) { return JSON.parse(JSON.stringify(o == null ? null : o)); }
+function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+function str(x) { if (x == null) return ''; var s = typeof x === 'string' ? x.trim() : String(x); return s === 'null' || s === 'undefined' ? '' : s; }
+function num(x) { if (x == null || x === '') return null; var n = typeof x === 'number' ? x : parseFloat(String(x).replace(',', '.')); return isFinite(n) ? Math.round(n * 10) / 10 : null; }
+function arr(x) { return Array.isArray(x) ? x.filter(function (v) { return v != null && v !== ''; }) : (x ? [x] : []); }
+function strs(x) { return arr(x).map(function (v) { return typeof v === 'string' ? v.trim() : (typeof v === 'object' ? Object.values(v).join(' — ') : String(v)); }).filter(Boolean); }
+function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+function fmtNum(n) { return n == null ? '—' : String(n).replace('.', ','); }
+function fmtDate(iso) { if (!iso) return '—'; var d = new Date(iso); if (isNaN(d)) return '—'; return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }) + ' ' + d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); }
+function answersCount(iv) { return (iv && iv.messages || []).filter(function (m) { return m.role === 'user'; }).length; }
+function toast(msg) { var el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(function () { el.hidden = true; }, 3200); }
+function errText(e) {
+  var c = e && e.code;
+  if (c === 'rate_limited') return t('errRate');
+  if (c === 'session_expired') return t('errSession');
+  if (c === 'refused') return t('errRefused');
+  return t('errGeneric');
+}
+
+/* ---------- нормализация ответов ИИ ---------- */
+function normSummary(d) {
+  d = d && typeof d === 'object' && !Array.isArray(d) ? d : {};
+  return {
+    role_key: str(d.role_key), role_keys: strs(d.role_keys), role_summary: str(d.role_summary),
+    responsibilities: strs(d.responsibilities),
+    decision_rights: arr(d.decision_rights).filter(function (o) { return o && typeof o === 'object'; }).map(function (o) {
+      return { decision: str(o.decision), owner: str(o.owner), limit: str(o.limit), evidence: str(o.evidence) };
+    }),
+    documents: arr(d.documents).filter(function (o) { return o && typeof o === 'object'; }).map(function (o) {
+      return { name: str(o.name), version: str(o.version), owner: str(o.owner), retention: str(o.retention) };
+    }),
+    kpis: arr(d.kpis).filter(function (o) { return o && typeof o === 'object'; }).map(function (o) {
+      return { name: str(o.name), formula: str(o.formula), source: str(o.source), frequency: str(o.frequency), target: str(o.target) };
+    }),
+    exceptions: arr(d.exceptions).filter(function (o) { return o && typeof o === 'object'; }).map(function (o) {
+      return { event: str(o.event), action: str(o.action), escalate_to: str(o.escalate_to) };
+    }),
+    erp_requirements: arr(d.erp_requirements).filter(function (o) { return o && typeof o === 'object'; }).map(function (o) {
+      return { requirement: str(o.requirement), reason: str(o.reason), priority: ['high', 'medium', 'low'].indexOf(o.priority) >= 0 ? o.priority : '', evidence: str(o.evidence) };
+    }),
+    processes: arr(d.processes).filter(function (p) { return p && typeof p === 'object'; }).slice(0, 15).map(function (p) {
+      return {
+        name: str(p.name) || '—', description: str(p.description), frequency: str(p.frequency),
+        hours_per_week: num(p.hours_per_week), systems: strs(p.systems), inputs_from: strs(p.inputs_from), outputs_to: strs(p.outputs_to),
+        pain_points: strs(p.pain_points), judgement: ['low', 'medium', 'high'].indexOf(p.judgement) >= 0 ? p.judgement : '',
+        automation_potential: clamp(Math.round(num(p.automation_potential) || 0), 0, 5), automation_idea: str(p.automation_idea)
+      };
+    }),
+    handoffs: arr(d.handoffs).filter(function (o) { return o && typeof o === 'object'; }).map(function (o) { return { with: str(o.with), what: str(o.what), issue: str(o.issue) }; }),
+    approvals: strs(d.approvals), top_pains: strs(d.top_pains), keep_human: strs(d.keep_human),
+    helper_wish: str(d.helper_wish), open_questions: strs(d.open_questions)
+  };
+}
+function normAnalysis(d) {
+  d = d && typeof d === 'object' && !Array.isArray(d) ? d : {};
+  function sc(v) { var n = num(v); return n == null ? 0 : clamp(Math.round(n), 0, 5); }
+  return {
+    headline: str(d.headline),
+    automation_candidates: arr(d.automation_candidates).filter(function (o) { return o && typeof o === 'object'; }).slice(0, 10).map(function (o, i) {
+      var s = o.scores && typeof o.scores === 'object' ? o.scores : {};
+      return { rank: num(o.rank) || i + 1, task: str(o.task), who: strs(o.who), hours_per_week: num(o.hours_per_week), scores: { time: sc(s.time), rules: sc(s.rules), data: sc(s.data), risk: sc(s.risk) }, approach: str(o.approach), human_check: str(o.human_check), pilot: str(o.pilot) };
+    }),
+    process_catalog: arr(d.process_catalog).filter(function (o) { return o && typeof o === 'object'; }).map(function (o) {
+      return { process: str(o.process), departments: strs(o.departments), people: num(o.people), hours_per_week: num(o.hours_per_week), systems: strs(o.systems), flow: str(o.flow), issues: strs(o.issues) };
+    }),
+    bottlenecks: arr(d.bottlenecks).filter(function (o) { return o && typeof o === 'object'; }).map(function (o) { return { between: str(o.between), issue: str(o.issue), evidence: str(o.evidence) }; }),
+    keep_human: arr(d.keep_human).map(function (o) { return o && typeof o === 'object' ? { task: str(o.task), why: str(o.why) } : { task: str(o), why: '' }; }),
+    duplicates: strs(d.duplicates), gaps: strs(d.gaps)
+  };
+}
+
+/* ---------- промпты ---------- */
+var COMPANY = 'Balkan Pharmaceuticals — фармацевтическое производство в Молдове: лекарства и БАДы, собственные бренды и контрактное производство (Private Label). Упаковку и инструкции печатают подрядчики. В работе используются 1С, Excel, почта, ERP, бумажные журналы и документы GMP.';
+function rulesPrompt(iv) {
+  var langLine = iv.lang === 'ro'
+    ? 'Язык интервью: румынский (limba română). Все твои сообщения — только на румынском.'
+    : 'Язык интервью: русский. Все твои сообщения — только на русском.';
+  return [
+    'Ты — доброжелательный интервьюер по рабочим процессам. Компания: ' + COMPANY,
+    'Цель: понять, как на самом деле устроена работа сотрудника, какие у него процессы и передачи между отделами, и найти рутину, которую можно упростить или автоматизировать. Это не проверка и не оценка человека — скажи это, если собеседник насторожится.',
+    'Собеседник: ' + iv.name + '; отдел: ' + deptName(iv.dept, 'ru') + '; должность: ' + iv.position + '.',
+    langLine,
+    'Правила:',
+    '1. Один короткий вопрос за раз (1–2 предложения). Можно коротко, одним предложением, отреагировать на ответ, затем задать вопрос. Без списков и без markdown.',
+    '2. Пройди 5 этапов по порядку.',
+    '   Этап 1 — роль и обычная неделя: за что отвечает, какой результат работы видят другие, что делает ежедневно, еженедельно, ежемесячно.',
+    '   Этап 2 — регулярные задачи: выбери 3–5 самых частых или долгих. Для каждой выясни: как часто, сколько времени за раз, какие программы, файлы и документы, откуда и от кого приходят исходные данные, кому передаётся результат, что идёт не так (ошибки, ожидание, переделки, ручной перенос данных). Попроси реальный недавний пример хотя бы для одной задачи.',
+    '   Этап 3 — стыки: с какими отделами взаимодействует, где ждёт, что уточняет, какие согласования и подписи нужны и сколько они занимают.',
+    '   Этап 4 — боли: самое однообразное, где ошибки и переделки, что отнимает больше всего времени.',
+    '   Этап 5 — что требует опыта и должно остаться за человеком, и что он отдал бы помощнику, если бы тот появился.',
+    '3. Если ответ расплывчатый — уточни цифрами (сколько раз в неделю, сколько минут). Не задавай больше двух уточнений подряд об одном и том же.',
+    '4. Не предлагай решений и не оценивай людей. Не спрашивай пароли, персональные данные пациентов и клиентов, зарплаты, цены. Если собеседник сам их назвал — не повторяй.',
+    '5. Каждое своё сообщение начинай с метки текущего этапа: [[1]], [[2]], [[3]], [[4]] или [[5]].',
+    '6. Когда все 5 этапов пройдены (обычно 15–25 вопросов), напиши [[DONE]] и одно предложение благодарности, без вопроса.',
+    '7. Если собеседник пишет, что хочет дополнить интервью, выслушай, задай 1–3 уточнения и снова заверши через [[DONE]].',
+    '8. Почти к каждому вопросу последней строкой добавляй варианты ответа: [[OPTIONS many: вариант | вариант | вариант]], когда подходит несколько, или [[OPTIONS one: вариант | вариант]], когда подходит один (частота, длительность, да/нет). 3–8 вариантов по 1–5 слов, на языке интервью, конкретно для отдела и должности собеседника и для фармпроизводства (программы: 1С, Excel, почта, ERP, бумажные журналы; отделы; типичные задачи и проблемы). Не добавляй вариант «Другое» — свой ответ собеседник всегда может дописать. Без вариантов — только вопросы-просьбы описать конкретный случай своими словами.',
+    '9. Ответ собеседника может быть выбранными вариантами через «;» и его собственным уточнением после «—». Учитывай и то и другое. Если выбрано несколько задач или проблем, разбери их по очереди.'
+  ].join('\n');
+}
+function transcriptText(iv) {
+  return (iv.messages || []).map(function (m) { return (m.role === 'assistant' ? 'Интервьюер: ' : 'Сотрудник: ') + m.content; }).join('\n');
+}
+function summaryPrompt(iv, outLang) {
+  var langWord = outLang === 'ro' ? 'румынском (limba română)' : 'русском';
+  return [
+    'Ниже — расшифровка интервью с сотрудником компании ' + COMPANY,
+    'Сотрудник: отдел «' + deptName(iv.dept, 'ru') + '», должность «' + (iv.position || '') + '».',
+    'Составь структурированное резюме его рабочих процессов. Все текстовые значения пиши на ' + langWord + ' языке. Не выдумывай: если цифры не названы, ставь null. Часы в неделю считай из названной частоты и длительности, только если обе названы. Поправки сотрудника к резюме (строки «Поправка к резюме» / «Corectare la rezumat») важнее более ранних ответов. Ответ сотрудника может быть выбранными вариантами через «;» и его уточнением после «—».',
+    'Ответь только JSON-объектом такого вида:',
+    '{"role_summary":"2–3 предложения о роли","processes":[{"name":"короткое название процесса","description":"что делается и зачем, 1–2 предложения","frequency":"как часто, текстом","hours_per_week":число или null,"systems":["1С","Excel"],"inputs_from":["от кого или откуда данные"],"outputs_to":["кому передаётся результат"],"pain_points":["что идёт не так"],"judgement":"low|medium|high — насколько нужны опыт и решения человека","automation_potential":число 1–5,"automation_idea":"одно предложение, что можно упростить, или null"}],"handoffs":[{"with":"отдел или роль","what":"что передаётся","issue":"проблема или null"}],"approvals":["согласования и подписи, сколько ждут"],"top_pains":["3–5 главных болей"],"keep_human":["что должно остаться за человеком"],"helper_wish":"что отдал бы помощнику, или null","open_questions":["что осталось непонятным"]}',
+    '',
+    'Расшифровка:',
+    transcriptText(iv)
+  ].join('\n');
+}
+function analysisPrompt(n) {
+  return [
+    'Ты — операционный консультант на фармацевтическом производстве. Компания: ' + COMPANY,
+    'Ниже резюме интервью ' + n + ' сотрудников (JSON; текст внутри может быть на русском или румынском). Сведи их в карту процессов компании и найди, что упростить в первую очередь.',
+    'Пиши по-русски. Не выдумывай цифры, которых нет в данных: часы суммируй только из названных. Учитывай, что ошибка в GMP-документах, сериях, деньгах и регистрационных данных дорого стоит — там риск выше.',
+    'Ответь только JSON-объектом такого вида:',
+    '{"headline":"главный вывод в 1–2 предложениях","automation_candidates":[{"rank":1,"task":"что автоматизировать","who":["отделы"],"hours_per_week":сумма названных часов или null,"scores":{"time":1–5 сколько времени сэкономит,"rules":1–5 насколько работа по правилам,"data":1–5 насколько доступны входные данные,"risk":1–5 насколько опасна ошибка},"approach":"самый простой способ: шаблон, формула, правило в 1С или ERP, no-code, ИИ-помощник","human_check":"что проверяет человек","pilot":"план пилота на 2 недели"}],"process_catalog":[{"process":"название","departments":["отделы"],"people":число сотрудников,"hours_per_week":сумма названных часов или null,"systems":["системы"],"flow":"откуда → что делается → куда, одно предложение","issues":["проблемы"]}],"bottlenecks":[{"between":"отдел A ↔ отдел B","issue":"что не так","evidence":"какие роли об этом сказали"}],"keep_human":[{"task":"что","why":"почему"}],"duplicates":["одна и та же работа у разных людей или отделов"],"gaps":["каких отделов или ролей не хватает, что уточнить во втором раунде"]}',
+    'automation_candidates — до 10, по убыванию пользы. process_catalog — объедини одинаковые процессы разных людей.'
+  ].join('\n');
+}
+
+/* ---------- сохранение своего интервью ---------- */
+var chain = Promise.resolve(true);
+function setSave(state) {
+  S.saveState = state;
+  var el = $('#savestate');
+  if (!el) return;
+  el.className = 'savestate' + (state === 'saved' ? ' ok' : state === 'fail' || state === 'readonly' ? ' bad' : '');
+  el.textContent = state === 'saving' ? t('saving') : state === 'saved' ? t('saved') : state === 'fail' ? t('saveFail') : state === 'readonly' ? t('readOnly') : '';
+}
+function saveMine() {
+  if (!S.myRef || !S.iv) return Promise.resolve(false);
+  S.iv.updatedAt = now();
+  var data = clone(S.iv);
+  setSave('saving');
+  chain = chain.then(function () {
+    return S.myRef.set(data).then(function () { setSave('saved'); return true; }, function (e) {
+      if (e && e.code === 'unavailable') {
+        return sleep(400 + Math.random() * 600).then(function () { return S.myRef.set(data); }).then(function () { setSave('saved'); return true; }, function () { setSave('fail'); return false; });
+      }
+      if (e && e.code === 'invalid_argument') { S.readOnly = true; setSave('readonly'); } else setSave('fail');
+      return false;
+    });
+  });
+  return chain;
+}
+
+/* ---------- верхняя панель ---------- */
+function renderBar() {
+  var bar = $('#bar');
+  bar.replaceChildren();
+  var dash = S.isOwner && S.ownerMode === 'dash';
+  var actions = h('div', { class: 'bar-actions' });
+  if (dash) {
+    actions.append(
+      h('button', { class: 'btn small', onclick: function () { S.ownerMode = 'self'; render(); resumeIfNeeded(); } }, 'Пройти интервью самому'),
+      h('button', { class: 'btn small', onclick: exportCsv, disabled: !S.all.length }, 'Скачать CSV'),
+      h('button', { class: 'btn small', onclick: exportJson, disabled: !S.all.length }, 'Скачать JSON')
+    );
+  } else {
+    if (S.isOwner) actions.append(h('button', { class: 'btn small ghost', onclick: function () { S.ownerMode = 'dash'; render(); } }, '← Панель руководителя'));
+    var seg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Язык / Limba' });
+    ['ru', 'ro'].forEach(function (l) {
+      seg.append(h('button', { 'aria-pressed': S.lang === l ? 'true' : 'false', onclick: function () { setLang(l); } }, l.toUpperCase()));
+    });
+    actions.append(seg);
+  }
+  bar.append(h('div', { class: 'wrap bar-in' },
+    h('div', { class: 'brand' }, h('span', { class: 'mark', 'aria-hidden': 'true' }, 'B'),
+      h('span', { class: 'brand-t' }, h('b', null, 'Balkan · ' + (dash ? 'Карта процессов' : (S.lang === 'ro' ? 'Harta proceselor' : 'Карта процессов'))), h('span', null, dash ? 'Панель руководителя: интервью сотрудников' : t('brand')))),
+    actions));
+  if (!dash && S.iv && S.view !== 'welcome') {
+    var phase = S.view === 'done' || S.view === 'review' || S.view === 'summarizing' ? 6 : (S.iv.phase || 1);
+    var rail = h('div', { class: 'wrap rail', 'aria-label': 'Этапы' });
+    t('phases').forEach(function (name, i) {
+      var n = i + 1;
+      rail.append(h('div', { class: 'rail-step' + (n < phase ? ' done' : n === phase ? ' cur' : ''), title: name },
+        h('div', { class: 'rail-bar' }), h('div', { class: 'rail-l' }, h('b', null, n), name)));
+    });
+    bar.append(rail);
+  }
+}
+function setLang(l) {
+  stopSpeech();
+  S.lang = l;
+  try { localStorage.setItem('bp_lang', l); } catch (e) {}
+  if (S.view === 'chat') { renderBar(); renderLog(); updateComposer(); }
+  else { render(); if (S.view === 'welcome') scheduleWelcomeVoice(); }
+}
+
+/* ---------- маршрутизация ---------- */
+function go(view) {
+  stopRecognition(true); stopSpeech();
+  if (S.analysisCtl) { S.analysisCtl.abort(); S.analysisCtl = null; S.busy = false; }
+  S.view = view; render(); if (view === 'welcome') scheduleWelcomeVoice();
+}
+function render() {
+  renderBar();
+  var main = $('#main');
+  main.replaceChildren();
+  if (S.isOwner && S.ownerMode === 'dash') { main.append(viewDash()); return; }
+  main.append(employeeView());
+}
+function employeeView() {
+  if (S.ready && !S.offline && (!S.db || !S.uid)) return centerState(t('noStoreTitle'), t('noStoreLead'));
+  switch (S.view) {
+    case 'chat': return viewChat();
+    case 'summarizing': return viewSummarizing();
+    case 'review': return viewReview();
+    case 'done': return viewDone();
+    default: return viewWelcome();
+  }
+}
+function centerState(title, lead) {
+  return h('section', { class: 'center-state' }, h('div', { class: 'eyebrow' }, t('eyebrow')), h('h1', null, title), h('p', { class: 'muted' }, lead));
+}
+
+/* ---------- экран приветствия ---------- */
+function viewWelcome() {
+  var deptSel = h('select', { class: 'input', id: 'f-dept', required: true },
+    h('option', { value: '' }, t('fDeptPh')),
+    DEPTS.map(function (d) { return h('option', { value: d[0] }, S.lang === 'ro' ? d[2] : d[1]); }));
+  var draft = S.formDraft || {};
+  var selectedRoleKeys = (draft.roleKeys && draft.roleKeys.length ? draft.roleKeys : draft.roleKey ? [draft.roleKey] : [ROLE_DEFAULT_BY_DEPT[draft.dept] || '00']);
+  var summaryEl = h('summary', { id: 'role-summary' }, '');
+  var picker = h('details', { class: 'role-picker', id: 'role-picker' },
+    summaryEl,
+    h('div', { class: 'role-options' }, Object.keys(ROLE_PACKS).map(function (key) {
+      var pack = ROLE_PACKS[key];
+      return h('label', { class: 'check role-option' }, h('input', { class: 'role-choice', type: 'checkbox', value: key, checked: selectedRoleKeys.indexOf(key) >= 0, onchange: function () {
+        if (this.checked) setRoleKeys(selectedRoleKeys.concat([key]));
+        else setRoleKeys(selectedRoleKeys.filter(function (item) { return item !== key; }));
+      } }), h('span', null, (S.lang === 'ro' ? pack.title.ro : pack.title.ru) + ' · ' + key));
+    })));
+  function setRoleKeys(keys) {
+    selectedRoleKeys = keys.filter(function (key, index) { return ROLE_PACKS[key] && keys.indexOf(key) === index; });
+    picker.querySelectorAll('.role-choice').forEach(function (input) { input.checked = selectedRoleKeys.indexOf(input.value) >= 0; });
+    updateRoleSummary();
+  }
+  function updateRoleSummary() {
+    var primary = ROLE_PACKS[selectedRoleKeys[0]];
+    summaryEl.textContent = selectedRoleKeys.length
+      ? selectedRoleKeys.length + ' · ' + (primary ? primary.title[S.lang] : '') + (selectedRoleKeys.length > 1 ? ' +' + (selectedRoleKeys.length - 1) : '')
+      : t('fRole');
+    S.formDraft = Object.assign({}, S.formDraft, { roleKeys: selectedRoleKeys.slice(), roleKey: selectedRoleKeys[0] || '' });
+  }
+  deptSel.value = draft.dept || '';
+  deptSel.addEventListener('change', function () { setRoleKeys([ROLE_DEFAULT_BY_DEPT[deptSel.value] || '00']); });
+  var canStart = S.ready && !S.offline && S.db && S.uid && !S.readOnly;
+  var form = h('form', { class: 'card form', novalidate: true, onsubmit: onStart },
+    h('div', { class: 'field' }, h('label', { for: 'f-name' }, t('fName')), h('input', { class: 'input', id: 'f-name', autocomplete: 'name', placeholder: t('fNamePh'), value: draft.name || S.meName || '', maxlength: 80 })),
+    h('div', { class: 'row2' },
+      h('div', { class: 'field' }, h('label', { for: 'f-dept' }, t('fDept')), deptSel),
+      h('div', { class: 'field' }, h('label', { for: 'f-pos' }, t('fPos')), h('input', { class: 'input', id: 'f-pos', placeholder: t('fPosPh'), value: draft.position || '', maxlength: 120 }))),
+    h('div', { class: 'field' }, h('label', { for: 'role-picker' }, t('fRole')), picker, h('small', { class: 'muted' }, t('fRoleHint'))),
+    h('div', { class: 'field' }, h('label', { for: 'f-about' }, t('fAbout')),
+      h('textarea', { class: 'input', id: 'f-about', rows: 4, placeholder: t('fAboutPh'), maxlength: 4000, 'aria-label': t('fAbout'), value: draft.about || '' }),
+      h('small', { class: 'muted' }, t('fAboutHint'))),
+    h('label', { class: 'check' }, h('input', { type: 'checkbox', id: 'f-consent', checked: !!draft.consent }), h('span', null, t('consent'))),
+    S.formErr && h('div', { class: 'notice err', role: 'alert' }, S.formErr),
+    S.offline && h('div', { class: 'notice' }, h('b', null, t('offlineTitle') + '. '), t('offlineLead')),
+    S.readOnly && h('div', { class: 'notice' }, t('readOnly')),
+    h('div', { class: 'actions' }, h('button', { class: 'btn primary', type: 'submit', disabled: !canStart }, S.ready || S.offline ? t('start') : t('connecting')),
+      h('span', { id: 'welcome-voice-status', class: 'mic-status', role: 'status', 'aria-live': 'polite' }))
+  );
+  form.addEventListener('input', function () {
+    S.formDraft = Object.assign({}, S.formDraft, { name: $('#f-name').value, dept: $('#f-dept').value, about: $('#f-about').value, position: $('#f-pos').value, consent: $('#f-consent').checked });
+  });
+  updateRoleSummary();
+  var steps = h('aside', { class: 'card steps' }, h('h2', null, t('stepsTitle')),
+    h('ol', null, t('phases').map(function (p, i) { return h('li', null, h('span', { class: 'n' }, i + 1), h('div', null, h('b', null, p), h('span', null, t('phaseHints')[i]))); })));
+  return h('section', { class: 'welcome' },
+    h('div', null,
+      h('div', { class: 'intro' }, h('div', { class: 'eyebrow' }, t('eyebrow')), h('h1', null, t('welcomeTitle')), h('p', null, t('welcomeLead')), h('p', null, t('why')),
+        h('ul', { class: 'facts' }, t('facts').map(function (f) { return h('li', null, f); }))),
+      form),
+    steps);
+}
+function onStart(e) {
+  e.preventDefault();
+  var name = $('#f-name').value.trim(), dept = $('#f-dept').value, roleKeys = (S.formDraft.roleKeys || []).slice(), roleKey = roleKeys[0] || '', about = $('#f-about').value.trim(), position = $('#f-pos').value.trim(), consent = $('#f-consent').checked;
+  if (!name || !dept || !roleKey || !position || !consent) { S.formErr = t('needFields'); S.formDraft = Object.assign({}, S.formDraft, { name: name, dept: dept, roleKey: roleKey, roleKeys: roleKeys, about: about, position: position, consent: consent }); render(); return; }
+  S.formErr = '';
+  S.iv = {
+    uid: S.uid, name: name, dept: dept, roleKey: roleKey, roleKeys: roleKeys, about: about, position: position, lang: S.lang, consent: true, status: 'in_progress',
+    mode: S.sample ? 'ai' : 'script', phase: 1, messages: [], script: { stage: 'role', i: 0, task: 1 }, summary: null,
+    startedAt: now(), updatedAt: now()
+  };
+  S.notice = S.sample ? '' : t('scriptNotice');
+  go('chat');
+  saveMine().then(function (ok) {
+    if (!ok) { updateComposer(); return; }
+    if (S.iv.mode === 'ai') aiTurn(); else scriptAsk();
+  });
+}
+
+/* ---------- чат и озвучка ---------- */
+var SPEAKER_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/></svg>';
+var MUTE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 5 6m0-6-5 6"/></svg>';
+var MIC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg>';
+var STOP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+function speechSupported() { return !!S.ownerVoice; }
+function messageIsSpeaking(message) { return (S.voiceSpeaking || S.voiceLoading) && S.voiceUtterance && S.voiceUtterance._bpMessage === message; }
+function renderVoiceToggle() {
+  var active = S.voiceSpeaking || S.voiceLoading;
+  var button = $('#voice-toggle');
+  if (button) {
+    button.innerHTML = active ? STOP_SVG : S.voiceOn ? SPEAKER_SVG : MUTE_SVG;
+    button.setAttribute('aria-pressed', S.voiceOn ? 'true' : 'false');
+    button.setAttribute('aria-label', active ? t('voiceStop') : S.voiceOn ? t('voiceOff') : t('voiceOn'));
+    button.title = button.getAttribute('aria-label');
+  }
+  document.querySelectorAll('.msg-voice').forEach(function (item) {
+    var current = messageIsSpeaking(item._bpMessage);
+    item.innerHTML = current ? STOP_SVG : SPEAKER_SVG;
+    item.setAttribute('aria-pressed', current ? 'true' : 'false');
+    item.setAttribute('aria-label', current ? t('voiceStop') : t('voicePlay'));
+    item.title = current ? t('voiceStop') : t('voicePlay');
+  });
+  var status = $('#voice-status');
+  if (status) status.textContent = S.voiceLoading ? t('voicePreparing') + ' ' + formatMicTime(S.voiceSeconds) : '';
+  var welcomeStatus = $('#welcome-voice-status');
+  if (welcomeStatus) welcomeStatus.textContent = S.voiceLoading && S.voiceUtterance && S.voiceUtterance.welcome ? t('voicePreparing') + ' ' + formatMicTime(S.voiceSeconds) : '';
+}
+function voiceToggleBtn() {
+  var button = h('button', { class: 'voice-toggle', id: 'voice-toggle', type: 'button', onclick: toggleVoice });
+  setTimeout(renderVoiceToggle, 0);
+  return button;
+}
+function stopSpeech() {
+  var job = S.voiceUtterance;
+  S.voiceSpeaking = false; S.voiceLoading = false; S.voiceSeconds = 0; S.voiceUtterance = null;
+  clearTimeout(S.voiceAutoTimer); S.voiceAutoTimer = null;
+  clearInterval(S.voiceTimer); S.voiceTimer = null;
+  if (job) {
+    job.cancelled = true;
+    clearTimeout(job.poll);
+    if (job.controller) { try { job.controller.abort(); } catch (e) {} }
+    if (job.audio) {
+      job.audio.onplay = job.audio.onended = job.audio.onerror = null;
+      try { job.audio.pause(); } catch (e) {}
+    }
+    if (job.url) {
+      var url = job.url;
+      setTimeout(function () { try { URL.revokeObjectURL(url); } catch (e) {} }, 2000);
+    }
+  }
+  renderVoiceToggle();
+}
+function voiceFailed(job, message) {
+  if (S.voiceUtterance !== job) return;
+  stopSpeech();
+  toast(t(message || 'speechError'));
+}
+function playOwnerVoice(job, blob) {
+  if (S.voiceUtterance !== job || job.cancelled) return;
+  var audio = new Audio();
+  job.audio = audio;
+  job.url = URL.createObjectURL(blob);
+  audio.preload = 'auto';
+  audio.src = job.url;
+  audio.onplay = function () {
+    if (S.voiceUtterance !== job) return;
+    S.voiceLoading = false; S.voiceSpeaking = true;
+    clearInterval(S.voiceTimer); S.voiceTimer = null;
+    renderVoiceToggle();
+  };
+  audio.onended = function () { if (S.voiceUtterance === job) stopSpeech(); };
+  audio.onerror = function () { voiceFailed(job); };
+  var played;
+  try { played = audio.play(); } catch (e) { voiceFailed(job); return; }
+  Promise.resolve(played).then(function () {
+    if (S.voiceUtterance !== job) return;
+    S.voiceLoading = false; S.voiceSpeaking = true;
+    clearInterval(S.voiceTimer); S.voiceTimer = null;
+    renderVoiceToggle();
+  }, function (error) {
+    if (S.voiceUtterance !== job) return;
+    if (error && error.name === 'NotAllowedError') { stopSpeech(); toast(t('voiceTap')); }
+    else voiceFailed(job);
+  });
+}
+function requestOwnerVoice(job) {
+  if (S.voiceUtterance !== job || job.cancelled) return;
+  var controller = job.controller = new AbortController();
+  var path = job.welcome ? '/api/welcome-voice?lang=' + encodeURIComponent(S.lang) : '/api/me/voice/' + job.index;
+  var headers = { 'Accept': 'audio/mp4, application/json' };
+  if (!job.welcome) headers['Authorization'] = 'Bearer ' + (S.token || '');
+  fetch(path, { headers: headers, cache: 'no-store', signal: controller.signal }).then(function (response) {
+    job.controller = null;
+    if (S.voiceUtterance !== job || job.cancelled) return null;
+    if (response.status === 202) {
+      job.poll = setTimeout(function () { requestOwnerVoice(job); }, 2000);
+      return null;
+    }
+    if (!response.ok) throw new Error('owner_voice_' + response.status);
+    return response.blob().then(function (blob) { playOwnerVoice(job, blob); });
+  }).catch(function () {
+    if (S.voiceUtterance === job && !job.cancelled) voiceFailed(job);
+  });
+}
+function startVoiceJob(job) {
+  S.voiceUtterance = job; S.voiceLoading = true; S.voiceSeconds = 0;
+  clearInterval(S.voiceTimer);
+  S.voiceTimer = setInterval(function () {
+    if (S.voiceUtterance !== job || !S.voiceLoading) { clearInterval(S.voiceTimer); return; }
+    S.voiceSeconds++; renderVoiceToggle();
+  }, 1000);
+  renderVoiceToggle();
+  requestOwnerVoice(job);
+}
+function speakMessage(message) {
+  if (!message || !message.content) return;
+  if (!speechSupported()) { toast(t('voiceUnsupported')); return; }
+  var index = S.iv && S.iv.messages ? S.iv.messages.indexOf(message) : -1;
+  if (index < 0) return;
+  stopSpeech();
+  startVoiceJob({ _bpMessage: message, index: index, welcome: false, cancelled: false, controller: null, poll: null, audio: null, url: '' });
+}
+function speakWelcome() {
+  if (!speechSupported() || S.view !== 'welcome') return;
+  stopSpeech();
+  startVoiceJob({ _bpMessage: null, welcome: true, cancelled: false, controller: null, poll: null, audio: null, url: '' });
+}
+function scheduleWelcomeVoice() {
+  if (!speechSupported() || S.view !== 'welcome') return;
+  clearTimeout(S.voiceAutoTimer); S.voiceAutoTimer = null;
+  S.voiceAutoTimer = setTimeout(function () {
+    S.voiceAutoTimer = null;
+    if (S.view === 'welcome') speakWelcome();
+  }, 2000);
+}
+function prefetchMessageVoice(message) {
+  if (!speechSupported() || !S.iv || !S.token) return;
+  var index = S.iv.messages.indexOf(message);
+  if (index < 0) return;
+  fetch('/api/me/voice-prefetch', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + S.token, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ message: index, count: 2 }), cache: 'no-store',
+  }).catch(function () {});
+}
+function scheduleMessageSpeech(message) {
+  if (!S.voiceOn || !message || S.recog) return;
+  clearTimeout(S.voiceAutoTimer); S.voiceAutoTimer = null;
+  prefetchMessageVoice(message);
+  S.voiceAutoTimer = setTimeout(function () {
+    S.voiceAutoTimer = null;
+    if (!S.voiceOn || S.recog || S.view !== 'chat' || !S.iv || S.iv.messages[S.iv.messages.length - 1] !== message) return;
+    speakMessage(message);
+  }, 2000);
+}
+function speakLatestAssistant() {
+  var messages = S.iv && S.iv.messages || [];
+  for (var i = messages.length - 1; i >= 0; i--) if (messages[i].role === 'assistant') { scheduleMessageSpeech(messages[i]); return; }
+}
+function toggleVoice() {
+  if (S.view === 'welcome' && (S.voiceSpeaking || S.voiceLoading)) { stopSpeech(); return; }
+  if (S.voiceOn) {
+    S.voiceOn = false;
+    try { localStorage.setItem('bp_voice', '0'); } catch (e) {}
+    stopSpeech(); renderVoiceToggle(); return;
+  }
+  if (!speechSupported()) { toast(t('voiceUnsupported')); return; }
+  S.voiceOn = true;
+  try { localStorage.setItem('bp_voice', '1'); } catch (e) {}
+  if (S.view === 'welcome') speakWelcome(); else speakLatestAssistant();
+  renderVoiceToggle();
+}
+function toggleMessageSpeech(message) { if (messageIsSpeaking(message)) stopSpeech(); else speakMessage(message); }
+function voiceMessageButton(message) {
+  if (!message || !message.content) return null;
+  var active = messageIsSpeaking(message);
+  var button = h('button', { class: 'msg-voice', type: 'button', 'aria-pressed': active ? 'true' : 'false', 'aria-label': active ? t('voiceStop') : t('voicePlay'), title: active ? t('voiceStop') : t('voicePlay'), onclick: function () { toggleMessageSpeech(message); } });
+  button._bpMessage = message;
+  button.innerHTML = active ? STOP_SVG : SPEAKER_SVG;
+  return button;
+}
+function formatMicTime(seconds) { return Math.floor(seconds / 60) + ':' + ('0' + seconds % 60).slice(-2); }
+function updateMic() {
+  var button = $('#mic-btn'), status = $('#mic-status');
+  if (!button) return;
+  var active = !!S.recog;
+  button.disabled = S.busy || S.readOnly;
+  button.classList.toggle('recording', S.listening);
+  button.innerHTML = (active ? STOP_SVG : MIC_SVG) + '<span>' + (S.listening ? t('voiceStopMic') : active ? t('voiceStarting') : t('voiceMic')) + '</span>';
+  button.setAttribute('aria-pressed', active ? 'true' : 'false');
+  button.setAttribute('aria-label', S.listening ? t('voiceStopMic') : active ? t('voiceCancelMic') : t('voiceMic'));
+  button.setAttribute('aria-describedby', 'mic-hint');
+  button.title = S.listening ? t('voiceStopMic') : t('micHint');
+  if (status) status.textContent = S.listening ? t('voiceListening') + ' ' + formatMicTime(S.micSeconds) : active ? t('voiceStarting') : '';
+}
+function resetRecognition() {
+  clearInterval(S.micTimer); S.micTimer = null;
+  S.recog = null; S.listening = false; S.micSeconds = 0; updateMic();
+}
+function stopRecognition(abort) {
+  if (!S.recog) return;
+  try { if (abort || !S.listening) S.recog.abort(); else S.recog.stop(); } catch (e) { resetRecognition(); }
+}
+function recognitionError(event) {
+  var code = event && event.error || '';
+  if (code !== 'aborted') {
+    if (code === 'not-allowed' || code === 'service-not-allowed' || code === 'audio-capture') toast(t('voiceDenied'));
+    else if (code === 'no-speech') toast(t('voiceEmpty'));
+    else if (code === 'language-not-supported') toast(t('voiceLang'));
+    else if (code === 'network') toast(t('voiceNetwork'));
+    else toast(t('voiceError'));
+  }
+  resetRecognition();
+}
+function startRecognition() {
+  var Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Recognition) { toast(t('micUnsupported')); return; }
+  if (S.recog || S.busy || S.readOnly) return;
+  stopSpeech();
+  var recognition;
+  try { recognition = new Recognition(); } catch (e) { toast(t('micError')); return; }
+  S.recog = recognition; updateMic();
+  recognition.lang = (S.iv && S.iv.lang) === 'ro' ? 'ro-RO' : 'ru-RU';
+  recognition.interimResults = true;
+  recognition.continuous = false;
+  recognition.maxAlternatives = 1;
+  recognition.onstart = function () {
+    if (S.recog !== recognition) return;
+    S.listening = true; S.micSeconds = 0; updateMic();
+    clearInterval(S.micTimer);
+    S.micTimer = setInterval(function () {
+      if (S.recog !== recognition) { clearInterval(S.micTimer); return; }
+      S.micSeconds++;
+      updateMic();
+      if (S.micSeconds >= 120) stopRecognition(false);
+    }, 1000);
+  };
+  recognition.onresult = function (event) {
+    if (S.recog !== recognition) return;
+    var transcript = '';
+    for (var i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) transcript += event.results[i][0].transcript + ' ';
+    }
+    transcript = transcript.trim();
+    if (!transcript) return;
+    var answer = $('#answer');
+    if (answer && !answer.disabled) {
+      answer.value = (answer.value.trim() ? answer.value.trim() + ' ' : '') + transcript;
+      answer.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    toast(t('voiceReady'));
+  };
+  recognition.onerror = function (event) { if (S.recog === recognition) recognitionError(event); };
+  recognition.onend = function () { if (S.recog === recognition) resetRecognition(); };
+  try { recognition.start(); } catch (e) { if (S.recog === recognition) resetRecognition(); toast(t('micError')); }
+}
+function toggleRecognition() { if (S.recog) stopRecognition(!S.listening); else startRecognition(); }
+var pendingEl = null;
+function msgBody(m, pending, iv) {
+  var body = m.role === 'user' && m.picked && m.picked.length
+    ? h('div', { class: 'txt has-picked' }, h('div', { class: 'picked' }, m.picked.map(function (p) { return h('span', null, p); })), m.own && h('div', { class: 'own' }, m.own))
+    : h('div', { class: 'txt' + (pending && !m.content ? ' dots' : '') }, m.content || (pending ? t('thinking') : ''));
+  var materials = m.role === 'user' ? messageAttachments(m, iv) : [];
+  if (materials.length) body.append(h('div', { class: 'attach-list' }, materials.map(function (a) { return attachmentChip(a, false, iv); })));
+  return body;
+}
+function msgEl(role, text, pending, m, iv) {
+  var message = m || { role: role, content: text };
+  return h('div', { class: 'msg ' + (role === 'assistant' ? 'a' : 'u') + (pending ? ' pending' : '') },
+    role === 'assistant' && !pending
+      ? h('div', { class: 'msg-tools' }, h('span', { class: 'who' }, t('interviewer')), voiceMessageButton(message))
+      : h('span', { class: 'who' }, iv && iv.name || S.iv && S.iv.name || t('you')),
+    msgBody(message, pending, iv));
+}
+function viewChat() {
+  var wrap = h('section', { class: 'chat' });
+  if (S.notice) wrap.append(h('div', { class: 'notice' }, S.notice));
+  if (S.reopened) wrap.append(h('div', { class: 'notice info' }, t('reopenHint')));
+  wrap.append(h('div', { class: 'log', id: 'log', 'aria-live': 'polite' }));
+  var ta = h('textarea', { id: 'answer', rows: 2, placeholder: t('placeholder'), 'aria-label': t('placeholder') });
+  try { ta.value = localStorage.getItem('bp_draft_' + S.uid) || ''; } catch (e) {}
+  ta.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); onSend(); } });
+  ta.addEventListener('input', function () {
+    ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
+    clearTimeout(ta._t); ta._t = setTimeout(function () { try { localStorage.setItem('bp_draft_' + S.uid, ta.value); } catch (e) {} }, 400);
+  });
+  wrap.append(h('div', { class: 'composer' }, h('div', { class: 'composer-box' },
+    h('div', { class: 'opts', id: 'opts', hidden: true }),
+    ta,
+    h('div', { class: 'attach-panel', id: 'attach-panel' },
+      h('div', { class: 'attach-actions' },
+        h('button', { class: 'btn small', type: 'button', id: 'attach-file', onclick: function () { $('#file-input').click(); } }, '＋ ' + t('attachFile')),
+        h('button', { class: 'btn small ghost', type: 'button', id: 'attach-link', onclick: function () { S.linkOpen = !S.linkOpen; S.attachErr = ''; updateComposer(); if (S.linkOpen) setTimeout(function () { $('#sheet-url').focus(); }, 0); } }, t('attachLink')),
+        h('span', { class: 'attach-hint' }, t('attachHint'))),
+      h('form', { class: 'attach-link-form', id: 'link-form', hidden: true, onsubmit: addAttachmentLink },
+        h('div', { class: 'field' }, h('label', { for: 'sheet-url' }, t('attachLink')), h('input', { class: 'input', id: 'sheet-url', type: 'url', inputmode: 'url', autocomplete: 'off', placeholder: t('attachLinkPh'), maxlength: 2000 })),
+        h('button', { class: 'btn small primary', type: 'submit', id: 'attach-link-add' }, t('attachAdd')),
+        h('button', { class: 'btn small ghost', type: 'button', onclick: function () { S.linkOpen = false; updateComposer(); } }, t('attachCancel'))),
+      h('div', { class: 'attach-list', id: 'attach-list' }),
+      h('div', { class: 'attach-progress', id: 'attach-progress', role: 'progressbar', 'aria-label': t('attachUploading'), 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuenow': 0, hidden: true },
+        h('div', { class: 'attach-progress-track', 'aria-hidden': 'true' }, h('div', { class: 'attach-progress-fill', id: 'attach-progress-fill' })),
+        h('span', { class: 'attach-progress-text', id: 'attach-progress-text', role: 'status' })),
+      h('div', { class: 'savestate bad', id: 'attach-err', role: 'alert' }),
+      h('input', { id: 'file-input', type: 'file', hidden: true, multiple: true, accept: ATTACH_ACCEPT, onchange: function () { uploadFiles(this.files); this.value = ''; } })),
+    h('div', { class: 'composer-row' },
+      h('div', { class: 'left' },
+        h('span', { id: 'savestate', class: 'savestate' }),
+        h('span', { id: 'chaterr', class: 'savestate bad' }),
+        h('span', { id: 'voice-status', class: 'mic-status', role: 'status', 'aria-live': 'polite' }),
+        h('span', { id: 'mic-status', class: 'mic-status', role: 'status', 'aria-live': 'polite' }),
+        h('button', { class: 'btn small', type: 'button', id: 'retry', hidden: true, onclick: function () { S.chatErr = ''; aiTurn(); } }, t('retry'))),
+      h('div', { class: 'actions' },
+        h('button', { class: 'btn small ghost mic-btn', type: 'button', id: 'mic-btn', onclick: toggleRecognition, title: t('micHint') }, t('voiceMic')),
+        h('button', { class: 'btn small ghost', type: 'button', id: 'finish', onclick: onFinish, title: t('finishHint') }, t('finish')),
+        h('button', { class: 'btn small', type: 'button', id: 'stop', hidden: true, onclick: function () { if (S.ctl) S.ctl.abort(); } }, t('stop')),
+        h('button', { class: 'btn primary', type: 'button', id: 'send', onclick: onSend }, t('send')))),
+    h('div', { class: 'mic-hint', id: 'mic-hint' }, t('micHint')))));
+  setTimeout(function () { renderLog(); setSave(S.saveState); updateComposer(); updateMic(); scrollLog(); focusAnswer(); }, 0);
+  return wrap;
+}
+function renderLog() {
+  var log = $('#log');
+  if (!log || !S.iv) return;
+  log.replaceChildren();
+  (S.iv.messages || []).forEach(function (m) { log.append(msgEl(m.role, m.content, false, m, S.iv)); });
+  if (S.busy && S.iv.mode === 'ai') { pendingEl = msgEl('assistant', '', true); log.append(pendingEl); }
+}
+// На сенсорном экране фокус открывает клавиатуру и меняет viewport: не захватываем его автоматически.
+function focusAnswer() {
+  var a = $('#answer');
+  if (!a || S.busy || navigator.maxTouchPoints > 0 || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches)) return;
+  a.focus({ preventScroll: true });
+}
+// Новый вопрос начинается сразу под липкой шапкой: варианты и поле ответа не перекрывают его.
+function scrollLog() {
+  requestAnimationFrame(function () {
+    var log = $('#log');
+    if (!log || !log.lastElementChild) return;
+    var barHeight = $('#bar') ? $('#bar').getBoundingClientRect().height : 0;
+    log.lastElementChild.scrollIntoView({ block: 'start', behavior: 'auto' });
+    window.scrollBy({ top: -(barHeight + 12), behavior: 'auto' });
+  });
+}
+function updateComposer() {
+  var send = $('#send'); if (!send) return;
+  var last = S.iv && S.iv.messages[S.iv.messages.length - 1];
+  var waitingAnswer = last && last.role === 'assistant';
+  var blocked = S.busy || S.readOnly;
+  send.disabled = blocked || S.attachBusy || (!waitingAnswer && !S.reopened);
+  $('#answer').disabled = blocked;
+  $('#stop').hidden = !(S.busy && S.iv.mode === 'ai');
+  var fin = $('#finish');
+  fin.disabled = S.busy || S.attachBusy || answersCount(S.iv) < (S.iv.mode === 'script' ? 3 : 5);
+  renderOpts();
+  renderAttachments(blocked, waitingAnswer);
+  $('#chaterr').textContent = S.chatErr || '';
+  $('#retry').hidden = !(S.chatErr && S.iv.mode === 'ai' && last && last.role === 'user' && !S.busy);
+  updateMic();
+  if (S.readOnly) setSave('readonly');
+}
+function currentOptions() {
+  var last = S.iv && S.iv.messages[S.iv.messages.length - 1];
+  return last && last.role === 'assistant' && last.options && last.options.length ? last : null;
+}
+function renderOpts(focusIdx) {
+  var box = $('#opts');
+  if (!box) return;
+  var q = currentOptions();
+  var show = !!q && !S.busy && !S.readOnly;
+  box.hidden = !show;
+  var ta = $('#answer');
+  if (ta) ta.placeholder = show ? t('ownPh') : t('placeholder');
+  if (!show) { box.replaceChildren(); return; }
+  var one = q.mode === 'one';
+  box.replaceChildren(
+    h('div', { class: 'opts-hint', id: 'opts-hint' }, one ? t('optsOne') : t('optsMany')),
+    h('div', { class: 'opts-list', role: 'group', 'aria-labelledby': 'opts-hint' }, q.options.map(function (o, i) {
+      return h('button', { type: 'button', class: 'opt' + (one ? ' one' : ''), 'aria-pressed': S.picked.indexOf(o) >= 0 ? 'true' : 'false', onclick: function () { togglePick(o, one, i); } }, o);
+    })));
+  if (focusIdx != null) { var btn = box.querySelectorAll('.opt')[focusIdx]; if (btn) btn.focus(); }
+}
+function togglePick(o, one, idx) {
+  var i = S.picked.indexOf(o);
+  if (i >= 0) S.picked.splice(i, 1);
+  else if (one) S.picked = [o];
+  else S.picked.push(o);
+  renderOpts(idx);
+}
+/* Материалы к текущему вопросу: файлы идут частями по 8 МБ, ссылки — только на Google Таблицы. */
+var ATTACH_ACCEPT = '.xlsx,.xls,.csv,.pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp,.heic,.heif,.bmp,.tif,.tiff';
+var ATTACH_EXT = /\.(xlsx|xls|csv|pdf|docx?|jpe?g|png|gif|webp|heic|heif|bmp|tiff?)$/i;
+var MAX_ATTACHMENT_SIZE = 500 * 1024 * 1024;
+var ATTACH_CHUNK = 8 * 1024 * 1024;
+function currentQuestionIndex() {
+  if (!S.iv) return -1;
+  for (var i = S.iv.messages.length - 1; i >= 0; i--) if (S.iv.messages[i].role === 'assistant') return i;
+  return -1;
+}
+function pendingAttachments() {
+  var q = currentQuestionIndex();
+  return ((S.iv && S.iv.attachments) || []).filter(function (a) { return a.questionIndex === q && a.messageIndex == null; });
+}
+function messageAttachments(m, iv) {
+  var doc = iv || S.iv;
+  var all = (doc && doc.attachments) || [];
+  return (m.attachmentIds || []).map(function (id) { return all.find(function (a) { return a.id === id; }); }).filter(Boolean);
+}
+function formatBytes(n) {
+  if (!n) return '';
+  if (n >= 1024 * 1024) return (Math.round(n / 1024 / 1024 * 10) / 10).toString().replace('.', ',') + ' МБ';
+  return Math.max(1, Math.round(n / 1024)) + ' КБ';
+}
+function attachmentChip(a, removable) {
+  var action = a.kind === 'link'
+    ? h('a', { href: a.url, target: '_blank', rel: 'noopener noreferrer' }, t('attachOpen'))
+    : h('button', { class: 'attachment-open', type: 'button', onclick: function () { downloadAttachment(a); } }, t('attachDownload'));
+  return h('div', { class: 'attachment-chip' },
+    h('span', { class: 'attachment-name', title: a.name }, a.kind === 'link' ? '↗ ' : '📎 ', a.name),
+    a.size > 0 && h('span', { class: 'attachment-size' }, formatBytes(a.size)), action,
+    removable && h('button', { class: 'attachment-remove', type: 'button', 'aria-label': t('attachRemove') + ': ' + a.name,
+      title: t('attachRemove'), onclick: function () { removeAttachment(a); } }, '×'));
+}
+function downloadAttachment(a) {
+  var headers = {};
+  var path;
+  if (S.adminPage) { headers['X-Admin-Key'] = S.adminKey; path = '/api/admin/attachments/' + a.id; }
+  else { headers.Authorization = 'Bearer ' + S.token; path = '/api/me/attachments/' + a.id; }
+  toast(t('attachDownload') + ': ' + a.name);
+  fetch(path, { headers: headers, cache: 'no-store' }).then(function (r) {
+    if (!r.ok) throw new Error('download');
+    return r.blob();
+  }).then(function (blob) {
+    var url = URL.createObjectURL(blob), link = h('a', { href: url, download: a.name });
+    document.body.append(link); link.click();
+    setTimeout(function () { URL.revokeObjectURL(url); link.remove(); }, 30000);
+  }).catch(function () { toast(t('attachFail')); });
+}
+function renderAttachments(blocked, waitingAnswer) {
+  var panel = $('#attach-panel');
+  if (!panel) return;
+  panel.hidden = (!!S.busy && !S.attachProgress) || (!waitingAnswer && !S.reopened);
+  $('#attach-file').disabled = blocked || S.attachBusy;
+  $('#attach-link').disabled = blocked || S.attachBusy;
+  $('#file-input').disabled = blocked || S.attachBusy;
+  $('#link-form').hidden = !S.linkOpen || S.attachBusy;
+  $('#attach-link-add').disabled = blocked || S.attachBusy;
+  $('#attach-list').replaceChildren(...S.attachments.map(function (a) { return attachmentChip(a, !S.attachBusy); }));
+  var progress = $('#attach-progress'), percent = Math.max(0, Math.min(100, S.attachPercent || 0));
+  progress.hidden = !S.attachProgress;
+  progress.setAttribute('aria-valuenow', String(Math.floor(percent)));
+  progress.setAttribute('aria-valuetext', S.attachProgress || '');
+  $('#attach-progress-fill').style.width = percent + '%';
+  $('#attach-progress-text').textContent = S.attachProgress || '';
+  $('#attach-err').textContent = S.attachErr || '';
+}
+function attachmentError(e) {
+  var code = e && e.code;
+  if (code === 'file_too_large') return t('attachTooLarge');
+  if (code === 'unsupported_file_type') return t('attachType');
+  if (code === 'too_many_attachments' || code === 'attachment_quota') return t('attachTooMany');
+  if (code === 'invalid_google_sheet_url') return t('attachBadLink');
+  return t('attachFail');
+}
+function rawAttachmentRequest(path, body, onProgress) {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', path, true);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + S.token);
+    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+    xhr.upload.onprogress = function (e) { if (e.lengthComputable && onProgress) onProgress(e.loaded, e.total); };
+    xhr.onload = function () {
+      var data = {}; try { data = xhr.responseText ? JSON.parse(xhr.responseText) : {}; } catch (e) {}
+      if (xhr.status >= 200 && xhr.status < 300) resolve(data);
+      else reject({ status: xhr.status, code: data.error || ('http_' + xhr.status) });
+    };
+    xhr.onerror = xhr.onabort = function () { reject({ status: 0, code: 'network' }); };
+    xhr.send(body);
+  });
+}
+function newUploadId() {
+  var bytes = new Uint8Array(16);
+  if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(bytes);
+  else for (var i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+  return Array.prototype.map.call(bytes, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+}
+function uploadFiles(files) {
+  if (S.attachBusy) return;
+  var q = currentQuestionIndex();
+  var selected = Array.prototype.slice.call(files || []);
+  if (q < 0 || !selected.length) return;
+  if (selected.length + S.attachments.length > 5) { S.attachErr = t('attachTooMany'); updateComposer(); return; }
+  var valid = [];
+  selected.forEach(function (file) {
+    if (!ATTACH_EXT.test(file.name)) S.attachErr = t('attachType');
+    else if (!file.size) S.attachErr = t('attachFail');
+    else if (file.size > MAX_ATTACHMENT_SIZE) S.attachErr = t('attachTooLarge');
+    else valid.push(file);
+  });
+  if (!valid.length) { updateComposer(); return; }
+  S.attachBusy = true; S.attachPercent = 0; S.attachErr = '';
+  var sequence = Promise.resolve();
+  valid.forEach(function (file) { sequence = sequence.then(function () { return uploadOneAttachment(file, q); }); });
+  sequence.catch(function (e) { S.attachErr = attachmentError(e); }).then(function () {
+    S.attachBusy = false; S.attachProgress = ''; S.attachPercent = 0; updateComposer();
+  });
+}
+function uploadOneAttachment(file, question) {
+  var uid = newUploadId();
+  function showProgress(loaded) {
+    var percent = Math.max(0, Math.min(100, loaded / file.size * 100));
+    S.attachPercent = percent;
+    S.attachProgress = t('attachUploading') + ': ' + file.name + ' · ' + Math.floor(percent) + '% · ' + (loaded ? formatBytes(loaded) : '0 КБ') + ' / ' + formatBytes(file.size);
+    renderAttachments(false, true);
+  }
+  function sendPart(offset, attempt) {
+    var end = Math.min(offset + ATTACH_CHUNK, file.size);
+    showProgress(offset);
+    var params = new URLSearchParams({ upload: uid, offset: String(offset), question: String(question), name: file.name, size: String(file.size) });
+    return rawAttachmentRequest('/api/me/attachments/chunk?' + params.toString(), file.slice(offset, end), function (loaded) {
+      showProgress(Math.min(file.size, offset + loaded));
+    }).catch(function (e) {
+      if (attempt < 2 && e && (e.code === 'network' || e.status >= 500)) return sleep(700 + attempt * 700).then(function () { return sendPart(offset, attempt + 1); });
+      throw e;
+    }).then(function () {
+      if (end < file.size) return sendPart(end, 0);
+      showProgress(file.size);
+      return API.req('POST', '/api/me/attachments/complete', { upload: uid, question: question, name: file.name, size: file.size });
+    });
+  }
+  return sendPart(0, 0).then(function (res) {
+    S.iv.attachments = S.iv.attachments || [];
+    S.iv.attachments.push(res.attachment);
+    if (currentQuestionIndex() === question) S.attachments.push(res.attachment);
+    S.attachErr = '';
+    toast(t('attachSaved') + ': ' + file.name);
+  });
+}
+function addAttachmentLink(e) {
+  e.preventDefault();
+  if (S.attachBusy) return;
+  var input = $('#sheet-url'), url = input.value.trim(), question = currentQuestionIndex();
+  if (!/^https:\/\/docs\.google\.com\/spreadsheets\//i.test(url)) { S.attachErr = t('attachBadLink'); updateComposer(); return; }
+  if (S.attachments.length >= 5) { S.attachErr = t('attachTooMany'); updateComposer(); return; }
+  S.attachBusy = true; S.attachErr = ''; updateComposer();
+  API.req('POST', '/api/me/attachment-links', { question: question, url: url }).then(function (res) {
+    S.iv.attachments = S.iv.attachments || [];
+    S.iv.attachments.push(res.attachment); S.attachments.push(res.attachment);
+    input.value = ''; S.linkOpen = false;
+    toast(t('attachSaved') + ': Google Sheets');
+  }, function (err) { S.attachErr = attachmentError(err); }).then(function () { S.attachBusy = false; updateComposer(); });
+}
+function removeAttachment(a) {
+  if (S.attachBusy) return;
+  S.attachBusy = true; S.attachErr = ''; updateComposer();
+  API.req('DELETE', '/api/me/attachments/' + a.id).then(function () {
+    S.iv.attachments = (S.iv.attachments || []).filter(function (x) { return x.id !== a.id; });
+    S.attachments = S.attachments.filter(function (x) { return x.id !== a.id; });
+  }, function (err) { S.attachErr = attachmentError(err); }).then(function () { S.attachBusy = false; updateComposer(); });
+}
+function onSend() {
+  var ta = $('#answer');
+  if (S.recog) stopRecognition(true);
+  if (!ta || S.attachBusy) return;
+  var own = ta.value.trim();
+  var picked = currentOptions() ? S.picked.slice() : [];
+  var materials = S.attachments.slice();
+  if (!own && !picked.length && !materials.length) return;
+  sendAnswer(picked, own, materials);
+}
+function knowledgeProgress(report) {
+  var total = report.total || 1;
+  S.attachProgress = t('analysisProgress').replace('{done}', report.ready || 0).replace('{total}', total);
+  S.attachPercent = Math.round((report.ready || 0) / total * 100);
+  updateComposer();
+}
+function waitForKnowledge(ids, controller, attempt) {
+  attempt = attempt || 0;
+  if (controller.signal.aborted) return Promise.reject(new DOMException('Aborted', 'AbortError'));
+  return fetch('/api/me/attachments/analyze', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + (S.token || ''), 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ ids: ids }), cache: 'no-store', signal: controller.signal,
+  }).then(function (response) {
+    return response.json().then(function (data) {
+      if (response.status === 202) {
+        knowledgeProgress(data);
+        return new Promise(function (resolve) { setTimeout(resolve, 1000); }).then(function () { return waitForKnowledge(ids, controller, attempt); });
+      }
+      if (!response.ok) throw new Error('knowledge_' + response.status);
+      return data;
+    });
+  }).catch(function (error) {
+    if (error && error.name === 'AbortError') throw error;
+    if (attempt < 4) return new Promise(function (resolve) { setTimeout(resolve, 1000); }).then(function () { return waitForKnowledge(ids, controller, attempt + 1); });
+    return { done: true, ready: ids.length, total: ids.length, failed: ids.length, network: true, items: [] };
+  });
+}
+function sendAnswer(picked, own, materials) {
+  if (S.busy || S.readOnly || S.attachBusy) return;
+  stopSpeech();
+  var ta = $('#answer');
+  if (ta) { ta.value = ''; ta.style.height = 'auto'; }
+  try { localStorage.removeItem('bp_draft_' + S.uid); } catch (e) {}
+  S.chatErr = '';
+  S.reopened = false;
+  S.picked = [];
+  S.attachments = [];
+  S.attachErr = ''; S.attachProgress = ''; S.attachPercent = 0; S.linkOpen = false;
+  own = own.slice(0, 4000);
+  var text = picked.length ? picked.join('; ') + (own ? ' — ' + own : '') : own;
+  if (!text && materials.length) text = t('attachmentsOnly');
+  var msg = { role: 'user', content: text, t: now() };
+  if (picked.length) { msg.picked = picked; msg.own = own; }
+  if (materials.length) msg.attachmentIds = materials.map(function (a) { return a.id; });
+  S.iv.messages.push(msg);
+  var proceed = function (report) {
+    if (S.view !== 'chat') return;
+    S.busy = false; S.analysisCtl = null;
+    if (materials.length) {
+      var total = report.total || materials.length, done = report.ready == null ? total : report.ready;
+      var warning = report.failed || report.extracted || report.network;
+      S.attachProgress = (warning ? t('analysisWarning') : t('analysisDone')).replace('{done}', done).replace('{total}', total);
+      S.attachPercent = 100;
+    }
+    if (S.iv.mode === 'ai') aiTurn();
+    else { scriptAdvance(text); scriptAsk(); }
+  };
+  if (materials.length) {
+    S.busy = true;
+    knowledgeProgress({ ready: 0, total: materials.length });
+    renderLog(); scrollLog();
+    var controller = S.analysisCtl = new AbortController();
+    saveMine().then(function (ok) {
+      if (!ok) throw new Error('save_failed');
+      return waitForKnowledge(materials.map(function (a) { return a.id; }), controller, 0);
+    }).then(proceed).catch(function (error) {
+      if (error && error.name === 'AbortError') return;
+      proceed({ ready: materials.length, total: materials.length, failed: materials.length, network: true });
+    });
+  } else {
+    if (S.iv.mode === 'ai') { saveMine(); aiTurn(); }
+    else { scriptAdvance(text); scriptAsk(); }
+  }
+}
+function parseReply(text) {
+  var done = /\[\[\s*DONE\s*\]\]/i.test(text);
+  var qm = text.match(/\[\[\s*Q:([A-Za-z0-9-]+)\s*\]\]/i);
+  var questionKey = qm ? qm[1] : null;
+  var m = text.match(/\[\[\s*([1-5])\s*\]\]/);
+  var phase = m ? parseInt(m[1], 10) : null;
+  var options = [], mode = 'many';
+  var om = text.match(/\[\[\s*OPTIONS?\s*(one|many)?\s*:?\s*([\s\S]*?)\]\]/i);
+  if (om) {
+    mode = (om[1] || 'many').toLowerCase();
+    var seen = {};
+    options = om[2].split('|').map(function (x) { return x.replace(/\s+/g, ' ').trim().slice(0, 80); }).filter(function (x) {
+      var k = x.toLowerCase();
+      if (!x || seen[k] || /^(другое|другой вариант|свой вариант|altele|alt răspuns|alta)$/i.test(x)) return false;
+      seen[k] = 1; return true;
+    }).slice(0, 8);
+  }
+  var body = text.replace(/\[\[\s*OPTIONS?[\s\S]*?\]\]/gi, '').replace(/\[\[\s*Q:[A-Za-z0-9-]+\s*\]\]/gi, '').replace(/\[\[\s*(DONE|[1-5])\s*\]\]\s*/gi, '');
+  var cut = body.indexOf('[[');
+  if (cut >= 0) body = body.slice(0, cut);
+  body = body.replace(/\[\s*$/, '').trim();
+  return { done: done, phase: phase, questionKey: questionKey, body: body, options: options.length > 1 ? options : [], mode: mode };
+}
+function buildInput() {
+  var turns = [{ role: 'user', content: rulesPrompt(S.iv) }, { role: 'user', content: 'Начни интервью: поздоровайся по имени, одним предложением объясни цель и задай первый вопрос.' }];
+  var msgs = S.iv.messages.slice();
+  var total = 0;
+  msgs.forEach(function (m) { total += m.content.length; });
+  while (total > 150000 && msgs.length > 4) { total -= msgs[0].content.length; msgs.shift(); }
+  msgs.forEach(function (m) {
+    var c = m.content;
+    if (m.role === 'assistant') {
+      c = '[[' + (m.phase || S.iv.phase || 1) + ']] ' + c;
+      if (m.options && m.options.length) c += '\n[[OPTIONS ' + (m.mode || 'many') + ': ' + m.options.join(' | ') + ']]';
+    }
+    turns.push({ role: m.role, content: c });
+  });
+  return turns;
+}
+function aiTurn() {
+  if (S.busy || !S.sample) { if (!S.sample) switchToScript(); return; }
+  var last = S.iv.messages[S.iv.messages.length - 1];
+  if (last && last.role === 'assistant') return;
+  S.busy = true;
+  var ctl = S.ctl = new AbortController();
+  renderLog(); updateComposer(); scrollLog();
+  S.sample(buildInput(), {
+    modelTier: 'quick', cache: false, signal: ctl.signal,
+    onText: function (u) {
+      if (!pendingEl) return;
+      var shown = parseReply(u.text).body;
+      var txt = pendingEl.querySelector('.txt');
+      txt.classList.toggle('dots', !shown);
+      txt.textContent = shown || t('thinking');
+      pendingEl.classList.toggle('pending', !shown);
+    }
+  }).then(function (res) {
+    var r = parseReply(res.text);
+    if (r.phase) S.iv.phase = r.phase;
+    S.iv.messages.push({ role: 'assistant', content: r.body || (r.done ? SCRIPT[S.iv.lang].end : '…'), phase: r.phase || S.iv.phase, questionKey: r.questionKey, options: r.done ? [] : r.options, mode: r.mode, t: now() });
+    S.picked = [];
+    S.busy = false; S.ctl = null;
+    renderBar(); renderLog(); updateComposer(); scrollLog();
+    focusAnswer();
+    stopSpeech();
+    var message = S.iv.messages[S.iv.messages.length - 1];
+    return saveMine().then(function (ok) {
+      if (ok && !r.done && S.voiceOn && S.view === 'chat' && S.iv.messages[S.iv.messages.length - 1] === message) scheduleMessageSpeech(message);
+      if (r.done) finishInterview();
+    });
+  }, function (e) {
+    S.busy = false; S.ctl = null;
+    var code = e && e.code;
+    if (['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'].indexOf(code) >= 0) { renderLog(); switchToScript(); return; }
+    if (code !== 'cancelled') S.chatErr = errText(e);
+    renderLog(); updateComposer();
+  });
+}
+function switchToScript() {
+  S.iv.mode = 'script';
+  S.notice = t('scriptNotice');
+  var asked = {};
+  (S.iv.messages || []).forEach(function (m) { if (m.questionKey) asked[m.questionKey] = true; });
+  var questions = currentRoleQuestionList(), index = 0;
+  while (index < questions.length && asked[questions[index].id]) index++;
+  S.iv.script = { stage: index < questions.length ? 'role' : 'p3', i: index, task: 1 };
+  if (S.view === 'chat') render();
+  scriptAsk();
+}
+
+/* ---------- анкета без ИИ ---------- */
+function scriptItem(item, phase, n) {
+  var q = typeof item === 'string' ? { q: item } : item;
+  return { text: q.q.replace('{n}', n), phase: phase, options: q.o || [], mode: q.m || 'many', questionKey: q.id || null };
+}
+function currentRolePack() {
+  var key = S.iv && (S.iv.roleKey || ROLE_DEFAULT_BY_DEPT[S.iv.dept]) || '00';
+  return ROLE_PACKS[key] || ROLE_PACKS['00'];
+}
+function aboutWordStems(text) {
+  var stop = ['и','в','на','с','по','за','от','до','что','как','для','или','его','ее','у','о','de','la','cu','în','pe','pentru','este','sunt','cea','ce'];
+  var stems = {};
+  (String(text || '').toLowerCase().replace(/ё/g, 'е').match(/[a-zа-яёăâîșț]{3,}/g) || []).forEach(function (word) {
+    if (stop.indexOf(word) < 0 && word.length >= 4) stems[word.slice(0, 5)] = true;
+  });
+  return stems;
+}
+function prioritizeAboutQuestions(questions) {
+  var analysis = S.iv && S.iv.aboutAnalysis;
+  if (!analysis || !analysis.activities || !analysis.activities.length) return questions;
+  var stems = aboutWordStems(JSON.stringify(analysis));
+  return questions.map(function (question, index) {
+    var words = aboutWordStems(question[S.iv.lang] || question.ru), score = 0;
+    Object.keys(words).forEach(function (stem) { if (stems[stem]) score++;
+    });
+    return { question: question, index: index, score: score };
+  }).sort(function (a, b) {
+    return a.question.phase - b.question.phase || b.score - a.score || a.index - b.index;
+  }).map(function (item) { return item.question; });
+}
+function currentRoleQuestionList() {
+  var keys = S.iv && S.iv.roleKeys && S.iv.roleKeys.length ? S.iv.roleKeys : [S.iv.roleKey || ROLE_DEFAULT_BY_DEPT[S.iv.dept] || '00'];
+  var questions = keys.reduce(function (all, key) { return all.concat((ROLE_PACKS[key] || ROLE_PACKS['00']).questions); }, []);
+  return prioritizeAboutQuestions(questions);
+}
+function scriptQuestion() {
+  var Q = SCRIPT[S.iv.lang] || SCRIPT.ru, sc = S.iv.script;
+  if (sc.stage === 'role') {
+    var item = currentRoleQuestionList()[sc.i];
+    if (!item) return null;
+    return { text: item[S.iv.lang] || item.ru, phase: item.phase, options: [], mode: 'many', questionKey: item.id };
+  }
+  if (sc.stage === 'p1') return scriptItem(Q.p1[sc.i], 1);
+  if (sc.stage === 'task') return scriptItem(Q.task[sc.i], 2, sc.task);
+  if (sc.stage === 'more') return scriptItem(Q.more, 2);
+  if (sc.stage === 'p3' || sc.stage === 'p4' || sc.stage === 'p5') return scriptItem(Q[sc.stage][sc.i], +sc.stage.slice(1));
+  if (sc.stage === 'add') return scriptItem(Q.add, 5);
+  return null;
+}
+function scriptAdvance(answer) {
+  var sc = S.iv.script, Q = SCRIPT[S.iv.lang] || SCRIPT.ru;
+  var nextStage = { p1: 'task', p3: 'p4', p4: 'p5', p5: 'end' };
+  if (sc.stage === 'role') {
+    sc.i++;
+    if (sc.i >= currentRoleQuestionList().length) { sc.i = 0; sc.stage = 'p3'; }
+    return;
+  }
+  if (sc.stage === 'more') {
+    var yes = /^\s*(да|da|yes)([\s,.!]|$)/i.test(answer);
+    if (yes && sc.task < 5) { sc.task++; sc.stage = 'task'; sc.i = 0; } else { sc.stage = 'p3'; sc.i = 0; }
+    return;
+  }
+  if (sc.stage === 'add') { sc.stage = 'end'; return; }
+  if (!SCRIPT.ru[sc.stage] || sc.stage === 'end') { sc.stage = 'end'; return; }
+  sc.i++;
+  var len = sc.stage === 'task' ? Q.task.length : Q[sc.stage].length;
+  if (sc.i >= len) { sc.i = 0; sc.stage = sc.stage === 'task' ? (sc.task >= 5 ? 'p3' : 'more') : nextStage[sc.stage]; }
+}
+function scriptAsk() {
+  stopSpeech();
+  var q = scriptQuestion();
+  if (!q) {
+    S.iv.messages.push({ role: 'assistant', content: (SCRIPT[S.iv.lang] || SCRIPT.ru).end, phase: 5, t: now() });
+    renderLog();
+    saveMine().then(finishInterview);
+    return;
+  }
+  var text = q.text;
+  if (!S.iv.messages.length) text = t('greet').replace('{name}', S.iv.name.split(' ')[0]) + '\n\n' + text;
+  S.iv.phase = q.phase;
+  S.iv.messages.push({ role: 'assistant', content: text, phase: q.phase, questionKey: q.questionKey || null, options: q.options, mode: q.mode, t: now() });
+  S.picked = [];
+  renderBar(); renderLog(); updateComposer(); scrollLog();
+  var message = S.iv.messages[S.iv.messages.length - 1];
+  saveMine().then(function (ok) {
+    if (ok && S.voiceOn && S.view === 'chat' && S.iv.messages[S.iv.messages.length - 1] === message) scheduleMessageSpeech(message);
+  });
+}
+
+/* ---------- завершение и резюме ---------- */
+function onFinish() { if (S.ctl) S.ctl.abort(); finishInterview(); }
+function finishInterview() {
+  S.iv.finishedAt = now();
+  if (S.iv.mode === 'ai' && S.sample) {
+    S.iv.status = 'review';
+    go('summarizing');
+    saveMine().then(buildSummary);
+  } else {
+    S.iv.status = 'done'; S.iv.submittedAt = now();
+    saveMine().then(function () { go('done'); });
+  }
+}
+function buildSummary() {
+  S.sumErr = '';
+  return S.sample.json(summaryPrompt(S.iv, S.iv.lang), { modelTier: 'default', cache: false }).then(function (d) {
+    S.iv.summary = normSummary(d); S.iv.summaryBy = 'employee'; S.iv.summaryAt = now();
+    return saveMine();
+  }, function (e) { S.sumErr = (e && e.code) || 'upstream_error'; }).then(function () { go('review'); });
+}
+function viewSummarizing() {
+  return h('section', { class: 'center-state' }, h('div', { class: 'eyebrow' }, t('eyebrow')), h('h1', { class: 'dots' }, t('summarizing')), h('p', { class: 'muted' }, t('summarizingLead')));
+}
+function viewReview() {
+  var L = T[S.iv.lang] || T.ru;
+  var wrap = h('section', { class: 'review' }, h('div', { class: 'eyebrow' }, t('eyebrow')), h('h1', null, t('reviewTitle')));
+  if (S.iv.summary) {
+    wrap.append(h('p', { class: 'muted' }, t('reviewLead')), summaryView(S.iv.summary, L));
+    var fixTa = h('textarea', { class: 'input', id: 'fix', rows: 3, placeholder: t('fixPh') });
+    wrap.append(h('div', { class: 'card fixbox' }, h('label', { for: 'fix', class: 'mini-l' }, t('fixPh')), fixTa,
+      h('div', { class: 'actions' },
+        h('button', { class: 'btn primary', onclick: submitInterview }, t('submit')),
+        h('button', { class: 'btn', onclick: function () {
+          var v = fixTa.value.trim(); if (!v) { fixTa.focus(); return; }
+          S.iv.messages.push({ role: 'user', content: (T[S.iv.lang] || T.ru).fixPrefix + v.slice(0, 4000), t: now() });
+          go('summarizing'); saveMine().then(buildSummary);
+        } }, t('fix')))));
+  } else {
+    wrap.append(h('div', { class: 'notice' }, t('summaryFail')),
+      h('div', { class: 'actions' },
+        h('button', { class: 'btn primary', onclick: function () { S.iv.summary = null; submitInterview(); } }, t('sendRaw')),
+        S.sample && h('button', { class: 'btn', onclick: function () { go('summarizing'); buildSummary(); } }, t('tryAgain'))));
+  }
+  return wrap;
+}
+function submitInterview() {
+  S.iv.status = 'done'; S.iv.submittedAt = now();
+  saveMine().then(function () { go('done'); });
+}
+function viewDone() {
+  return h('section', { class: 'done-view' }, h('div', { class: 'eyebrow' }, t('eyebrow')), h('h1', null, t('doneTitle')), h('p', null, t('doneLead')),
+    h('div', { class: 'actions' }, h('button', { class: 'btn', onclick: function () {
+      S.iv.status = 'in_progress';
+      S.reopened = true;
+      if (S.iv.mode === 'script') { S.iv.script.stage = 'add'; S.iv.script.i = 0; go('chat'); scriptAsk(); }
+      else { go('chat'); saveMine(); }
+    } }, t('reopen'))));
+}
+
+/* ---------- отображение резюме ---------- */
+function potential(n, label) {
+  n = n || 0;
+  var w = h('span', { class: 'pot', title: label + ': ' + n + ' / 5', 'aria-label': label + ': ' + n + ' / 5' });
+  for (var i = 1; i <= 5; i++) w.append(h('i', { class: i <= n ? 'on' : '' }));
+  return w;
+}
+function metaRow(k, v) { return v ? h('div', null, h('dt', null, k), h('dd', null, v)) : null; }
+function listBlock(title, items) {
+  if (!items || !items.length) return null;
+  return h('section', { class: 'sum-block' }, h('h3', null, title), h('ul', { class: 'plain' }, items.map(function (x) { return h('li', null, x); })));
+}
+function summaryView(sum, L) {
+  var s = h('div', { class: 'summary' });
+  if (sum.role_summary) s.append(h('section', { class: 'sum-block' }, h('h3', null, L.role), h('p', { class: 'lead-p' }, sum.role_summary)));
+  if (sum.processes && sum.processes.length) {
+    s.append(h('section', { class: 'sum-block' }, h('h3', null, L.processes, h('span', { class: 'count' }, sum.processes.length)),
+      h('div', { class: 'proc-list' }, sum.processes.map(function (p) {
+        return h('article', { class: 'proc' },
+          h('div', { class: 'proc-head' }, h('h4', null, p.name), potential(p.automation_potential, L.potential)),
+          p.description && h('p', { class: 'proc-desc' }, p.description),
+          h('dl', { class: 'proc-meta' }, metaRow(L.freq, p.frequency), metaRow(L.hours, p.hours_per_week != null ? fmtNum(p.hours_per_week) : ''),
+            metaRow(L.systems, p.systems.join(', ')), metaRow(L.from, p.inputs_from.join(', ')), metaRow(L.to, p.outputs_to.join(', '))),
+          p.pain_points.length > 0 && h('div', { class: 'proc-pains' }, h('span', { class: 'mini-l' }, L.pains), h('ul', null, p.pain_points.map(function (x) { return h('li', null, x); }))),
+          p.automation_idea && h('p', { class: 'proc-idea' }, h('span', { class: 'mini-l' }, L.idea + ': '), p.automation_idea));
+      }))));
+  }
+  var decisions = (sum.decision_rights || []).map(function (o) { return [o.decision, o.owner && 'Владелец: ' + o.owner, o.limit && 'Лимит: ' + o.limit, o.evidence].filter(Boolean).join(' · '); });
+  var documents = (sum.documents || []).map(function (o) { return [o.name, o.version && 'версия ' + o.version, o.owner && 'владелец: ' + o.owner, o.retention && 'срок: ' + o.retention].filter(Boolean).join(' · '); });
+  var kpis = (sum.kpis || []).map(function (o) { return [o.name, o.formula && 'Формула: ' + o.formula, o.source && 'Источник: ' + o.source, o.frequency, o.target && 'Цель: ' + o.target].filter(Boolean).join(' · '); });
+  var exceptions = (sum.exceptions || []).map(function (o) { return [o.event, o.action, o.escalate_to && 'Эскалация: ' + o.escalate_to].filter(Boolean).join(' · '); });
+  var requirements = (sum.erp_requirements || []).map(function (o) { return [o.requirement, o.reason, o.priority && 'Приоритет: ' + o.priority, o.evidence].filter(Boolean).join(' · '); });
+  var erpBlocks = h('div', { class: 'twocol' }, listBlock('Ответственность', sum.responsibilities), listBlock('Решения и полномочия', decisions), listBlock('Документы и версии', documents), listBlock('KPI и источники', kpis), listBlock('Исключения и эскалации', exceptions), listBlock('Требования к ERP', requirements));
+  if (erpBlocks.childNodes.length) s.append(erpBlocks);
+  var hand = (sum.handoffs || []).map(function (o) { return [o.with, o.what].filter(Boolean).join(' — ') + (o.issue ? ' (' + o.issue + ')' : ''); });
+  var two = h('div', { class: 'twocol' }, listBlock(L.handoffs, hand), listBlock(L.approvals, sum.approvals), listBlock(L.topPains, sum.top_pains), listBlock(L.keepHuman, sum.keep_human),
+    sum.helper_wish && listBlock(L.helper, [sum.helper_wish]), listBlock(L.openQ, sum.open_questions));
+  if (two.childNodes.length) s.append(two);
+  return s;
+}
+
+/* ---------- панель руководителя ---------- */
+function statusChip(iv) {
+  if (iv.status === 'done' && iv.summary) return h('span', { class: 'chip ok' }, 'Готово');
+  if (iv.status === 'done') return h('span', { class: 'chip rev' }, 'Без резюме');
+  if (iv.status === 'review') return h('span', { class: 'chip rev' }, 'Проверяет резюме');
+  return h('span', { class: 'chip prog' }, 'В процессе');
+}
+function procCount(iv) { return iv.summary && iv.summary.processes ? iv.summary.processes.length : 0; }
+function hoursOf(iv) { return iv.summary && iv.summary.processes ? iv.summary.processes.reduce(function (a, p) { return a + (typeof p.hours_per_week === 'number' ? p.hours_per_week : 0); }, 0) : 0; }
+function stats() {
+  var all = S.all, done = all.filter(function (x) { return x.status === 'done'; });
+  var depts = {}; done.forEach(function (x) { depts[x.dept] = 1; });
+  return {
+    total: all.length, done: done.length, prog: all.length - done.length,
+    tasks: all.reduce(function (a, x) { return a + procCount(x); }, 0),
+    hours: Math.round(all.reduce(function (a, x) { return a + hoursOf(x); }, 0) * 10) / 10,
+    depts: Object.keys(depts).length,
+    raw: all.filter(function (x) { return !x.summary && (x.messages || []).length > 2 && x.status !== 'in_progress'; })
+  };
+}
+function docPath(iv) { return (iv._col || 'interviews') + '/' + iv.id; }
+function personName(iv) { var p = S.profiles[iv.id]; return iv.name || (p && p.name) || 'Сотрудник'; }
+function viewDash() {
+  var st = stats();
+  var tabs = [['overview', 'Обзор', null], ['people', 'Сотрудники', st.total], ['processes', 'Процессы', st.tasks], ['knowledge', 'База знаний', S.knowledge.length], ['analysis', 'Анализ', null], ['invite', 'Как пригласить', null]];
+  var wrap = h('div', { class: 'dash' });
+  wrap.append(h('div', { class: 'tabs', role: 'tablist' }, tabs.map(function (tb) {
+    return h('button', { role: 'tab', 'aria-selected': S.tab === tb[0] ? 'true' : 'false', onclick: function () { S.tab = tb[0]; if (S.tab === 'knowledge') loadKnowledge(); render(); } }, tb[1], tb[2] != null && h('span', { class: 'c' }, tb[2]));
+  })));
+  if (S.dashErr) wrap.append(h('div', { class: 'notice err' }, S.dashErr));
+  var body = S.tab === 'people' ? dashPeople() : S.tab === 'processes' ? dashProcesses() : S.tab === 'knowledge' ? dashKnowledge() : S.tab === 'analysis' ? dashAnalysis() : S.tab === 'invite' ? dashInvite() : dashOverview(st);
+  wrap.append(body);
+  if (S.selected) wrap.append(drawer());
+  return wrap;
+}
+function emptyDash() {
+  return h('div', { class: 'card empty' }, h('div', { class: 'eyebrow' }, 'Пока пусто'), h('h2', null, 'Ни один сотрудник ещё не проходил интервью'),
+    h('p', { class: 'muted' }, 'Здесь появятся сотрудники, их регулярные процессы, часы на рутину и стыки между отделами. Сначала пройдите интервью сами, чтобы увидеть его глазами сотрудника, затем разошлите приглашения.'),
+    h('div', { class: 'actions' }, h('button', { class: 'btn primary', onclick: function () { S.ownerMode = 'self'; render(); resumeIfNeeded(); } }, 'Пройти интервью самому'), h('button', { class: 'btn', onclick: function () { S.tab = 'invite'; render(); } }, 'Как пригласить сотрудников')));
+}
+function dashOverview(st) {
+  if (!S.all.length) return emptyDash();
+  var frag = h('div');
+  frag.append(h('div', { class: 'tiles' },
+    tile(st.done + '', ' / ' + st.total, 'прошли интервью'),
+    tile(st.prog + '', '', 'в процессе'),
+    tile(st.depts + '', ' / ' + DEPTS.length, 'отделов охвачено'),
+    tile(st.tasks + '', '', 'процессов описано'),
+    tile(fmtNum(st.hours), ' ч', 'в неделю на описанные задачи')));
+  if (st.raw.length) frag.append(h('div', { class: 'notice info', style: 'margin-bottom:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between' },
+    h('span', null, st.raw.length + ' интервью без резюме (сотрудник прошёл анкету без ИИ или отправил без резюме). Разберите их, чтобы они попали в карту процессов.'),
+    h('button', { class: 'btn small primary', disabled: !S.sample || Object.keys(S.extracting).length > 0, onclick: function () { extractMany(st.raw.map(function (x) { return x.id; })); } }, 'Разобрать все')));
+  var byDept = {};
+  S.all.forEach(function (x) { var d = byDept[x.dept] || (byDept[x.dept] = { done: 0, prog: 0 }); if (x.status === 'done') d.done++; else d.prog++; });
+  var max = Math.max.apply(null, Object.keys(byDept).map(function (k) { return byDept[k].done + byDept[k].prog; }).concat([1]));
+  var bars = h('div', { class: 'bars' }, DEPTS.filter(function (d) { return byDept[d[0]]; }).map(function (d) {
+    var v = byDept[d[0]];
+    return h('div', { class: 'barrow' }, h('span', { class: 'l', title: d[1] }, d[1]),
+      h('div', { class: 'track', title: 'готово: ' + v.done + ', в процессе: ' + v.prog }, h('i', { class: 'd', style: 'width:' + (v.done / max * 100) + '%' }), h('i', { class: 'p', style: 'width:' + (v.prog / max * 100) + '%' })),
+      h('span', { class: 'num mono', style: 'text-align:right' }, v.done + v.prog));
+  }));
+  var missing = DEPTS.filter(function (d) { return !byDept[d[0]] && d[0] !== 'other'; });
+  var recent = S.all.slice().sort(function (a, b) { return (b.updatedAt || '').localeCompare(a.updatedAt || ''); }).slice(0, 7);
+  frag.append(h('div', { class: 'grid2' },
+    h('div', { class: 'panel' }, h('h2', null, 'Охват по отделам', h('span', { class: 'muted' }, 'тёмное — готово, светлое — в процессе')), bars,
+      missing.length > 0 && h('div', { style: 'margin-top:16px' }, h('div', { class: 'mini-l', style: 'margin-bottom:8px' }, 'Ещё не опрошены'), h('div', { class: 'chips' }, missing.map(function (d) { return h('span', { class: 'chip' }, d[1]); })))),
+    h('div', { class: 'panel' }, h('h2', null, 'Последние интервью'),
+      h('ul', { class: 'feed' }, recent.map(function (x) {
+        return h('li', { tabindex: 0, onclick: function () { openPerson(x.id); }, onkeydown: function (e) { if (e.key === 'Enter') openPerson(x.id); } },
+          h('span', { style: 'min-width:0;display:flex;flex-direction:column' }, h('span', { class: 'nm' }, personName(x)), h('span', { class: 'muted', style: 'font-size:12.5px' }, deptName(x.dept, 'ru') + ' · ' + fmtDate(x.updatedAt))),
+          statusChip(x));
+      })),
+      S.analysis && S.analysis.result && S.analysis.result.headline && h('div', { style: 'margin-top:16px;border-top:1px solid var(--line);padding-top:14px' },
+        h('div', { class: 'mini-l' }, 'Последний анализ'), h('p', { style: 'margin:6px 0 10px' }, S.analysis.result.headline),
+        h('button', { class: 'btn small', onclick: function () { S.tab = 'analysis'; render(); } }, 'Открыть анализ')))));
+  return frag;
+}
+function tile(v, small, k) { return h('div', { class: 'tile' }, h('div', { class: 'v' }, v, small && h('small', null, small)), h('div', { class: 'k' }, k)); }
+function openPerson(id) { S.selected = id; S.confirmDel = false; render(); }
+
+function dashPeople() {
+  if (!S.all.length) return emptyDash();
+  var rows = S.all.slice().sort(function (a, b) { return (b.updatedAt || '').localeCompare(a.updatedAt || ''); });
+  return h('table', { class: 'tbl' },
+    h('colgroup', null, h('col', { style: 'width:22%' }), h('col', { style: 'width:20%' }), h('col', { style: 'width:20%' }), h('col', { style: 'width:13%' }), h('col', { style: 'width:8%' }), h('col', { style: 'width:7%' }), h('col', { style: 'width:10%' })),
+    h('thead', null, h('tr', null, ['Сотрудник', 'Отдел', 'Должность', 'Статус', 'Ответов', 'Проц.', 'Обновлено'].map(function (x, i) { return h('th', { class: i >= 4 && i <= 5 ? 'r' : '' }, x); }))),
+    h('tbody', null, rows.map(function (x) {
+      var prof = S.profiles[x.id];
+      return h('tr', { class: 'click', tabindex: 0, onclick: function () { openPerson(x.id); }, onkeydown: function (e) { if (e.key === 'Enter') openPerson(x.id); } },
+        h('td', { 'data-l': 'Сотрудник' }, h('div', { class: 'clip', title: personName(x) }, personName(x)), prof && prof.name && prof.name !== x.name && h('div', { class: 'sub clip' }, prof.name)),
+        h('td', { 'data-l': 'Отдел' }, h('div', { class: 'clip', title: deptName(x.dept, 'ru') }, deptName(x.dept, 'ru'))),
+        h('td', { 'data-l': 'Должность' }, h('div', { class: 'clip', title: x.position || '' }, x.position || '—')),
+        h('td', { 'data-l': 'Статус' }, statusChip(x), x.mode === 'script' && h('div', { class: 'sub' }, 'без ИИ')),
+        h('td', { 'data-l': 'Ответов', class: 'r num mono' }, answersCount(x)),
+        h('td', { 'data-l': 'Процессов', class: 'r num mono' }, procCount(x)),
+        h('td', { 'data-l': 'Обновлено', class: 'num' }, h('div', { class: 'clip' }, fmtDate(x.updatedAt))));
+    })));
+}
+
+function processRows() {
+  var rows = [];
+  S.all.forEach(function (x) {
+    if (!x.summary) return;
+    (x.summary.processes || []).forEach(function (p) { rows.push({ iv: x, p: p }); });
+  });
+  return rows;
+}
+function dashProcesses() {
+  var all = processRows();
+  if (!all.length) {
+    return h('div', { class: 'card empty' }, h('h2', null, 'Процессов пока нет'), h('p', { class: 'muted' }, 'Процессы появляются, когда сотрудник завершает интервью и подтверждает резюме. Интервью, пройденные без ИИ, разберите на вкладке «Обзор» или в карточке сотрудника.'));
+  }
+  var f = S.filter;
+  var q = f.q.toLowerCase();
+  var rows = all.filter(function (r) {
+    if (f.dept && r.iv.dept !== f.dept) return false;
+    if (!q) return true;
+    var hay = [r.p.name, r.p.description, r.p.systems.join(' '), r.p.pain_points.join(' '), r.p.inputs_from.join(' '), r.p.outputs_to.join(' '), personName(r.iv), r.iv.position].join(' ').toLowerCase();
+    return hay.indexOf(q) >= 0;
+  });
+  rows.sort(function (a, b) {
+    if (f.sort === 'potential') return (b.p.automation_potential || 0) - (a.p.automation_potential || 0) || (b.p.hours_per_week || 0) - (a.p.hours_per_week || 0);
+    if (f.sort === 'dept') return deptName(a.iv.dept, 'ru').localeCompare(deptName(b.iv.dept, 'ru'), 'ru');
+    return (b.p.hours_per_week || 0) - (a.p.hours_per_week || 0);
+  });
+  var deptsPresent = {}; all.forEach(function (r) { deptsPresent[r.iv.dept] = 1; });
+  var deptSel = h('select', { class: 'input', id: 'pf-dept', 'aria-label': 'Отдел', onchange: function (e) { S.filter.dept = e.target.value; render(); } },
+    h('option', { value: '' }, 'Все отделы'), DEPTS.filter(function (d) { return deptsPresent[d[0]]; }).map(function (d) { return h('option', { value: d[0] }, d[1]); }));
+  deptSel.value = f.dept;
+  var sortSel = h('select', { class: 'input', id: 'pf-sort', 'aria-label': 'Сортировка', onchange: function (e) { S.filter.sort = e.target.value; render(); } },
+    h('option', { value: 'hours' }, 'Сначала больше часов'), h('option', { value: 'potential' }, 'Сначала выше потенциал'), h('option', { value: 'dept' }, 'По отделам'));
+  sortSel.value = f.sort;
+  var search = h('input', { class: 'input', id: 'pf-q', type: 'search', placeholder: 'Поиск: процесс, программа, боль…', value: f.q });
+  search.addEventListener('input', function () { clearTimeout(search._t); search._t = setTimeout(function () { S.filter.q = search.value; render(); var el = $('#pf-q'); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } }, 300); });
+  var hours = rows.reduce(function (a, r) { return a + (r.p.hours_per_week || 0); }, 0);
+  return h('div', null,
+    h('div', { class: 'toolbar' }, search, deptSel, sortSel, h('span', { class: 'muted num', style: 'font-size:13px' }, rows.length + ' из ' + all.length + ' · ' + fmtNum(Math.round(hours * 10) / 10) + ' ч/нед')),
+    h('table', { class: 'tbl' },
+      h('colgroup', null, h('col', { style: 'width:24%' }), h('col', { style: 'width:15%' }), h('col', { style: 'width:12%' }), h('col', { style: 'width:13%' }), h('col', { style: 'width:16%' }), h('col', { style: 'width:12%' }), h('col', { style: 'width:8%' })),
+      h('thead', null, h('tr', null, ['Процесс', 'Кто', 'Частота · ч/нед', 'Программы', 'Откуда → куда', 'Что мешает', 'Потенц.'].map(function (x) { return h('th', null, x); }))),
+      h('tbody', null, rows.map(function (r) {
+        var p = r.p, flow = (p.inputs_from.join(', ') || '…') + ' → ' + (p.outputs_to.join(', ') || '…');
+        return h('tr', { class: 'click', tabindex: 0, onclick: function () { openPerson(r.iv.id); }, onkeydown: function (e) { if (e.key === 'Enter') openPerson(r.iv.id); } },
+          h('td', { 'data-l': 'Процесс' }, h('div', { style: 'font-weight:600' }, p.name), p.description && h('div', { class: 'sub clamp', title: p.description }, p.description)),
+          h('td', { 'data-l': 'Кто' }, h('div', { class: 'clip', title: personName(r.iv) }, personName(r.iv)), h('div', { class: 'sub clip', title: deptName(r.iv.dept, 'ru') }, deptName(r.iv.dept, 'ru'))),
+          h('td', { 'data-l': 'Частота · ч/нед' }, h('div', { class: 'clamp', title: p.frequency }, p.frequency || '—'), h('div', { class: 'sub num mono' }, p.hours_per_week != null ? fmtNum(p.hours_per_week) + ' ч' : '—')),
+          h('td', { 'data-l': 'Программы' }, h('div', { class: 'clamp', title: p.systems.join(', ') }, p.systems.join(', ') || '—')),
+          h('td', { 'data-l': 'Откуда → куда' }, h('div', { class: 'clamp', title: flow }, flow)),
+          h('td', { 'data-l': 'Что мешает' }, h('div', { class: 'clamp', title: p.pain_points.join('; ') }, p.pain_points.join('; ') || '—')),
+          h('td', { 'data-l': 'Потенциал' }, potential(p.automation_potential, 'Потенциал автоматизации')));
+      }))));
+}
+
+function loadKnowledge() {
+  if (typeof API === 'undefined') return Promise.resolve();
+  return API.req('GET', '/api/admin/knowledge?q=' + encodeURIComponent(S.knowledgeQuery || ''), undefined, { admin: true }).then(function (res) {
+    S.knowledge = res.items || []; S.knowledgeErr = '';
+    if (S.tab === 'knowledge') render();
+  }, function () { S.knowledgeErr = 'Не удалось загрузить базу знаний. Проверьте соединение.'; if (S.tab === 'knowledge') render(); });
+}
+function knowledgeStatusLabel(status) {
+  return ({ ready: 'Готово', extracted: 'Без ИИ-резюме', failed: 'Ошибка разбора', queued: 'В очереди', processing: 'Разбирается', analyzing: 'Анализируется' })[status] || status;
+}
+function knowledgeCard(item) {
+  var a = item.analysis || {}, fields = a.fields || [], points = a.key_points || [];
+  var systems = a.systems || [], processes = a.processes || [], handoffs = a.handoffs || [], quality = a.data_quality || [];
+  return h('article', { class: 'panel knowledge-card' },
+    h('div', { class: 'panel-h' }, h('h2', null, item.sourceName), h('span', { class: 'chip ' + (item.status === 'ready' ? 'rev' : 'prog') }, knowledgeStatusLabel(item.status))),
+    h('div', { class: 'muted', style: 'font-size:12.5px' }, (item.personName || 'Сотрудник') + ' · ' + (item.position || item.department || '') + (item.questionIndex != null ? ' · вопрос ' + (item.questionIndex + 1) : '')),
+    a.summary && h('p', null, a.summary),
+    points.length > 0 && h('ul', { class: 'knowledge-points' }, points.map(function (point) { return h('li', null, point); })),
+    fields.length > 0 && h('section', null, h('h3', null, 'Поля документа'), h('div', { class: 'knowledge-fields' }, fields.map(function (field) {
+      return h('div', { class: 'knowledge-field' }, h('b', null, field.name), field.description && h('span', null, field.description), field.example && h('code', null, field.example));
+    }))),
+    systems.length > 0 && h('div', null, h('h3', null, 'Системы'), h('div', { class: 'picked' }, systems.map(function (name) { return h('span', null, name); }))),
+    processes.length > 0 && h('div', null, h('h3', null, 'Процессы'), h('div', { class: 'picked' }, processes.map(function (name) { return h('span', null, name); }))),
+    handoffs.length > 0 && h('section', null, h('h3', null, 'Связи'), h('ul', { class: 'knowledge-points' }, handoffs.map(function (name) { return h('li', null, name); }))),
+    quality.length > 0 && h('section', null, h('h3', null, 'Качество данных'), h('ul', { class: 'knowledge-points' }, quality.map(function (name) { return h('li', null, name); }))),
+    item.error && h('p', { class: 'savestate bad' }, item.error),
+    item.text && h('details', null, h('summary', null, 'Исходный текст для проверки'), h('pre', { class: 'knowledge-text' }, item.text)));
+}
+function dashKnowledge() {
+  var input = h('input', { class: 'input', id: 'knowledge-q', type: 'search', placeholder: 'Поиск по документам, полям, системам…', value: S.knowledgeQuery || '' });
+  input.addEventListener('input', function () { S.knowledgeQuery = input.value; });
+  var form = h('form', { class: 'toolbar', onsubmit: function (event) { event.preventDefault(); S.knowledgeQuery = input.value.trim(); loadKnowledge(); } },
+    input, h('button', { class: 'btn primary', type: 'submit' }, 'Найти'));
+  var body = h('div', { class: 'knowledge-grid' }, form, S.knowledgeErr && h('div', { class: 'notice err' }, S.knowledgeErr));
+  if (!S.knowledge.length) body.append(h('div', { class: 'card empty' }, h('h2', null, S.knowledgeQuery ? 'Ничего не найдено' : 'Документы пока не разобраны'),
+    h('p', { class: 'muted' }, S.knowledgeQuery ? 'Попробуйте другое поле, артикул, систему или фамилию.' : 'Загрузите документ в интервью. Здесь появятся его резюме, поля, процессы и связи.')));
+  else S.knowledge.forEach(function (item) { body.append(knowledgeCard(item)); });
+  return body;
+}
+
+function dashAnalysis() {
+  var withSum = S.all.filter(function (x) { return x.summary; });
+  var a = S.analysis && S.analysis.result;
+  var head = h('div', { class: 'panel', style: 'margin-bottom:20px' },
+    h('div', { class: 'progress-line' },
+      h('div', { style: 'flex:1 1 280px;min-width:0' },
+        h('h2', { style: 'margin-bottom:4px' }, 'Сводный анализ'),
+        h('p', { class: 'muted', style: 'font-size:14px' }, S.analysis ? 'Последний: ' + fmtDate(S.analysis.generatedAt) + ' по ' + S.analysis.basedOn + ' интервью. Сейчас с резюме: ' + withSum.length + '.' : 'Claude сведёт резюме всех интервью: каталог процессов, кандидаты на автоматизацию, узкие места на стыках, кого опросить ещё.')),
+      S.anBusy
+        ? h('div', { class: 'actions' }, h('span', { class: 'muted dots', id: 'anprog' }, 'Анализирую'), h('button', { class: 'btn small', onclick: function () { if (S.anCtl) S.anCtl.abort(); } }, 'Остановить'))
+        : h('button', { class: 'btn primary', disabled: !withSum.length || !S.sample, onclick: runAnalysis }, S.analysis ? 'Пересобрать анализ' : 'Собрать анализ по ' + withSum.length + ' интервью')),
+    !S.sample && h('p', { class: 'notice', style: 'margin-top:12px' }, 'ИИ недоступен в этом окне, поэтому анализ собрать нельзя. Откройте страницу в claude.ai под своей учётной записью.'),
+    S.anErr && h('p', { class: 'notice err', style: 'margin-top:12px' }, S.anErr),
+    !withSum.length && h('p', { class: 'muted', style: 'margin-top:10px;font-size:14px' }, 'Для анализа нужно хотя бы одно интервью с резюме.'));
+  if (!a) return head;
+  var out = h('div', null, head);
+  if (a.headline) out.append(h('div', { class: 'an-head' }, h('div', { class: 'eyebrow' }, 'Главный вывод'), h('p', { class: 'hl' }, a.headline)));
+  if (a.automation_candidates.length) {
+    out.append(h('section', { class: 'an-sec' }, h('h2', null, 'Что автоматизировать в первую очередь'),
+      h('ol', { class: 'cands' }, a.automation_candidates.map(function (c) {
+        return h('li', { class: 'cand' }, h('div', { class: 'rk' }, c.rank),
+          h('div', { style: 'min-width:0' }, h('h3', null, c.task),
+            h('div', { class: 'meta' }, c.who.map(function (w) { return h('span', { class: 'chip' }, w); }), c.hours_per_week != null && h('span', { class: 'chip rev num' }, fmtNum(c.hours_per_week) + ' ч/нед')),
+            h('div', { class: 'scores' }, scoreEl('Экономия времени', c.scores.time), scoreEl('Работа по правилам', c.scores.rules), scoreEl('Данные доступны', c.scores.data), scoreEl('Риск ошибки', c.scores.risk, true)),
+            h('dl', { class: 'kv' }, metaRow('Как сделать', c.approach), metaRow('Что проверяет человек', c.human_check), metaRow('Пилот на 2 недели', c.pilot))));
+      }))));
+  }
+  if (a.process_catalog.length) {
+    out.append(h('section', { class: 'an-sec' }, h('h2', null, 'Каталог процессов компании'),
+      h('table', { class: 'tbl' },
+        h('colgroup', null, h('col', { style: 'width:22%' }), h('col', { style: 'width:18%' }), h('col', { style: 'width:8%' }), h('col', { style: 'width:8%' }), h('col', { style: 'width:24%' }), h('col', { style: 'width:20%' })),
+        h('thead', null, h('tr', null, ['Процесс', 'Отделы', 'Людей', 'ч/нед', 'Поток', 'Проблемы'].map(function (x, i) { return h('th', { class: i === 2 || i === 3 ? 'r' : '' }, x); }))),
+        h('tbody', null, a.process_catalog.map(function (p) {
+          return h('tr', null,
+            h('td', { 'data-l': 'Процесс' }, h('div', { style: 'font-weight:600' }, p.process), p.systems.length > 0 && h('div', { class: 'sub clamp' }, p.systems.join(', '))),
+            h('td', { 'data-l': 'Отделы' }, h('div', { class: 'clamp', title: p.departments.join(', ') }, p.departments.join(', ') || '—')),
+            h('td', { 'data-l': 'Людей', class: 'r num mono' }, p.people != null ? p.people : '—'),
+            h('td', { 'data-l': 'ч/нед', class: 'r num mono' }, p.hours_per_week != null ? fmtNum(p.hours_per_week) : '—'),
+            h('td', { 'data-l': 'Поток' }, h('div', { class: 'clamp', title: p.flow }, p.flow || '—')),
+            h('td', { 'data-l': 'Проблемы' }, h('div', { class: 'clamp', title: p.issues.join('; ') }, p.issues.join('; ') || '—')));
+        })))));
+  }
+  if (a.bottlenecks.length) out.append(h('section', { class: 'an-sec' }, h('h2', null, 'Узкие места на стыках отделов'),
+    h('div', { class: 'cards2' }, a.bottlenecks.map(function (b) { return h('div', { class: 'mini' }, h('b', null, b.between), h('span', null, b.issue), b.evidence && h('span', { class: 'muted', style: 'font-size:13px' }, 'Говорили: ' + b.evidence)); }))));
+  var tail = h('div', { class: 'twocol', style: 'margin-top:26px' },
+    a.keep_human.length > 0 && h('section', { class: 'sum-block' }, h('h3', null, 'Оставить людям'), h('ul', { class: 'plain' }, a.keep_human.map(function (k) { return h('li', null, h('b', null, k.task), k.why ? ' — ' + k.why : ''); }))),
+    listBlock('Дублирование работы', a.duplicates),
+    listBlock('Пробелы: кого опросить во втором раунде', a.gaps));
+  if (tail.childNodes.length) out.append(tail);
+  return out;
+}
+function scoreEl(label, v, risk) {
+  return h('div', { class: 'score' + (risk ? ' risk' : '') }, h('div', { class: 'lab' }, label + ' · ', h('span', { class: 'mono' }, v + '/5')), h('div', { class: 'sb' }, h('i', { style: 'width:' + (v / 5 * 100) + '%' })));
+}
+function runAnalysis() {
+  var items = S.all.filter(function (x) { return x.summary; });
+  if (!items.length || !S.sample || S.anBusy) return;
+  S.anBusy = true; S.anErr = '';
+  var ctl = S.anCtl = new AbortController();
+  render();
+  var payload = items.map(function (x, i) { return { n: i + 1, dept: deptName(x.dept, 'ru'), position: x.position || '', summary: x.summary }; });
+  var txt = JSON.stringify(payload);
+  if (txt.length > 180000) {
+    payload.forEach(function (p) { p.summary = { role_summary: p.summary.role_summary, processes: (p.summary.processes || []).map(function (q) { return { name: q.name, frequency: q.frequency, hours_per_week: q.hours_per_week, systems: q.systems, inputs_from: q.inputs_from, outputs_to: q.outputs_to, pain_points: q.pain_points, automation_potential: q.automation_potential }; }), top_pains: p.summary.top_pains }; });
+    txt = JSON.stringify(payload).slice(0, 220000);
+  }
+  S.sample.json(analysisPrompt(items.length) + '\n\nРезюме интервью:\n' + txt, {
+    modelTier: 'complex', cache: false, signal: ctl.signal,
+    onText: function (u) { var el = $('#anprog'); if (el) { el.classList.remove('dots'); el.textContent = 'Пишу анализ… ' + u.text.length.toLocaleString('ru-RU') + ' знаков'; } }
+  }).then(function (d) {
+    S.analysis = { generatedAt: now(), basedOn: items.length, result: normAnalysis(d) };
+    return S.db.doc('analysis/latest').set(clone(S.analysis)).catch(function () { toast('Анализ готов, но не сохранился в базе. Он пропадёт после перезагрузки.'); });
+  }, function (e) {
+    if (!e || e.code !== 'cancelled') S.anErr = (e && e.code === 'invalid_json') ? 'Claude вернул ответ не в том формате. Нажмите «Собрать анализ» ещё раз.' : errText(e);
+  }).then(function () { S.anBusy = false; S.anCtl = null; render(); });
+}
+
+function dashInvite() {
+  var textRu = 'Коллеги, добрый день!\n\nМы собираем карту рабочих процессов компании, чтобы убрать рутину: ручной перенос данных, лишние согласования, однообразные отчёты. Это не проверка и не оценка вашей работы.\n\nПожалуйста, пройдите короткое интервью с ИИ-помощником (20–35 минут, можно с перерывами). Ответы вижу только я.\n\nСсылка: [вставьте ссылку на эту страницу]\nОткройте её, войдя в claude.ai под тем email, на который пришло приглашение.\n\nСпасибо!';
+  var textRo = 'Stimați colegi, bună ziua!\n\nRealizăm harta proceselor de lucru ale companiei pentru a elimina rutina: transferul manual de date, aprobările inutile, rapoartele repetitive. Nu este o verificare sau o evaluare a muncii dumneavoastră.\n\nVă rog să parcurgeți un interviu scurt cu un asistent AI (20–35 de minute, cu pauze dacă e nevoie). Răspunsurile le văd doar eu.\n\nLink: [inserați linkul acestei pagini]\nDeschideți-l autentificat în claude.ai cu adresa de e-mail la care ați primit invitația.\n\nMulțumesc!';
+  function copyBox(label, text, id) {
+    var pre = h('div', { class: 'invite-text', id: id }, text);
+    return h('div', { class: 'panel' }, h('h2', null, label), pre,
+      h('button', { class: 'btn small', onclick: function () {
+        var done = function () { toast('Текст скопирован'); };
+        try { navigator.clipboard.writeText(text).then(done, function () { selectEl(pre); toast('Текст выделен — скопируйте его вручную'); }); }
+        catch (e) { selectEl(pre); toast('Текст выделен — скопируйте его вручную'); }
+      } }, 'Скопировать'));
+  }
+  return h('div', { class: 'invite' },
+    h('div', { class: 'panel' }, h('h2', null, 'Как дать доступ сотрудникам'),
+      h('ol', { class: 'howto' },
+        h('li', null, h('span', null, 'Нажмите «Поделиться» (Share) в шапке этой страницы на claude.ai.')),
+        h('li', null, h('span', null, 'Добавьте сотрудников по email. Уровень доступа — «Редактор» (Editor) на личном плане или «Участник» (Contributor) на плане Team/Enterprise. С уровнем «Просмотр» ответы не сохранятся.')),
+        h('li', null, h('span', null, 'Не включайте доступ по публичной ссылке: с ней приглашённые извне получают только просмотр и не смогут ответить.')),
+        h('li', null, h('span', null, 'Скопируйте ссылку на страницу и отправьте сотрудникам вместе с текстом справа.'))),
+      h('div', { class: 'notice info', style: 'margin-top:16px;display:flex;flex-direction:column;gap:6px' },
+        h('span', null, 'Каждому сотруднику нужна учётная запись claude.ai (подойдёт бесплатная). ИИ-интервьюер расходует лимит Claude самого сотрудника.'),
+        h('span', null, 'Если ИИ у сотрудника недоступен, интервью пройдёт по готовым вопросам, а резюме вы соберёте кнопкой «Разобрать ответы».'),
+        h('span', null, 'Чужие интервью закрыты правилами хранилища: их видите только вы, даже редакторы страницы их не читают. Редактор технически может опубликовать новую версию страницы, поэтому давайте этот уровень только своим сотрудникам.'))),
+    h('div', { style: 'display:flex;flex-direction:column;gap:18px;min-width:0' }, copyBox('Приглашение на русском', textRu, 'inv-ru'), copyBox('Invitație în română', textRo, 'inv-ro')));
+}
+function selectEl(el) { try { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) {} }
+
+function roleCoverage(x) {
+  var keys = x.roleKeys && x.roleKeys.length ? x.roleKeys : [x.roleKey || ROLE_DEFAULT_BY_DEPT[x.dept] || '00'];
+  var packs = keys.map(function (key) { return ROLE_PACKS[key] || ROLE_PACKS['00']; });
+  var asked = {};
+  (x.messages || []).forEach(function (m) { if (m.questionKey) asked[m.questionKey] = true; });
+  var ids = packs.reduce(function (all, pack) { return all.concat(pack.questions.filter(function (q) { return asked[q.id]; }).map(function (q) { return q.id; })); }, []);
+  return { key: keys[0], keys: keys, title: packs.map(function (pack) { return pack.title.ru; }).join(' + '), asked: ids.length, total: packs.reduce(function (sum, pack) { return sum + pack.questions.length; }, 0), ids: ids };
+}
+
+function aboutAdmin(x) {
+  if (!x.about) return null;
+  var analysis = x.aboutAnalysis || {}, activities = analysis.activities || [];
+  return h('section', { class: 'attachments-admin' }, h('h3', null, 'Занятия из описания сотрудника'),
+    analysis.summary && h('p', { class: 'muted' }, analysis.summary),
+    activities.length > 0 && h('div', { class: 'picked' }, activities.map(function (item) { return h('span', null, item.label); })),
+    h('details', null, h('summary', null, 'Описание и доказательства'), h('p', { class: 'muted' }, x.about),
+      activities.map(function (item) { return h('p', { class: 'attachment-question' }, item.label + ': ' + (item.evidence || []).join(' · ')); })));
+}
+
+function attachmentsAdmin(x) {
+  var items = x.attachments || [];
+  if (!items.length) return null;
+  return h('section', { class: 'attachments-admin' }, h('h3', null, 'Материалы для анализа · ' + items.length),
+    h('p', { class: 'muted', style: 'font-size:12.5px' }, 'Файлы и ссылки привязаны к вопросам. Содержимое файлов не отправляется в облачный ИИ.'),
+    h('div', { class: 'attach-list' }, items.map(function (a) {
+      return h('div', null, attachmentChip(a, false), a.question && h('div', { class: 'attachment-question' }, 'Вопрос: ' + a.question));
+    })));
+}
+function drawer() {
+  var x = S.all.find(function (i) { return i.id === S.selected; });
+  if (!x) { S.selected = null; return h('span'); }
+  var close = function () { S.selected = null; S.confirmDel = false; render(); };
+  var L = T.ru;
+  var busy = !!S.extracting[x.id];
+  var coverage = roleCoverage(x);
+  var box = h('div', { class: 'drawer', role: 'dialog', 'aria-modal': 'true', 'aria-label': personName(x) },
+    h('div', { class: 'drawer-h' },
+      h('div', { style: 'min-width:0' }, h('div', { class: 'eyebrow' }, deptName(x.dept, 'ru')), h('h2', null, personName(x)), h('p', { class: 'muted' }, (x.position || '—') + ' · ' + (x.lang === 'ro' ? 'на румынском' : 'на русском') + (x.mode === 'script' ? ' · анкета без ИИ' : ''))),
+      h('button', { class: 'btn small ghost', onclick: close, 'aria-label': 'Закрыть' }, 'Закрыть')),
+    h('div', { class: 'actions' }, statusChip(x), h('span', { class: 'muted', style: 'font-size:13px' }, 'начато ' + fmtDate(x.startedAt) + ' · обновлено ' + fmtDate(x.updatedAt))),
+    h('p', { class: 'muted', style: 'font-size:12.5px' }, 'Функция: ' + coverage.title + ' (' + coverage.key + ') · базовых тем: ' + coverage.asked + ' / ' + coverage.total),
+    (x.messages || []).length > 2 && h('div', { class: 'actions' },
+      h('button', { class: 'btn small' + (x.summary ? '' : ' primary'), disabled: busy || !S.sample, onclick: function () { extractMany([x.id]); } }, busy ? 'Разбираю…' : x.summary ? 'Пересобрать резюме' : 'Разобрать ответы'),
+      S.extractErr[x.id] && h('span', { class: 'savestate bad' }, S.extractErr[x.id])),
+    aboutAdmin(x),
+    attachmentsAdmin(x),
+    x.summary ? summaryView(x.summary, L) : h('p', { class: 'muted' }, 'Резюме ещё нет. ' + (x.status === 'in_progress' ? 'Сотрудник проходит интервью.' : 'Нажмите «Разобрать ответы», чтобы Claude составил его по расшифровке.')),
+    (x.messages || []).length > 0 && h('details', { class: 'tr' }, h('summary', null, 'Расшифровка интервью · ' + x.messages.length + ' сообщ.'),
+      h('div', { class: 'transcript', style: 'margin-top:10px' }, x.messages.map(function (m) {
+        return h('div', { class: 'msg ' + (m.role === 'assistant' ? 'a' : 'u') }, h('span', { class: 'who' }, m.role === 'assistant' ? 'Интервьюер' : personName(x)), msgBody(m, false, x),
+          m.role === 'assistant' && m.options && m.options.length > 0 && h('span', { class: 'muted', style: 'font-size:12.5px' }, 'Варианты: ' + m.options.join(' · ')));
+      }))),
+    h('div', { style: 'border-top:1px solid var(--line);padding-top:14px' },
+      S.confirmDel
+        ? h('div', { class: 'actions' }, h('span', null, 'Удалить интервью без возможности восстановления?'),
+            h('button', { class: 'btn small danger', onclick: function () { S.db.doc(docPath(x)).delete().then(function () { toast('Интервью удалено'); }, function () { toast('Не удалось удалить. Попробуйте ещё раз.'); }); S.selected = null; S.confirmDel = false; render(); } }, 'Да, удалить'),
+            h('button', { class: 'btn small', onclick: function () { S.confirmDel = false; render(); } }, 'Отмена'))
+        : h('button', { class: 'btn small danger', onclick: function () { S.confirmDel = true; render(); } }, 'Удалить интервью')));
+  return h('div', null, h('div', { class: 'scrim', onclick: close }), box);
+}
+function extractMany(ids) {
+  if (!S.sample) return;
+  var queue = ids.filter(function (id) { return !S.extracting[id]; });
+  queue.forEach(function (id) { S.extracting[id] = true; delete S.extractErr[id]; });
+  render();
+  var next = function () {
+    var id = queue.shift();
+    if (!id) return;
+    var iv = S.all.find(function (x) { return x.id === id; });
+    if (!iv) { delete S.extracting[id]; return next(); }
+    return S.sample.json(summaryPrompt(iv, 'ru'), { modelTier: 'default', cache: false }).then(function (d) {
+      return S.db.doc(docPath(iv)).update({ summary: normSummary(d), summaryBy: 'owner', summaryAt: now() });
+    }).catch(function (e) {
+      S.extractErr[id] = e && e.code === 'invalid_json' ? 'Ответ не в том формате, попробуйте ещё раз' : errText(e);
+    }).then(function () { delete S.extracting[id]; render(); return next(); });
+  };
+  next();
+}
+
+/* ---------- экспорт ---------- */
+function csvCell(v) { v = v == null ? '' : String(v); return /[;"\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+function saveFile(filename, data) {
+  if (!S.downloads) { toast('Скачивание недоступно в этом окне'); return; }
+  S.downloads.save({ filename: filename, data: data }).then(function () { toast('Файл сохранён'); }, function (e) {
+    if (e && e.code === 'declined') return;
+    toast('Не удалось сохранить файл');
+  });
+}
+function exportCsv() {
+  var head = ['Сотрудник', 'Отдел', 'Должность', 'Язык', 'Статус', 'Процесс', 'Описание', 'Частота', 'Часов в неделю', 'Программы', 'Откуда данные', 'Кому результат', 'Что мешает', 'Нужен опыт', 'Потенциал 1-5', 'Что упростить'];
+  var lines = [head.map(csvCell).join(';')];
+  S.all.forEach(function (x) {
+    var base = [personName(x), deptName(x.dept, 'ru'), x.position, x.lang, x.status];
+    var ps = x.summary && x.summary.processes && x.summary.processes.length ? x.summary.processes : [null];
+    ps.forEach(function (p) {
+      var row = base.concat(p ? [p.name, p.description, p.frequency, p.hours_per_week != null ? String(p.hours_per_week).replace('.', ',') : '', p.systems.join(', '), p.inputs_from.join(', '), p.outputs_to.join(', '), p.pain_points.join('; '), p.judgement, p.automation_potential || '', p.automation_idea] : ['', '', '', '', '', '', '', '', '', '', '']);
+      lines.push(row.map(csvCell).join(';'));
+    });
+  });
+  saveFile('karta-processov-' + now().slice(0, 10) + '.csv', '﻿' + lines.join('\r\n'));
+}
+function exportJson() {
+  var data = {
+    exportedAt: now(),
+    interviews: S.all.map(function (x) { var coverage = roleCoverage(x); return { name: personName(x), dept: deptName(x.dept, 'ru'), position: x.position, roleKey: coverage.key, roleKeys: coverage.keys, roleTitle: coverage.title, roleCoverage: coverage, about: x.about || '', aboutAnalysis: x.aboutAnalysis || {}, lang: x.lang, mode: x.mode, status: x.status, startedAt: x.startedAt, submittedAt: x.submittedAt || null, summary: x.summary || null, attachments: x.attachments || [], messages: (x.messages || []).map(function (m) { return { role: m.role, content: m.content, t: m.t, questionKey: m.questionKey || null, attachmentIds: m.attachmentIds || [] }; }) }; }),
+    analysis: S.analysis || null
+  };
+  saveFile('karta-processov-' + now().slice(0, 10) + '.json', JSON.stringify(data, null, 2));
+}
+
+/* ---------- запуск ---------- */
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && S.selected) { S.selected = null; S.confirmDel = false; render(); } });
+
+var cols = { interviews: [], guests: [] };
+function subscribeAll() {
+  ['interviews', 'guests'].forEach(function (col) { subscribeCol(col); });
+}
+function subscribeCol(col) {
+  S.db.collection(col).onSnapshot(function (snap) {
+    cols[col] = snap.docs.map(function (d) { var o = Object.assign({}, d.data()); o.id = d.id; o._col = col; return o; });
+    S.all = cols.interviews.concat(cols.guests);
+    S.dashErr = '';
+    var ids = cols.interviews.map(function (x) { return x.id; });
+    if (S.user && ids.length) S.user.profiles(ids).then(function (ps) { S.profiles = ps || {}; if (S.ownerMode === 'dash') render(); });
+    if (S.ownerMode === 'dash') render();
+  }, function (e) {
+    S.dashErr = 'Связь с хранилищем прервалась (' + (e && e.code) + '). Обновите страницу.';
+    if (S.ownerMode === 'dash') render();
+  });
+}
+
+function boot() {
+  render();
+  if (!window.claude || typeof window.claude.use !== 'function') { S.offline = true; S.ready = true; render(); return; }
+  var use = function (n) { return window.claude.use(n).catch(function () { return null; }); };
+  Promise.all([use('db'), use('user'), use('sample'), use('downloads')]).then(function (r) {
+    S.db = r[0]; S.user = r[1]; S.sample = r[2]; S.downloads = r[3];
+    var u = S.user;
+    var info = u ? Promise.all([u.id(), u.isOwner(), u.me(), typeof u.can === 'function' ? u.can('data.write') : null]) : Promise.resolve([null, false, { name: '' }, null]);
+    return info.then(function (v) {
+      S.uid = v[0]; S.isOwner = !!v[1]; S.meName = (v[2] && v[2].name) || ''; S.readOnly = v[3] === false;
+      if (S.db && !S.uid && !S.readOnly) {
+        var rid = null;
+        try { rid = localStorage.getItem('bp_guest_id'); } catch (e) {}
+        if (!rid) { rid = 'g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); try { localStorage.setItem('bp_guest_id', rid); } catch (e) {} }
+        S.uid = rid; S.guest = true;
+      }
+      if (!S.db || !S.uid) return;
+      S.myRef = S.db.doc((S.guest ? 'guests/' : 'interviews/') + S.uid);
+      var mine = S.myRef.get().then(function (snap) {
+        if (snap && snap.exists) {
+          S.iv = clone(snap.data());
+          if (S.iv.lang === 'ru' || S.iv.lang === 'ro') S.lang = S.iv.lang;
+          if (!S.iv.script) S.iv.script = { stage: 'p1', i: 0, task: 1 };
+          S.view = S.iv.status === 'done' ? 'done' : S.iv.status === 'review' ? 'review' : 'chat';
+          if (S.iv.mode === 'ai' && !S.sample) { S.iv.mode = 'script'; S.notice = t('scriptNotice'); }
+        }
+      }, function () {});
+      var an = S.isOwner ? S.db.doc('analysis/latest').get().then(function (s) { if (s && s.exists) S.analysis = clone(s.data()); }, function () {}) : null;
+      return Promise.all([mine, an]).then(function () { if (S.isOwner) subscribeAll(); });
+    });
+  }).catch(function () {}).then(function () {
+    S.ready = true;
+    render();
+    resumeIfNeeded();
+  });
+}
+function resumeIfNeeded() {
+  if (S.view !== 'chat' || !S.iv || S.busy || S.reopened) return;
+  if (S.isOwner && S.ownerMode !== 'self') return;
+  var last = S.iv.messages && S.iv.messages[S.iv.messages.length - 1];
+  if (last && last.role !== 'user') { if (S.voiceOn) scheduleMessageSpeech(last); return; }
+  if (S.iv.mode === 'ai') aiTurn(); else scriptAsk();
+}
+boot();
+})();
+</script>

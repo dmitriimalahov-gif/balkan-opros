@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Карта процессов Balkan</title>
+<style>
+/* Постоянная ссылка на опрос: находит текущий адрес сервера в current.json и встраивает опрос во весь экран */
+/* тема по умолчанию светлая; тёмная — только если сотрудник выбрал её в опросе */
+:root{--bg:#F3F5F2;--ink:#16212A;--muted:#5B6770;--accent:#275C4C;--accent-ink:#FFFFFF;color-scheme:light}
+:root[data-theme="dark"]{--bg:#101619;--ink:#E4EBE8;--muted:#97A5A2;--accent:#7CC3AA;--accent-ink:#0E1A16;color-scheme:dark}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:var(--bg);color:var(--ink);font:15px/1.55 "Golos Text","Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+#app{position:absolute;inset:0;width:100%;height:100%;height:100dvh;border:0;display:block}
+.msg{max-width:540px;margin:16vh auto 0;padding:0 max(20px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:10px}
+.msg b{font-size:21px;line-height:1.3}
+.msg span{color:var(--muted)}
+.mark{width:34px;height:34px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 19px/1 Georgia,serif}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="msg" id="msg" role="status">
+  <div class="mark" aria-hidden="true">B</div>
+  <b id="msg-t">Загрузка опроса…</b>
+  <span id="msg-s">Încărcarea sondajului…</span>
+</div>
+<script>
+(function () {
+  'use strict';
+  var KEY = 'bp_token', THEME = 'bp_theme';
+  var origin = '';
+  function read(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function write(k, v) { try { if (v) localStorage.setItem(k, v); else localStorage.removeItem(k); } catch (e) {} }
+  function get() { return read(KEY); }
+  function set(v) { write(KEY, v); }
+  var theme = read(THEME) === 'dark' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  function show(t, s) { document.getElementById('msg-t').textContent = t; document.getElementById('msg-s').textContent = s; }
+
+  var hash = location.hash || '';
+  var admin = /(?:^#|&)admin(?:&|$)/.test(hash);
+  // «Ссылка для продолжения» сотрудника. Сохранённый ключ она НЕ перезаписывает: опрос сначала покажет,
+  // чьё это интервью, и сохранит ключ, только когда человек нажмёт «Продолжить» (защита от подсунутой ссылки).
+  var link = hash.match(/(?:^#|&)t=([A-Za-z0-9_\-]+)/);
+  if (hash) { try { history.replaceState(null, '', location.pathname + (admin ? '#admin' : '')); } catch (e) {} }
+
+  // опрос сообщает свой ключ — храним его здесь, на постоянном адресе (адрес сервера меняется)
+  window.addEventListener('message', function (e) {
+    if (!origin || e.origin !== origin) return;
+    var d = e.data || {};
+    if (d.type === 'bp_theme') { theme = d.theme === 'dark' ? 'dark' : 'light'; write(THEME, theme); document.documentElement.setAttribute('data-theme', theme); return; }
+    if (d.type !== 'bp_token') return;
+    if (d.token) set(d.token);
+    else if (!link) set('');   // отказ от чужой ссылки не стирает собственный ключ
+  });
+
+  function start() {
+    fetch('current.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (cfg) {
+        if (!cfg || !/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/.test(cfg.url || '')) throw new Error('no url');
+        return fetch(cfg.url + '/healthz', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('down'); return cfg; });
+      })
+      .then(function (cfg) {
+        origin = cfg.url;
+        var tok = link ? link[1] : get();
+        var f = document.createElement('iframe');
+        f.id = 'app';
+        f.title = 'Карта процессов Balkan';
+        // Распознавание речи в кросс-доменном iframe требует явного разрешения Permissions Policy.
+        f.allow = 'clipboard-write; microphone';
+        var params = ['th=' + theme];
+        if (!admin && tok) params.push((link ? 't' : 'st') + '=' + tok);
+        f.src = cfg.url + (admin ? '/admin' : '/') + '#' + params.join('&');
+        // надпись «Загрузка…» остаётся под прозрачным iframe, пока опрос не загрузится (через туннель — несколько секунд)
+        f.addEventListener('load', function () { document.getElementById('msg').hidden = true; });
+        document.body.appendChild(f);
+      })
+      .catch(function () {
+        show('Опрос временно недоступен', 'Сервер обновляет адрес, это занимает несколько минут — страница попробует снова сама. / Sondajul este temporar indisponibil, reîncercăm automat.');
+        setTimeout(start, 30000);
+      });
+  }
+  start();
+})();
+</script>
+</body>
+</html>
