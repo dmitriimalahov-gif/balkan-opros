@@ -18,6 +18,9 @@ if [[ ! -f "$RUN/voice.pid" ]] || ! kill -0 "$(cat "$RUN/voice.pid" 2>/dev/null)
   log "работник голоса перезапущен"
 fi
 
+# Исходный код синхронизируется отдельно от адреса туннеля; ошибка кода не мешает работе ссылки.
+"$BASE/sync-code.sh" >> "$RUN/code-sync.log" 2>&1 || log "синхронизация кода отложена, повторю"
+
 # Постоянная ссылка (как у Helper): адрес туннеля → pages/current.json → push в GitHub Pages.
 # Неудачный push повторяется на следующей проверке (run/pushed-url хранит последний опубликованный адрес).
 PAGES="$BASE/pages"; PUSHED="$RUN/pushed-url"
