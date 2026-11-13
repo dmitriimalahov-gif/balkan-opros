@@ -59,7 +59,8 @@ html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;backgrou
     fetch('current.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.json(); })
       .then(function (cfg) {
-        if (!cfg || !/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/.test(cfg.url || '')) throw new Error('no url');
+        // постоянный сервер poll.erp.numer.om (с 13.11.2026); туннель Mac — запасной путь отката
+        if (!cfg || !/^https:\/\/(poll\.erp\.numer\.om|[a-z0-9-]+\.trycloudflare\.com)$/.test(cfg.url || '')) throw new Error('no url');
         return fetch(cfg.url + '/healthz', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('down'); return cfg; });
       })
       .then(function (cfg) {
