@@ -21,6 +21,7 @@ BASE = Path(__file__).resolve().parent
 TERMINAL_STATUSES = {'ready', 'extracted', 'failed'}
 MAX_TEXT = 1_000_000
 MAX_MODEL_TEXT = 30_000
+MACOS_VISION = '/usr/bin/xcrun'  # локальное распознавание фото есть только на Mac
 
 
 class KnowledgeError(Exception):
@@ -196,7 +197,7 @@ def extract_csv_file(path):
     raise KnowledgeError('csv_encoding') from last_error
 
 
-def extract_pdf(path):
+def extract_pdf(path, image_reader=None):
     from pypdf import PdfReader
     reader = PdfReader(path)
     pages = []
@@ -216,8 +217,7 @@ def extract_pdf(path):
         except (OSError, subprocess.TimeoutExpired):
             pass
     if len(text) < 50:
-        text = ocr_pdf(path)
-        parser = 'macOS Vision'
+        text, parser = ocr_pdf(path, image_reader)
     return text, {'fields': [], 'tables': [], 'pages': len(reader.pages), 'parser': parser}
 
 
@@ -286,23 +286,33 @@ def extract_doc(path):
 
 
 def ocr_image(path):
-    result = subprocess.run(['/usr/bin/xcrun', 'swift', str(BASE / 'ocr_vision.swift'), path], capture_output=True, timeout=180)
+    result = subprocess.run([MACOS_VISION, 'swift', str(BASE / 'ocr_vision.swift'), path], capture_output=True, timeout=180)
     if result.returncode != 0:
         raise KnowledgeError('ocr_failed')
     return result.stdout.decode('utf-8', errors='replace').strip(), {'fields': [], 'tables': [], 'parser': 'macOS Vision'}
 
 
-def ocr_pdf(path):
+def read_image(path, image_reader=None):
+    """Фото и сканы: на Mac — локальный Apple Vision, на сервере — модель с распознаванием изображений."""
+    if os.path.exists(MACOS_VISION):
+        return ocr_image(path)
+    if image_reader is None:
+        raise KnowledgeError('ocr_unavailable')
+    return image_reader(path), {'fields': [], 'tables': [], 'parser': 'vision-model'}
+
+
+def ocr_pdf(path, image_reader=None):
     with tempfile.TemporaryDirectory(prefix='knowledge-pdf-ocr-') as folder:
         prefix = str(Path(folder) / 'page')
         result = subprocess.run(['/opt/homebrew/bin/pdftoppm', '-f', '1', '-l', '3', '-scale-to', '1800', '-png', path, prefix], capture_output=True, timeout=90)
         if result.returncode != 0:
             raise KnowledgeError('pdf_ocr_failed')
-        texts = []
+        texts, parser = [], 'macOS Vision'
         for image in sorted(Path(folder).glob('page-*.png')):
-            text, _ = ocr_image(str(image))
+            text, extraction = read_image(str(image), image_reader)
             texts.append(text)
-        return '\n\n'.join(texts).strip()
+            parser = extraction['parser']
+        return '\n\n'.join(texts).strip(), parser
 
 
 def google_csv_url(url):
@@ -334,7 +344,7 @@ def extract_google_sheet(url):
     return text, extraction
 
 
-def extract_document(item, path):
+def extract_document(item, path, image_reader=None):
     if item.get('kind') == 'link':
         text, extraction = extract_google_sheet(item.get('url') or '')
     else:
@@ -346,13 +356,13 @@ def extract_document(item, path):
         elif extension == '.csv':
             text, extraction = extract_csv_file(path)
         elif extension == '.pdf':
-            text, extraction = extract_pdf(path)
+            text, extraction = extract_pdf(path, image_reader)
         elif extension == '.docx':
             text, extraction = extract_docx(path)
         elif extension == '.doc':
             text, extraction = extract_doc(path)
         elif extension in ('.jpg', '.jpeg', '.png', '.gif', '.webp', '.heic', '.heif', '.bmp', '.tif', '.tiff'):
-            text, extraction = ocr_image(path)
+            text, extraction = read_image(path, image_reader)
         else:
             raise KnowledgeError('unsupported_file_type')
     text = text.strip()
@@ -367,7 +377,9 @@ def analysis_prompt(text, item, doc, extraction):
         'Ты анализируешь рабочий документ сотрудника фармацевтического производства для базы знаний ERP.',
         'Отвечай только JSON без markdown. Не выдумывай факты, отделы, системы, поля или связи: используй только текст и структуру документа.',
         'Не включай пароли, персональные данные пациентов, зарплаты и секреты. Если они есть, только отметь их наличие в data_quality.',
-        'Схема: {"summary":"2-4 предложения по существу", "key_points":["до 7 главных фактов"],',
+        'Схема: {"document_type":"что это за документ: вид и название (журнал, бланк, СОП, инструкция, накладная, отчёт, таблица учёта, фото оборудования и т.п.)",',
+        '"purpose":"для чего документ нужен, кто и когда его заполняет — только если это видно из документа или вопроса",',
+        '"summary":"2-4 предложения по существу", "key_points":["до 7 главных фактов"],',
         '"fields":[{"name":"точное поле", "description":"смысл поля", "example":"пример из документа"}],',
         '"systems":["точные системы/форматы"], "processes":["точные операции"], "handoffs":["источник → получатель: что передаётся"],',
         '"data_quality":["пропуски, неоднозначность, чувствительные данные или проблемы структуры"]}.',
@@ -382,6 +394,7 @@ def analysis_prompt(text, item, doc, extraction):
 def fallback_analysis(text, extraction):
     lines = [re.sub(r'\s+', ' ', line).strip() for line in text.splitlines() if line.strip()]
     return {
+        'document_type': '', 'purpose': '',
         'summary': ' '.join(lines[:3])[:900],
         'key_points': lines[:7],
         'fields': extraction.get('fields') or [],
@@ -407,6 +420,8 @@ def normalize_analysis(value, fallback):
         raise KnowledgeError('invalid_analysis')
     result = dict(fallback)
     result['summary'] = str(value.get('summary') or fallback['summary'])[:2000]
+    result['document_type'] = str(value.get('document_type') or '')[:300]
+    result['purpose'] = str(value.get('purpose') or '')[:600]
     for key in ('key_points', 'systems', 'processes', 'handoffs', 'data_quality'):
         items = value.get(key)
         if isinstance(items, list):
@@ -437,7 +452,7 @@ def claim_job(database):
         return row if changed else None
 
 
-def process_one(database, summarizer):
+def process_one(database, summarizer, image_reader=None):
     row = claim_job(database)
     if not row:
         return False
@@ -457,7 +472,7 @@ def process_one(database, summarizer):
             if not re.fullmatch(r'[0-9a-f]{16}', row['interview_id']) or not re.fullmatch(r'[0-9a-f]{24}', attachment_id):
                 raise KnowledgeError('attachment')
             path = str(Path(database).parent / 'attachments' / row['interview_id'] / attachment_id)
-        text, extraction = extract_document(item, path)
+        text, extraction = extract_document(item, path, image_reader)
         update_job(database, attachment_id, 'analyzing', extracted_text=text, extraction_json=json.dumps(extraction, ensure_ascii=False), error='')
         fallback = fallback_analysis(text, extraction)
         try:
@@ -488,6 +503,7 @@ def knowledge_status(database, interview_id, attachment_ids):
             continue
         analysis = json.loads(row['analysis_json'] or '{}')
         items.append({'id': attachment_id, 'status': row['status'], 'summary': analysis.get('summary') or '',
+                      'documentType': analysis.get('document_type') or '',
                       'error': row['error'] or '', 'name': row['source_name']})
     ready = sum(item['status'] in TERMINAL_STATUSES for item in items)
     failed = sum(item['status'] == 'failed' for item in items)
@@ -519,11 +535,11 @@ def list_knowledge(database, query='', limit=100, text_limit=12000):
     return items
 
 
-def knowledge_worker(database, summarizer, stop_event):
+def knowledge_worker(database, summarizer, stop_event, image_reader=None):
     init_knowledge(database)
     with connect(database) as con:
         con.execute("UPDATE knowledge_documents SET status='queued' WHERE status IN ('processing','analyzing')")
     while not stop_event.is_set():
-        worked = process_one(database, summarizer)
+        worked = process_one(database, summarizer, image_reader)
         if not worked:
             stop_event.wait(1)

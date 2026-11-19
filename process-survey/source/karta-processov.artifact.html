@@ -2027,6 +2027,7 @@ function knowledgeCard(item) {
   return h('article', { class: 'panel knowledge-card' },
     h('div', { class: 'panel-h' }, h('h2', null, item.sourceName), h('span', { class: 'chip ' + (item.status === 'ready' ? 'rev' : 'prog') }, knowledgeStatusLabel(item.status))),
     h('div', { class: 'muted', style: 'font-size:12.5px' }, (item.personName || 'Сотрудник') + ' · ' + (item.position || item.department || '') + (item.questionIndex != null ? ' · вопрос ' + (item.questionIndex + 1) : '')),
+    a.document_type && h('p', { class: 'knowledge-type' }, h('b', null, a.document_type), a.purpose ? ' — ' + a.purpose : ''),
     a.summary && h('p', null, a.summary),
     points.length > 0 && h('ul', { class: 'knowledge-points' }, points.map(function (point) { return h('li', null, point); })),
     fields.length > 0 && h('section', null, h('h3', null, 'Поля документа'), h('div', { class: 'knowledge-fields' }, fields.map(function (field) {

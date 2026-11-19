@@ -11,6 +11,7 @@
 
 Запуск: python3 server.py   (порт SURVEY_PORT, по умолчанию 8795, слушает только 127.0.0.1)
 """
+import base64
 import hashlib
 import hmac
 import json
@@ -43,6 +44,12 @@ ANALYSIS_KEY = os.environ.get('SURVEY_ANALYSIS_KEY') or os.environ.get('LLM_API_
 ANALYSIS_MODEL = os.environ.get('SURVEY_ANALYSIS_MODEL', 'qwen3.8-flash-next-iq3_s')
 ANALYSIS_TIMEOUT = int(os.environ.get('SURVEY_ANALYSIS_TIMEOUT', '120'))
 ROUTER_MODELS = {'auto'}  # алиасы автоматической маршрутизации шлюза LiteLLM (OpenCode)
+# Фото и сканы документов на сервере (без macOS Vision) читает модель с распознаванием изображений.
+VISION_MODEL = os.environ.get('SURVEY_VISION_MODEL') or ANALYSIS_MODEL
+MAX_VISION_IMAGE = 15 * 1024 * 1024
+VISION_PROMPT = ('Это фото или скан рабочего документа фармацевтического производства. Перепиши весь видимый текст '
+                 'дословно, сохраняя строки; колонки таблиц разделяй символом |. Если текста почти нет, кратко опиши, '
+                 'что изображено. Без пояснений и без markdown.')
 DB_PATH = os.path.join(BASE, 'data', 'survey.db')
 ADMIN_FILE = os.path.join(BASE, 'ADMIN_PASSWORD.txt')
 TUNNEL_LOG = os.path.join(BASE, 'run', 'tunnel.log')
@@ -87,11 +94,13 @@ _knowledge_stop = None
 _knowledge_thread = None
 
 
-def remote_assistant_chat(messages, json_mode=False, temperature=0.4, timeout=None, max_tokens=4000, reasoning_effort=None):
-    body = {'model': ANALYSIS_MODEL, 'messages': messages, 'max_tokens': max_tokens}
+def remote_assistant_chat(messages, json_mode=False, temperature=0.4, timeout=None, max_tokens=4000, reasoning_effort=None,
+                          model=None):
+    model = model or ANALYSIS_MODEL
+    body = {'model': model, 'messages': messages, 'max_tokens': max_tokens}
     # Роутер шлюза сам выбирает конечную модель, а её ограничения заранее неизвестны (например, часть
     # моделей отвергает temperature при рассуждении) — temperature и reasoning_effort оставляем ему.
-    if ANALYSIS_MODEL not in ROUTER_MODELS:
+    if model not in ROUTER_MODELS:
         body['temperature'] = temperature
         if reasoning_effort:
             body['reasoning_effort'] = reasoning_effort
@@ -119,6 +128,38 @@ def remote_assistant_chat(messages, json_mode=False, temperature=0.4, timeout=No
     if not isinstance(content, str) or not content.strip():
         raise LLMError('remote_analysis_empty')
     return content
+
+
+def image_mime(data):
+    """Тип изображения по сигнатуре: вложения хранятся на диске без расширения."""
+    if data[:3] == b'\xff\xd8\xff':
+        return 'image/jpeg'
+    if data[:8] == b'\x89PNG\r\n\x1a\n':
+        return 'image/png'
+    if data[:4] == b'GIF8':
+        return 'image/gif'
+    if data[:4] == b'RIFF' and data[8:12] == b'WEBP':
+        return 'image/webp'
+    return ''
+
+
+def remote_image_text(path):
+    if os.path.getsize(path) > MAX_VISION_IMAGE:
+        raise LLMError('image_too_large')
+    with open(path, 'rb') as source:
+        data = source.read()
+    mime = image_mime(data)
+    if not mime:
+        raise LLMError('image_format_unsupported')
+    content = [{'type': 'text', 'text': VISION_PROMPT},
+               {'type': 'image_url', 'image_url': {'url': 'data:%s;base64,%s' % (mime, base64.b64encode(data).decode('ascii'))}}]
+    text = remote_assistant_chat([{'role': 'user', 'content': content}], timeout=180, max_tokens=4000, model=VISION_MODEL)
+    print('VISION_API_MODEL', VISION_MODEL, flush=True)
+    return text
+
+
+def knowledge_image_reader():
+    return remote_image_text if ANALYSIS_BASE and ANALYSIS_KEY else None
 
 
 def remote_analysis_chat(prompt):
@@ -157,7 +198,8 @@ def start_knowledge_worker(summarizer=None):
     if _knowledge_thread and _knowledge_thread.is_alive():
         return
     _knowledge_stop = threading.Event()
-    _knowledge_thread = threading.Thread(target=knowledge_worker, args=(DB_PATH, summarizer or document_summary, _knowledge_stop),
+    _knowledge_thread = threading.Thread(target=knowledge_worker,
+                                         args=(DB_PATH, summarizer or document_summary, _knowledge_stop, knowledge_image_reader()),
                                          name='knowledge-worker', daemon=True)
     _knowledge_thread.start()
 
@@ -373,7 +415,8 @@ def turn_messages(doc):
                 c += '\n[К ответу приложены материалы: ' + ', '.join(names) + '.]'
             if attachment_ids:
                 knowledge = knowledge_status(DB_PATH, doc['id'], attachment_ids)
-                summaries = [item['name'] + ': ' + item['summary'][:2000] for item in knowledge['items']
+                summaries = [item['name'] + (' (' + item['documentType'] + ')' if item.get('documentType') else '') + ': '
+                             + item['summary'][:2000] for item in knowledge['items']
                              if item['status'] in ('ready', 'extracted') and item.get('summary')]
                 if summaries:
                     c += '\n[Разбор приложенных документов:\n' + '\n'.join(summaries) + ']'
