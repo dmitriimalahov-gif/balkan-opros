@@ -182,6 +182,7 @@ def remote_analysis_chat(prompt):
 # Быстрые сбои шлюза (пустой ответ роутера, 502–504) повторяем один раз: это секунды, а резерв Ollama на CPU — минуты.
 RETRYABLE_REMOTE_ERRORS = ('remote_analysis_empty', 'remote_analysis_invalid_response',
                            'remote_analysis_http_502', 'remote_analysis_http_503', 'remote_analysis_http_504')
+RETRY_PAUSE_SECONDS = 0.7
 
 
 def remote_with_retry(call):
@@ -191,6 +192,8 @@ def remote_with_retry(call):
         if not str(error).startswith(RETRYABLE_REMOTE_ERRORS):
             raise
         print('ASSISTANT_API_RETRY', str(error)[:80], flush=True)
+        if str(error).startswith('remote_analysis_http_'):
+            time.sleep(RETRY_PAUSE_SECONDS)  # перегруженному шлюзу нужна короткая передышка
         return call()
 
 

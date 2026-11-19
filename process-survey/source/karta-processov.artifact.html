@@ -409,6 +409,7 @@ var T = {
     attachmentsOnly: 'Прикрепил(а) материалы к этому вопросу.', attachOpen: 'Открыть', attachDownload: 'Скачать',
     analysisProgress: 'Документ на стадии разбора, подождите… · {done} / {total}', analysisDone: 'Документы добавлены в базу знаний · {done} / {total}',
     analysisPending: 'Документ ещё на стадии разбора · {done} / {total}. Продолжаем — интервьюер учтёт его, как только разбор закончится.',
+    analysisPendingScript: 'Документ ещё на стадии разбора · {done} / {total}. Продолжаем — разбор закончится в фоне.',
     analysisWarning: 'Документы сохранены · {done} / {total}. Часть требует проверки или анализ продолжится в фоне.',
     send: 'Отправить', stop: 'Остановить', retry: 'Повторить',
     voiceOn: 'Включить озвучку', voiceOff: 'Выключить озвучку', voicePlay: 'Озвучить вопрос', voiceStop: 'Остановить озвучку',
@@ -486,6 +487,7 @@ var T = {
     attachmentsOnly: 'Am atașat materiale la această întrebare.', attachOpen: 'Deschide', attachDownload: 'Descarcă',
     analysisProgress: 'Documentul este în curs de analiză, așteptați… · {done} / {total}', analysisDone: 'Documentele sunt adăugate în baza de cunoștințe · {done} / {total}',
     analysisPending: 'Documentul este încă în analiză · {done} / {total}. Continuăm — intervievatorul îl va lua în calcul imediat ce analiza se termină.',
+    analysisPendingScript: 'Documentul este încă în analiză · {done} / {total}. Continuăm — analiza se va termina în fundal.',
     analysisWarning: 'Documentele sunt salvate · {done} / {total}. O parte necesită verificare sau analiza continuă în fundal.',
     send: 'Trimite', stop: 'Oprește', retry: 'Reîncearcă',
     voiceOn: 'Activează citirea vocală', voiceOff: 'Dezactivează citirea vocală', voicePlay: 'Citește întrebarea', voiceStop: 'Oprește citirea',
@@ -1518,7 +1520,7 @@ function waitForKnowledge(ids, controller, attempt, deadline) {
   attempt = attempt || 0;
   deadline = deadline || Date.now() + KNOWLEDGE_WAIT_MS;
   if (controller.signal.aborted) return Promise.reject(new DOMException('Aborted', 'AbortError'));
-  return fetch('/api/me/attachments/analyze', {
+  var request = fetch('/api/me/attachments/analyze', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + (S.token || ''), 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({ ids: ids }), cache: 'no-store', signal: controller.signal,
@@ -1537,6 +1539,12 @@ function waitForKnowledge(ids, controller, attempt, deadline) {
     if (attempt < 4) return new Promise(function (resolve) { setTimeout(resolve, 1000); }).then(function () { return waitForKnowledge(ids, controller, attempt + 1, deadline); });
     return { done: true, ready: ids.length, total: ids.length, failed: ids.length, network: true, items: [] };
   });
+  // Зависший запрос статуса не держит сотрудника: не дольше потолка плюс 5 секунд на ответ сервера.
+  var timer = new Promise(function (resolve) {
+    setTimeout(function () { resolve({ done: false, ready: 0, total: ids.length, pending: true, items: [] }); },
+      Math.max(deadline - Date.now(), 0) + 5000);
+  });
+  return Promise.race([request, timer]);
 }
 function sendAnswer(picked, own, materials) {
   if (S.busy || S.readOnly || S.attachBusy) return;
@@ -1562,7 +1570,8 @@ function sendAnswer(picked, own, materials) {
     if (materials.length) {
       var total = report.total || materials.length, done = report.ready == null ? total : report.ready;
       var warning = report.failed || report.extracted || report.network;
-      var key = report.pending ? 'analysisPending' : (warning ? 'analysisWarning' : 'analysisDone');
+      var pendingKey = S.iv.mode === 'ai' ? 'analysisPending' : 'analysisPendingScript';
+      var key = warning ? 'analysisWarning' : (report.pending ? pendingKey : 'analysisDone');
       S.attachProgress = t(key).replace('{done}', done).replace('{total}', total);
       S.attachPercent = 100;
     }

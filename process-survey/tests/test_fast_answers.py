@@ -116,6 +116,31 @@ class ClientWaitCapTest(unittest.TestCase):
         self.assertEqual(page.count('analysisPending:'), 2, 'текст нужен на русском и румынском')
         self.assertIn('на стадии разбора', page)
 
+    def test_script_mode_has_neutral_pending_text(self):
+        page = (ROOT / 'static' / 'index.html').read_text(encoding='utf-8')
+        self.assertEqual(page.count('analysisPendingScript:'), 2, 'без ИИ нет интервьюера — нужен нейтральный текст RU/RO')
+
+    def test_warning_wins_over_pending_and_hung_request_is_capped(self):
+        page = (ROOT / 'static' / 'index.html').read_text(encoding='utf-8')
+        self.assertIn("var key = warning ? 'analysisWarning'", page)
+        self.assertIn('Promise.race([request, timer])', page, 'зависший запрос статуса не должен держать сотрудника')
+
+
+class RetryPauseTest(unittest.TestCase):
+    def test_gateway_error_pauses_briefly_before_retry(self):
+        replies = [server.LLMError('remote_analysis_http_503: busy'), 'ok']
+        calls = iter(replies)
+
+        def call():
+            value = next(calls)
+            if isinstance(value, Exception):
+                raise value
+            return value
+
+        with patch.object(server.time, 'sleep') as pause:
+            self.assertEqual(server.remote_with_retry(call), 'ok')
+        pause.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
