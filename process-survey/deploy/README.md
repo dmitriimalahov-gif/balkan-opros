@@ -12,7 +12,7 @@
 | Код + данные | `/opt/balkan-opros/` (код root:root, только чтение в контейнере) |
 | SQLite, вложения, голос | `/opt/balkan-opros/data/` (uid 10001, 700) |
 | Пароль панели | `/opt/balkan-opros/ADMIN_PASSWORD.txt` (uid 10001, 600) — не печатать |
-| Ключ основного LLM API | `/opt/balkan-opros/run/llm.env` (`LLM_BASE_URL`, `LLM_API_KEY`; root, 600) — `env_file` compose |
+| Ключ основного LLM API | `/opt/balkan-opros/run/llm.env` (root, 600) — `env_file` compose. С 19.11.2026: `SURVEY_ANALYSIS_BASE=https://litellm.myoguz.xyz`, `SURVEY_ANALYSIS_KEY` (ключ OpenCode), `SURVEY_ANALYSIS_MODEL=auto`; запасные `LLM_BASE_URL`/`LLM_API_KEY` — strata. Копия до переключения — `run/llm.env.bak-20261119-strata` |
 | Признак «постоянная ссылка опубликована» | `/opt/balkan-opros/run/pushed-url` (нужен для `stableUrl` в API) |
 | Compose / Dockerfile / run.py | `/opt/balkan-opros/deploy/` (копия этого каталога) |
 | Модели Ollama | `/opt/balkan-opros/ollama/` |
@@ -26,7 +26,7 @@
 - `balkan-opros-ollama` — `ollama/ollama`, модель `qwen3.5:9b`, `num_ctx` 16384 (задаёт server.py). Порт наружу не
   публикуется, доступ только из внутренней сети compose (`http://ollama:11434`). **CPU**: GPU сервера занята движком
   strata (~23,4 из 24 ГБ), nvidia-container-toolkit не установлен. 12 ГБ, 8 CPU. Ollama — резерв: основная модель
-  `qwen3.8-flash-next-iq3_s` через OpenAI-совместимый API `LLM_BASE_URL` (litellm этого же сервера). Модель грузится
+  с 19.11.2026 — роутер `auto` шлюза OpenCode (LiteLLM этого же сервера, `/opt/litellm/v1`). Модель грузится
   в память только при сбое API (`ai_available()` = true, пока задан ключ API).
 
 ## Управление
@@ -43,6 +43,13 @@ curl -s https://poll.erp.numer.om/api/config      # {"ai": true, ...}
 --exclude __pycache__ ~/erp2-inbox/process-survey/ root@llm.myoguz.xyz:/opt/balkan-opros/`, затем
 `chown -R root:root` для кода и `docker compose restart survey`. Пересборка образа нужна только при смене зависимостей
 (`docker compose build survey && docker compose up -d survey`).
+
+⚠️ `chown root:root` — только для кода: **не трогать `ADMIN_PASSWORD.txt`, `data/`, `run/`** (uid 10001). Если пароль
+станет root:root, сервер не прочитает его, попытается создать новый на read-only томе и упадёт в цикл перезапусков
+(`OSError: [Errno 30] Read-only file system: '/app/ADMIN_PASSWORD.txt'`, 502 на сайте) — так было 19.11.2026, ~3 мин.
+Лечение: `chown 10001:10001 ADMIN_PASSWORD.txt && chmod 600 ADMIN_PASSWORD.txt && docker compose restart survey`.
+Изменения `run/llm.env` подхватываются только при пересоздании: `docker compose up -d --force-recreate survey`
+(`restart` перечитывает код, но не `env_file`).
 
 Смена пароля панели: записать новый в `ADMIN_PASSWORD.txt` (uid 10001, 600) → `docker compose restart survey`.
 
