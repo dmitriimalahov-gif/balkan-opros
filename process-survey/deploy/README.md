@@ -98,7 +98,9 @@ Mac: `launchctl bootout` + `launchctl disable gui/$UID/com.balkan.process-survey
 - **Голос интервьюера** (Qwen3-TTS + Whisper на MLX, профиль NumerOM, `voice_worker.py`) — только Apple Silicon/
   окружение NumerOM; на сервере `ownerVoice: false`, кнопка озвучки скрыта. Уже готовые клипы (`data/voice/clips`)
   перенесены, но не выдаются (API требует живого работника). Голосовой **ввод** работает: это SpeechRecognition браузера.
-- **OCR изображений и сканов PDF** (`ocr_vision.swift`, macOS Vision) — нет; такие документы получат статус
-  `failed` (`document_read_failed`). Текстовые PDF работают (pypdf, при пустом слое — `pdftotext` из poppler,
-  симлинк на путь Homebrew в образе).
+- **OCR изображений и сканов PDF через macOS Vision** — нет, но с 19.11.2026 фото и сканы читает модель с
+  распознаванием изображений через шлюз OpenCode (`remote_image_text`, модель `SURVEY_VISION_MODEL` или та же `auto`,
+  парсер `vision-model`). Поддерживаются JPEG/PNG/GIF/WebP до 15 МБ (тип по сигнатуре файла); HEIC/TIFF/BMP получат
+  `image_format_unsupported`. Без ключа шлюза — `ocr_unavailable`. Текстовые PDF работают (pypdf, при пустом слое —
+  `pdftotext` из poppler, симлинк на путь Homebrew в образе), страницы сканов PDF уходят в ту же модель.
 - **`.doc`** (старый Word, `textutil`) — нет; `.docx`, `.xlsx`, `.xls`, `.csv`, Google Таблицы — работают.
