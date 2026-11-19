@@ -7,7 +7,7 @@ set -uo pipefail
 export PATH='/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
 
 SURVEY_URL="${SURVEY_HEALTH_URL:-https://poll.erp.numer.om/healthz}"
-LLM_URL="${SURVEY_LLM_URL:-https://llm.myoguz.xyz/models}"
+LLM_URL="${SURVEY_LLM_URL:-https://litellm.myoguz.xyz/v1/models}"
 ONLINE_URL="${SURVEY_ONLINE_URL:-https://www.apple.com/library/test/success.html}"
 STATE="${SURVEY_MONITOR_STATE:-/Users/brandbox/erp2-inbox/process-survey/run}"
 FAILS_TO_ALERT="${SURVEY_MONITOR_FAILS:-2}"
@@ -28,7 +28,10 @@ notify() {
 }
 
 survey_alive() {
-  curl -fsS -m "$TIMEOUT" "$SURVEY_URL" 2>/dev/null | grep -Eq '"ok": *true'
+  local body
+  # Тело сначала целиком: под pipefail `curl | grep -q` может дать ложный сбой по SIGPIPE.
+  body=$(curl -fsS -m "$TIMEOUT" "$SURVEY_URL" 2>/dev/null) || return 1
+  [[ "$body" =~ \"ok\":\ *true ]]
 }
 
 # Без ключа API живая модель отвечает 401/404; 5xx или отсутствие ответа означает, что модель не работает.
@@ -43,6 +46,7 @@ check() {
   local key="$1" title="$2" probe="$3"
   local fails_file="$STATE/monitor-$key.fails" alert_file="$STATE/monitor-$key.alerted" fails=0
   [[ -f "$fails_file" ]] && fails=$(<"$fails_file")
+  [[ "$fails" =~ ^[0-9]+$ ]] || fails=0  # испорченный файл счётчика не должен глушить тревогу
 
   if "$probe"; then
     if [[ -f "$alert_file" ]]; then

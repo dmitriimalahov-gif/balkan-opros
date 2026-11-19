@@ -52,8 +52,11 @@ class ServerMonitorTest(unittest.TestCase):
         _Handler.routes = {'/healthz': survey, '/models': llm, '/online': online}
 
     def run_monitor(self):
-        env = dict(
-            os.environ,
+        # Прокси из окружения (VPN, корпоративная сеть) не должен перехватывать запросы к 127.0.0.1.
+        env = {k: v for k, v in os.environ.items() if k.lower() not in ('http_proxy', 'https_proxy', 'all_proxy')}
+        env.update(
+            NO_PROXY='127.0.0.1,localhost',
+            no_proxy='127.0.0.1,localhost',
             SURVEY_HEALTH_URL=self.base + '/healthz',
             SURVEY_LLM_URL=self.base + '/models',
             SURVEY_ONLINE_URL=self.base + '/online',
@@ -108,6 +111,12 @@ class ServerMonitorTest(unittest.TestCase):
         alerts = self.run_monitor()
         self.assertEqual(len(alerts), 1)
         self.assertIn('ИИ', alerts[0])
+
+    def test_corrupted_counter_file_does_not_silence_alert(self):
+        Path(self.state.name, 'monitor-survey.fails').write_text('abc')
+        self.set_routes(survey=BAD_GATEWAY, llm=AUTH_REQUIRED, online=ONLINE)
+        self.run_monitor()
+        self.assertEqual(len(self.run_monitor()), 1)
 
     def test_offline_mac_raises_no_false_alarm(self):
         self.set_routes(survey=BAD_GATEWAY, llm=BAD_GATEWAY, online=(503, b''))

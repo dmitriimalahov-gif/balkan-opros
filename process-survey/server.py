@@ -42,6 +42,7 @@ ANALYSIS_BASE = os.environ.get('SURVEY_ANALYSIS_BASE') or os.environ.get('LLM_BA
 ANALYSIS_KEY = os.environ.get('SURVEY_ANALYSIS_KEY') or os.environ.get('LLM_API_KEY', '')
 ANALYSIS_MODEL = os.environ.get('SURVEY_ANALYSIS_MODEL', 'qwen3.8-flash-next-iq3_s')
 ANALYSIS_TIMEOUT = int(os.environ.get('SURVEY_ANALYSIS_TIMEOUT', '120'))
+ROUTER_MODELS = {'auto'}  # алиасы автоматической маршрутизации шлюза LiteLLM (OpenCode)
 DB_PATH = os.path.join(BASE, 'data', 'survey.db')
 ADMIN_FILE = os.path.join(BASE, 'ADMIN_PASSWORD.txt')
 TUNNEL_LOG = os.path.join(BASE, 'run', 'tunnel.log')
@@ -87,12 +88,13 @@ _knowledge_thread = None
 
 
 def remote_assistant_chat(messages, json_mode=False, temperature=0.4, timeout=None, max_tokens=4000, reasoning_effort=None):
-    body = {
-        'model': ANALYSIS_MODEL, 'messages': messages, 'temperature': temperature,
-        'max_tokens': max_tokens,
-    }
-    if reasoning_effort:
-        body['reasoning_effort'] = reasoning_effort
+    body = {'model': ANALYSIS_MODEL, 'messages': messages, 'max_tokens': max_tokens}
+    # Роутер шлюза сам выбирает конечную модель, а её ограничения заранее неизвестны (например, часть
+    # моделей отвергает temperature при рассуждении) — temperature и reasoning_effort оставляем ему.
+    if ANALYSIS_MODEL not in ROUTER_MODELS:
+        body['temperature'] = temperature
+        if reasoning_effort:
+            body['reasoning_effort'] = reasoning_effort
     if json_mode:
         body['response_format'] = {'type': 'json_object'}
     request = urllib.request.Request(
