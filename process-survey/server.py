@@ -32,7 +32,7 @@ from urllib.parse import parse_qs, quote, unquote, urlparse
 from role_packs import ROLE_PACKS, role_key, role_keys, role_pack, role_packs, role_title, role_questions
 from about_analysis import analyze_about, prioritize_questions
 from owner_voice import voice_available, request_voice, voice_audio_path
-from knowledge import (init_knowledge, enqueue_knowledge, sync_knowledge, delete_knowledge,
+from knowledge import (KnowledgeError, init_knowledge, enqueue_knowledge, sync_knowledge, delete_knowledge,
                        knowledge_status, list_knowledge, knowledge_worker)
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -144,18 +144,28 @@ def image_mime(data):
 
 
 def remote_image_text(path):
+    # Короткие коды KnowledgeError попадают в карточку документа; подробности сбоя шлюза — только в журнал.
     if os.path.getsize(path) > MAX_VISION_IMAGE:
-        raise LLMError('image_too_large')
+        raise KnowledgeError('image_too_large')
     with open(path, 'rb') as source:
         data = source.read()
     mime = image_mime(data)
     if not mime:
-        raise LLMError('image_format_unsupported')
+        raise KnowledgeError('image_format_unsupported')
     content = [{'type': 'text', 'text': VISION_PROMPT},
                {'type': 'image_url', 'image_url': {'url': 'data:%s;base64,%s' % (mime, base64.b64encode(data).decode('ascii'))}}]
-    text = remote_assistant_chat([{'role': 'user', 'content': content}], timeout=180, max_tokens=4000, model=VISION_MODEL)
+    try:
+        text = remote_assistant_chat([{'role': 'user', 'content': content}], timeout=180, max_tokens=4000, model=VISION_MODEL)
+    except LLMError as error:
+        print('VISION_API_FAILED', str(error)[:160], flush=True)
+        raise KnowledgeError('vision_unavailable') from error
     print('VISION_API_MODEL', VISION_MODEL, flush=True)
     return text
+
+
+def prompt_safe(value, limit):
+    """Текст из документа не должен подделывать служебные пометки интервьюера вида [[Q: …]]."""
+    return re.sub(r'\s+', ' ', str(value or '')).replace('[', '(').replace(']', ')').strip()[:limit]
 
 
 def knowledge_image_reader():
@@ -410,13 +420,14 @@ def turn_messages(doc):
         else:
             attachment_ids = m.get('attachmentIds') or []
             materials = [find_attachment(doc, aid) for aid in attachment_ids]
-            names = [a.get('name') for a in materials if a and a.get('name')]
+            names = [prompt_safe(a.get('name'), 200) for a in materials if a and a.get('name')]
             if names:
                 c += '\n[К ответу приложены материалы: ' + ', '.join(names) + '.]'
             if attachment_ids:
                 knowledge = knowledge_status(DB_PATH, doc['id'], attachment_ids)
-                summaries = [item['name'] + (' (' + item['documentType'] + ')' if item.get('documentType') else '') + ': '
-                             + item['summary'][:2000] for item in knowledge['items']
+                summaries = [prompt_safe(item['name'], 200)
+                             + (' (' + prompt_safe(item['documentType'], 300) + ')' if item.get('documentType') else '')
+                             + ': ' + prompt_safe(item['summary'], 2000) for item in knowledge['items']
                              if item['status'] in ('ready', 'extracted') and item.get('summary')]
                 if summaries:
                     c += '\n[Разбор приложенных документов:\n' + '\n'.join(summaries) + ']'
