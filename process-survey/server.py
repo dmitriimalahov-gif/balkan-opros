@@ -179,12 +179,28 @@ def remote_analysis_chat(prompt):
     ], json_mode=True, temperature=0.2)
 
 
+# Быстрые сбои шлюза (пустой ответ роутера, 502–504) повторяем один раз: это секунды, а резерв Ollama на CPU — минуты.
+RETRYABLE_REMOTE_ERRORS = ('remote_analysis_empty', 'remote_analysis_invalid_response',
+                           'remote_analysis_http_502', 'remote_analysis_http_503', 'remote_analysis_http_504')
+
+
+def remote_with_retry(call):
+    try:
+        return call()
+    except LLMError as error:
+        if not str(error).startswith(RETRYABLE_REMOTE_ERRORS):
+            raise
+        print('ASSISTANT_API_RETRY', str(error)[:80], flush=True)
+        return call()
+
+
 def assistant_chat(messages, json_mode=False, temperature=0.4, timeout=300, max_tokens=None, reasoning_effort=None):
     if ANALYSIS_BASE and ANALYSIS_KEY:
         try:
-            result = remote_assistant_chat(messages, json_mode=json_mode, temperature=temperature, timeout=timeout,
-                                           max_tokens=max_tokens or (12000 if json_mode else 4000),
-                                           reasoning_effort=reasoning_effort or ('low' if json_mode else None))
+            result = remote_with_retry(lambda: remote_assistant_chat(
+                messages, json_mode=json_mode, temperature=temperature, timeout=timeout,
+                max_tokens=max_tokens or (12000 if json_mode else 4000),
+                reasoning_effort=reasoning_effort or ('low' if json_mode else None)))
             print('ASSISTANT_API_MODEL', ANALYSIS_MODEL, flush=True)
             return result
         except Exception as error:
@@ -195,7 +211,7 @@ def assistant_chat(messages, json_mode=False, temperature=0.4, timeout=300, max_
 def document_summary(prompt):
     if ANALYSIS_BASE and ANALYSIS_KEY:
         try:
-            result = parse_json(remote_analysis_chat(prompt))
+            result = parse_json(remote_with_retry(lambda: remote_analysis_chat(prompt)))
             print('ANALYSIS_API_MODEL', ANALYSIS_MODEL, flush=True)
             return result
         except Exception as error:
@@ -400,6 +416,27 @@ def compact_summary(n, d):
             'top_pains': sm.get('top_pains'), 'keep_human': sm.get('keep_human')}
 
 
+def pending_documents_note(items, announce):
+    """Сотрудник не ждёт окончания долгого разбора: интервьюер знает, какие документы ещё разбираются или не прочитались."""
+    pending = [prompt_safe(item.get('name') or 'Документ', 200) for item in items
+               if item['status'] in ('queued', 'processing', 'analyzing')]
+    failed = [prompt_safe(item.get('name') or 'Документ', 200) for item in items if item['status'] == 'failed']
+    note = ''
+    if pending:
+        names = ', '.join('«%s»' % name for name in pending)
+        if announce:
+            note += ('\n[Документ ' + names + ' сейчас на стадии разбора, его содержание пока неизвестно. Начни ответ одной '
+                     'короткой фразой на языке интервью: документ сейчас на стадии разбора, пусть сотрудник немного '
+                     'подождёт — ты учтёшь его, как только разбор закончится. Затем продолжай интервью и не спрашивай '
+                     'о содержании этого документа, пока нет его разбора.]')
+        else:
+            note += '\n[Документ ' + names + ' ещё на стадии разбора.]'
+    if failed:
+        note += '\n[Документ ' + ', '.join('«%s»' % name for name in failed) + ' не удалось прочитать автоматически'
+        note += (': если он важен для ответа, попроси сотрудника кратко описать его словами.]' if announce else '.]')
+    return note
+
+
 def turn_messages(doc):
     msgs = [{'role': 'system', 'content': rules_prompt(doc)},
             {'role': 'user', 'content': 'Начни интервью: поздоровайся по имени, одним предложением объясни цель и задай первый вопрос.'}]
@@ -408,7 +445,8 @@ def turn_messages(doc):
     while total > 12_000 and len(hist) > 4:
         total -= len(str(hist[0].get('content', '')))
         hist.pop(0)
-    for m in hist:
+    last_user = max((i for i, m in enumerate(hist) if m.get('role') != 'assistant'), default=-1)
+    for position, m in enumerate(hist):
         c = str(m.get('content', ''))
         if m.get('role') == 'assistant':
             if m.get('questionKey'):
@@ -431,6 +469,7 @@ def turn_messages(doc):
                              if item['status'] in ('ready', 'extracted') and item.get('summary')]
                 if summaries:
                     c += '\n[Разбор приложенных документов:\n' + '\n'.join(summaries) + ']'
+                c += pending_documents_note(knowledge['items'], announce=position == last_user)
             msgs.append({'role': 'user', 'content': c})
     return msgs
 

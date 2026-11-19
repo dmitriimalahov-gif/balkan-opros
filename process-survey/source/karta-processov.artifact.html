@@ -407,7 +407,8 @@ var T = {
     attachBadLink: 'Вставьте HTTPS-ссылку на Google Таблицу (docs.google.com/spreadsheets).',
     attachFail: 'Не удалось сохранить материал. Проверьте соединение и попробуйте ещё раз.',
     attachmentsOnly: 'Прикрепил(а) материалы к этому вопросу.', attachOpen: 'Открыть', attachDownload: 'Скачать',
-    analysisProgress: 'Анализирую документы · {done} / {total}', analysisDone: 'Документы добавлены в базу знаний · {done} / {total}',
+    analysisProgress: 'Документ на стадии разбора, подождите… · {done} / {total}', analysisDone: 'Документы добавлены в базу знаний · {done} / {total}',
+    analysisPending: 'Документ ещё на стадии разбора · {done} / {total}. Продолжаем — интервьюер учтёт его, как только разбор закончится.',
     analysisWarning: 'Документы сохранены · {done} / {total}. Часть требует проверки или анализ продолжится в фоне.',
     send: 'Отправить', stop: 'Остановить', retry: 'Повторить',
     voiceOn: 'Включить озвучку', voiceOff: 'Выключить озвучку', voicePlay: 'Озвучить вопрос', voiceStop: 'Остановить озвучку',
@@ -483,7 +484,8 @@ var T = {
     attachBadLink: 'Inserați un link HTTPS către Google Sheets (docs.google.com/spreadsheets).',
     attachFail: 'Materialul nu a putut fi salvat. Verificați conexiunea și încercați din nou.',
     attachmentsOnly: 'Am atașat materiale la această întrebare.', attachOpen: 'Deschide', attachDownload: 'Descarcă',
-    analysisProgress: 'Analizez documentele · {done} / {total}', analysisDone: 'Documentele sunt adăugate în baza de cunoștințe · {done} / {total}',
+    analysisProgress: 'Documentul este în curs de analiză, așteptați… · {done} / {total}', analysisDone: 'Documentele sunt adăugate în baza de cunoștințe · {done} / {total}',
+    analysisPending: 'Documentul este încă în analiză · {done} / {total}. Continuăm — intervievatorul îl va lua în calcul imediat ce analiza se termină.',
     analysisWarning: 'Documentele sunt salvate · {done} / {total}. O parte necesită verificare sau analiza continuă în fundal.',
     send: 'Trimite', stop: 'Oprește', retry: 'Reîncearcă',
     voiceOn: 'Activează citirea vocală', voiceOff: 'Dezactivează citirea vocală', voicePlay: 'Citește întrebarea', voiceStop: 'Oprește citirea',
@@ -1510,8 +1512,11 @@ function knowledgeProgress(report) {
   S.attachPercent = Math.round((report.ready || 0) / total * 100);
   updateComposer();
 }
-function waitForKnowledge(ids, controller, attempt) {
+// Сотрудник ждёт разбор не дольше KNOWLEDGE_WAIT_MS; дальше интервью идёт, а интервьюер знает, что документ ещё разбирается.
+var KNOWLEDGE_WAIT_MS = 15000;
+function waitForKnowledge(ids, controller, attempt, deadline) {
   attempt = attempt || 0;
+  deadline = deadline || Date.now() + KNOWLEDGE_WAIT_MS;
   if (controller.signal.aborted) return Promise.reject(new DOMException('Aborted', 'AbortError'));
   return fetch('/api/me/attachments/analyze', {
     method: 'POST',
@@ -1521,14 +1526,15 @@ function waitForKnowledge(ids, controller, attempt) {
     return response.json().then(function (data) {
       if (response.status === 202) {
         knowledgeProgress(data);
-        return new Promise(function (resolve) { setTimeout(resolve, 1000); }).then(function () { return waitForKnowledge(ids, controller, attempt); });
+        if (Date.now() >= deadline) { data.pending = true; return data; }
+        return new Promise(function (resolve) { setTimeout(resolve, 1000); }).then(function () { return waitForKnowledge(ids, controller, attempt, deadline); });
       }
       if (!response.ok) throw new Error('knowledge_' + response.status);
       return data;
     });
   }).catch(function (error) {
     if (error && error.name === 'AbortError') throw error;
-    if (attempt < 4) return new Promise(function (resolve) { setTimeout(resolve, 1000); }).then(function () { return waitForKnowledge(ids, controller, attempt + 1); });
+    if (attempt < 4) return new Promise(function (resolve) { setTimeout(resolve, 1000); }).then(function () { return waitForKnowledge(ids, controller, attempt + 1, deadline); });
     return { done: true, ready: ids.length, total: ids.length, failed: ids.length, network: true, items: [] };
   });
 }
@@ -1556,7 +1562,8 @@ function sendAnswer(picked, own, materials) {
     if (materials.length) {
       var total = report.total || materials.length, done = report.ready == null ? total : report.ready;
       var warning = report.failed || report.extracted || report.network;
-      S.attachProgress = (warning ? t('analysisWarning') : t('analysisDone')).replace('{done}', done).replace('{total}', total);
+      var key = report.pending ? 'analysisPending' : (warning ? 'analysisWarning' : 'analysisDone');
+      S.attachProgress = t(key).replace('{done}', done).replace('{total}', total);
       S.attachPercent = 100;
     }
     if (S.iv.mode === 'ai') aiTurn();
